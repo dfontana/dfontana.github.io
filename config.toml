@@ -13,7 +13,7 @@ paginate        = 5  # Number of posts per page
 	themecolor  = "green"
 
 	# Link custom assets relative to /static
-	favicon     = "/img/fav.ico"
+	favicon     = "img/favicon.ico"
 	customCSS   = []
 	customJS    = []
 
@@ -37,3 +37,6 @@ paginate        = 5  # Number of posts per page
 	backtotopStr        = "Back to top"
 	shareStr            = "Share"
 	pageNotFoundTitle   = "404 - Page not found"
+	
+	# Configure Post Summaries or Not
+	useSummaryIfNoDescription = true

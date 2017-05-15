@@ -1,7 +1,8 @@
-<!-- 
+{{/* 
     Overwrites theme's list management. This will now render posts
     in reverse order, by their date published, rather than the default.
--->
+*/}}
+
 {{ define "main" }}
 	{{ $paginator := .Paginate .Data.Pages.ByDate.Reverse }}
     {{ range $paginator.Pages }}
