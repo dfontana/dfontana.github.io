@@ -13,4 +13,8 @@ Example site for reference: http://themes.gohugo.io/theme/steam/
 Hugo Docs: https://gohugo.io/content/sections/
 [ ] Author name in foot needs to link to *about*
 [ ] About needs to get a photo place, either through markdown or reworking the layout.
+[ ] Need a title
+[ ] And possibly a better subtitle
+[ ] Can I host my book? (Gonna want to markdown it 0.0)
+[ ] Get the resume on there!
 
