@@ -1,54 +1,39 @@
-baseurl = "/"
-languageCode = "en-us"
-theme = "steam"
-
-# Enable Google Analytics be inserting your tracking code
-googleAnalytics = ""
-# Number of posts per page
-paginate = 5
+baseurl         = "/"
+languageCode    = "en-us"
+theme           = "steam"
+googleAnalytics = "" # Enable Google Analytics; insert tracking code
+paginate        = 5 # Number of posts per page
 
 [params]
-	title = "Meow"
-	subtitle = "Thoughts, ideas, and works."
-	copyright = "Released under the MIT license."
+	title       = "Meow"
+	subtitle    = "Thoughts, ideas, and works."
+	copyright   = "Released under the MIT license."
 
 	# You can choose between green, orange, red and blue.
-	themecolor = "green"
+	themecolor  = "green"
 
 	# Link custom assets relative to /static
-	favicon   = "/img/fav.ico"
-	customCSS = []
-	customJS  = []
+	favicon     = "/img/fav.ico"
+	customCSS   = []
+	customJS    = []
 
-	# To provide some metadata for search engines and the about section in the footer
-	# feel free to add a few information about you and your website.
-	name = "Dylan Fontana"
-	bio = "Insert bio here."
+	# To provide some metadata for search engines and footer about.
+	name        = "Dylan Fontana"
+	bio         = "Insert bio here."
 	description = "Your description of the blog"
 	
-	# Link your social networks (optional)
-	location = "America/New_York"
-	linkedin = "dylan-fontana"
-	github = "dfontana"
-    googleplus = ""
-	facebook = ""
-	instagram = ""
-	gitlab = ""
-	bitbucket = ""
+	# Link your social networks
+	location    = "America/New_York"
+	linkedin    = "dylan-fontana"
+	github      = "dfontana"
+    googleplus  = ""
+	facebook    = ""
+	instagram   = ""
+	gitlab      = ""
+	bitbucket   = ""
 
 	# Customize or translate the strings
-	keepReadingStr = "Keep reading"
-	backtotopStr = "Back to top"
-	shareStr = "Share"
-	pageNotFoundTitle = "404 - Page not found"
-
-[Menus.main]
-    [Home]
-        Name = "Home"
-        URL = "/"
-    [About] 
-        Name = "About"
-        URL = "/about/"
-    [Projects] 
-        Name = "Projects"
-        URL = "/projects/"    
+	keepReadingStr      = "Keep reading"
+	backtotopStr        = "Back to top"
+	shareStr            = "Share"
+	pageNotFoundTitle   = "404 - Page not found"

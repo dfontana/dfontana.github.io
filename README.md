@@ -7,4 +7,6 @@ I wanted the site to be easy to maintain, update, and use. There's nothing that 
 [Learn more about Hugo!](https://gohugo.io)
 
 #### What's Left?
-Everything. Yikes!
+[ ] Author name in foot needs to link to *about*
+[ ] About needs to get a photo place, either through markdown or reworking the layout.
+
