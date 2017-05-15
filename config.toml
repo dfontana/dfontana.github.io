@@ -1,14 +1,49 @@
-baseURL = "/"
-languageCode = "en-us"
-title = "Introduction"
-theme = "introduction"
+baseURL         = "/"
+languageCode    = "en-us"
+title           = "Introduction"
+theme           = "introduction"
+
+[permalinks]
+fixed   = ":title/"
+blog    = "blog/:slug/"
 
 [params]
-author = "Dylan Fontana"
-firstname = "Dylan"
-tagline = "Meow."
-introheight = "medium"
-theme = "light"
+author      = "Dylan Fontana"
+firstname   = "Dylan"
+tagline     = "Meow."
+description = "Description. Meow."
+timezone    = "American/New_York"
 
-fadein = true
+#
+## Theme Images
+#
+faviconfile = "images/fav.ico"
+avatar      = "images/profile.png"
 
+#
+## Theme Styles
+# 
+introheight     = "large"
+theme           = "light"
+fadein          = true
+showblog        = true
+showallposts    = false
+sharebuttons    = false
+showprojects    = true
+
+#
+## Projects
+#
+project1link    = "#"
+project1title   = "Project 1"
+
+#
+## Social Media Links
+#
+[[params.social]]
+url     = "https://github.com/dfontana"
+icon    = "github"
+
+[[params.social]]
+url     = "https://www.linkedin.com/in/dylan-fontana/"
+icon    = "linkedin-square"
