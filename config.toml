@@ -37,7 +37,7 @@ paginate        = 5  # Number of posts per page
 	keepReadingStr      = "Keep reading"
 	backtotopStr        = "Back to top"
 	shareStr            = "Share"
-	pageNotFoundTitle   = "404 - Page not found"
+	pageNotFoundTitle   = "Uh oh. 404 - Page not found"
 	
 	# Configure Post Summaries or Not
 	useSummaryIfNoDescription = true
