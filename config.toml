@@ -2,7 +2,7 @@ baseurl         = "/"
 languageCode    = "en-us"
 theme           = "steam"
 googleAnalytics = "" # Enable Google Analytics; insert tracking code
-paginate        = 5 # Number of posts per page
+paginate        = 5  # Number of posts per page
 
 [params]
 	title       = "Meow"
