@@ -1,49 +1,54 @@
-baseURL         = "/"
-languageCode    = "en-us"
-title           = "Introduction"
-theme           = "introduction"
+baseurl = "/"
+languageCode = "en-us"
+theme = "steam"
 
-[permalinks]
-fixed   = ":title/"
-blog    = "blog/:slug/"
+# Enable Google Analytics be inserting your tracking code
+googleAnalytics = ""
+# Number of posts per page
+paginate = 5
 
 [params]
-author      = "Dylan Fontana"
-firstname   = "Dylan"
-tagline     = "Meow."
-description = "Description. Meow."
-timezone    = "American/New_York"
+	title = "Meow"
+	subtitle = "Thoughts, ideas, and works."
+	copyright = "Released under the MIT license."
 
-#
-## Theme Images
-#
-faviconfile = "images/fav.ico"
-avatar      = "images/profile.png"
+	# You can choose between green, orange, red and blue.
+	themecolor = "green"
 
-#
-## Theme Styles
-# 
-introheight     = "large"
-theme           = "light"
-fadein          = false
-showblog        = true
-showallposts    = false
-sharebuttons    = false
-showprojects    = true
+	# Link custom assets relative to /static
+	favicon   = "/img/fav.ico"
+	customCSS = []
+	customJS  = []
 
-#
-## Projects
-#
-project1link    = "#"
-project1title   = "Project 1"
+	# To provide some metadata for search engines and the about section in the footer
+	# feel free to add a few information about you and your website.
+	name = "Dylan Fontana"
+	bio = "Insert bio here."
+	description = "Your description of the blog"
+	
+	# Link your social networks (optional)
+	location = "America/New_York"
+	linkedin = "dylan-fontana"
+	github = "dfontana"
+    googleplus = ""
+	facebook = ""
+	instagram = ""
+	gitlab = ""
+	bitbucket = ""
 
-#
-## Social Media Links
-#
-[[params.social]]
-url     = "https://github.com/dfontana"
-icon    = "github"
+	# Customize or translate the strings
+	keepReadingStr = "Keep reading"
+	backtotopStr = "Back to top"
+	shareStr = "Share"
+	pageNotFoundTitle = "404 - Page not found"
 
-[[params.social]]
-url     = "https://www.linkedin.com/in/dylan-fontana/"
-icon    = "linkedin-square"
+[Menus.main]
+    [Home]
+        Name = "Home"
+        URL = "/"
+    [About] 
+        Name = "About"
+        URL = "/about/"
+    [Projects] 
+        Name = "Projects"
+        URL = "/projects/"    
