@@ -1,0 +1,15 @@
+{{/* 
+    Handles rendering the index of the website. All other lists are 
+    handled by list.html. 
+*/}}
+
+{{ define "main" }}
+    {{ $paginator := .Paginate .Data.Pages.ByTitle }}
+    {{ range $paginator.Pages }}
+        {{ if not .Params.hide }}
+           {{ .Render "summary" }}
+        {{ end }}
+    {{ end }}
+
+    {{ partial "pagination" . }}
+{{ end }}
