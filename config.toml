@@ -1,0 +1,13 @@
+baseURL = "/"
+languageCode = "en-us"
+title = "Introduction"
+theme = "introduction"
+
+[params]
+author = "Dylan Fontana"
+firstname = "Dylan"
+tagline = "Meow."
+introheight = "medium"
+theme = "light"
+
+fadein = true
