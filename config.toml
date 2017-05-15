@@ -25,7 +25,7 @@ avatar      = "images/profile.png"
 # 
 introheight     = "large"
 theme           = "light"
-fadein          = true
+fadein          = false
 showblog        = true
 showallposts    = false
 sharebuttons    = false
