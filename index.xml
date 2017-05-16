@@ -30,23 +30,5 @@
       <description>This is contact me.</description>
     </item>
     
-    <item>
-      <title>project2</title>
-      <link>/projects/project2/</link>
-      <pubDate>Mon, 15 May 2017 16:13:46 -0400</pubDate>
-      
-      <guid>/projects/project2/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>project1</title>
-      <link>/projects/project1/</link>
-      <pubDate>Mon, 15 May 2017 14:01:47 -0400</pubDate>
-      
-      <guid>/projects/project1/</guid>
-      <description></description>
-    </item>
-    
   </channel>
 </rss>
