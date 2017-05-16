@@ -12,5 +12,14 @@
 	<atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
+    <item>
+      <title>Under Construction</title>
+      <link>/posts/under-construction/</link>
+      <pubDate>Mon, 15 May 2017 20:36:13 -0400</pubDate>
+      
+      <guid>/posts/under-construction/</guid>
+      <description>Posts, Projects, Titles, About, Contact&amp;hellip; the whole Shebang! While most of the framework is working as expected, the content presented is placeholder until filled in. Check back later for updates, and in the meantime feel free to visit my social media linked in the footer!</description>
+    </item>
+    
   </channel>
 </rss>
