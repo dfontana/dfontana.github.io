@@ -28,8 +28,13 @@
   </url>
   
   <url>
-    <loc>/contact/</loc>
-    <lastmod>2017-05-15T00:18:12-04:00</lastmod>
+    <loc>/posts/setting_up_zsh/</loc>
+    <lastmod>2017-10-13T00:16:55-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/nodejs_profiling/</loc>
+    <lastmod>2017-10-13T00:15:20-04:00</lastmod>
   </url>
   
   <url>

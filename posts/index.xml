@@ -21,5 +21,25 @@
       <description>Posts, Projects, Titles, About, Contact&amp;hellip; the whole Shebang! While most of the framework is working as expected, the content presented is placeholder until filled in. Check back later for updates, and in the meantime feel free to visit my social media linked in the footer!</description>
     </item>
     
+    <item>
+      <title>How to Setup ZSH</title>
+      <link>/posts/setting_up_zsh/</link>
+      <pubDate>Fri, 13 Oct 2017 00:16:55 -0400</pubDate>
+      
+      <guid>/posts/setting_up_zsh/</guid>
+      <description>One of the things I love to do is tinker - to an almost unhealthy degree. Having not been satisfied with the autocompletion bash provides, and curious what alternative shells had to offer, I found ZSH. In this guide, I&amp;rsquo;m going to walk you through how I setup ZSH on my Windows machine (inside WSL) - but the instructions compare similarly for my Mac.
+First Step, ZSH You&amp;rsquo;ll want to boot up your terminal / WSL terminal and install the ZSH package.</description>
+    </item>
+    
+    <item>
+      <title>Profiling in NodeJS with Environment Variables</title>
+      <link>/posts/nodejs_profiling/</link>
+      <pubDate>Fri, 13 Oct 2017 00:15:20 -0400</pubDate>
+      
+      <guid>/posts/nodejs_profiling/</guid>
+      <description>While standing up a REST API for a work project, I spent a lot of time editing the IP, port, and other parameters within my server as I swapped from production and development environments. After being fed up with the constant back and forth, I searched for a better solution. In this tidbit, I&amp;rsquo;m going to present my solution.
+Reading Environment Variables in Node An easy solution would be to simply pass environment variables when launching NodeJS, pulling the configuration from inside our files to the commandline during launch time.</description>
+    </item>
+    
   </channel>
 </rss>
