@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Projects on Dylan.</title>
+    <title>Projects on </title>
     <link>/projects/</link>
-    <description>Recent content in Projects on Dylan.</description>
+    <description>Recent content in Projects on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Released under the MIT license.</copyright>
     <lastBuildDate>Mon, 15 May 2017 00:18:12 -0400</lastBuildDate>
     
 	<atom:link href="/projects/index.xml" rel="self" type="application/rss+xml" />

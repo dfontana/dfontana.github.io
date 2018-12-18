@@ -3,11 +3,6 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/posts/under-construction/</loc>
-    <lastmod>2017-05-15T20:36:13-04:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/</loc>
     <lastmod>2017-05-15T00:18:12-04:00</lastmod>
   </url>
@@ -24,17 +19,22 @@
   
   <url>
     <loc>/about/</loc>
-    <lastmod>2017-05-15T00:18:05-04:00</lastmod>
+    <lastmod>2018-12-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/raspberry_pi/</loc>
+    <lastmod>2018-12-17T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/posts/setting_up_zsh/</loc>
-    <lastmod>2017-10-13T00:16:55-04:00</lastmod>
+    <lastmod>2017-10-13T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/posts/nodejs_profiling/</loc>
-    <lastmod>2017-10-13T00:15:20-04:00</lastmod>
+    <lastmod>2017-10-13T00:00:00+00:00</lastmod>
   </url>
   
   <url>
