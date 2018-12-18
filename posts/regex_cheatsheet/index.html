@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>Regex&#39;s: A quick little cheatsheet &middot; </title>
+    <meta name="author" content="Dylan Fontana">
+    <meta name="description" content="A portfolio site.">
+    <meta name="generator" content="Hugo 0.49.2" />
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <!-- RSS autodiscovery -->
+    
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/screen.css">
+    <link rel="stylesheet" href="/css/github.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/default.min.css">
+    
+
+    
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+    
+
+    <!-- Stylesheet for theme color -->
+    <style type="text/css">
+    a, a:visited {color: #33cc99;}
+    .pagination a {color: #33cc99;}
+    .gist .gist-file .gist-meta a:visited {color: #33cc99 !important;}
+    a:focus, a:hover {color: #178b6b;}
+    h1.post-title a:focus, h1.post-title a:hover, h1.blog-title a:focus, h1.blog-title a:hover {color: #178b6b;}
+    .older-posts:hover, .newer-posts:hover {color: #178b6b;}
+</style>
+</head>
+
+<body class="home-template">
+    <header id="site-head">
+	
+	<h1 class="blog-title"><a href="/">Dylan.</a></h1>
+	
+	
+	<h1 class="blog-subtitle">Thoughts, ideas, and works.</h1>
+	
+</header>
+    
+<nav class="menu" role="nav">
+    <ul>
+        
+        	<li class="nav nav-current"><a href="/">Home</a></li>
+      	
+        	<li class="nav nav-current"><a href="/posts/">Posts</a></li>
+      	
+        	<li class="nav nav-current"><a href="/projects/">Projects</a></li>
+      	
+        	<li class="nav nav-current"><a href="/about/">About</a></li>
+      	
+    </ul>
+</nav>
+
+    
+    <main class="content" role="main">
+    
+<article class="post">
+    <header>
+        <h1 class="post-title">Regex&#39;s: A quick little cheatsheet</h1>
+        <div class="post-meta">
+            <time datetime="17 December 2018">
+                17 December 2018
+            </time>
+        </div>
+    </header>
+
+    <section class="post-content">
+        <p>It&rsquo;s not frequent I come across a need for a regex - perhaps to my own detriment - but when I do, I often find myself forgetting what specific parts may mean. Here&rsquo;s a little cheatsheet I made myself ~ perhaps there&rsquo;s some value for you.</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">Symbol</th>
+<th align="center">Name</th>
+<th align="left">Meaning</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center"><code>.</code></td>
+<td align="center">Wildcard</td>
+<td align="left">Anything can take this guy&rsquo;s place. You&rsquo;ll need to escape (<code>\.</code>) it for periods.</td>
+</tr>
+
+<tr>
+<td align="center"><code>\d</code></td>
+<td align="center">Digit</td>
+<td align="left">Will search for any digit. It&rsquo;s sister, <code>\D</code> is for any non-digit. Ex: <code>\d\d\d</code> looks for 3 digits.</td>
+</tr>
+
+<tr>
+<td align="center"><code>[ ]</code></td>
+<td align="center">&lsquo;Only&rsquo;</td>
+<td align="left">Anything inside braces will search through things only containing characters inside. If you were to negate this <code>^</code>, you&rsquo;ll ignore those characters. Ex: <code>[^abc]</code> Looks for 3 characters not starting with a, b, or c</td>
+</tr>
+
+<tr>
+<td align="center"><code>{ }</code></td>
+<td align="center">Repeating</td>
+<td align="left">Will look for the proceeding group for the number of times inside. <code>[wxy]{3}</code></td>
+</tr>
+
+<tr>
+<td align="center"><code>*</code></td>
+<td align="center">Any Number</td>
+<td align="left">Looks for any number of the proceeding group</td>
+</tr>
+
+<tr>
+<td align="center"><code>+</code></td>
+<td align="center">At least</td>
+<td align="left">Looks for at least one of the proceeding group</td>
+</tr>
+
+<tr>
+<td align="center"><code>?</code></td>
+<td align="center">Optional</td>
+<td align="left">Will treat the prior group as an optional match. <code>ab?c</code> will match <code>abc</code> or <code>ac</code></td>
+</tr>
+
+<tr>
+<td align="center"><code>\s</code></td>
+<td align="center">Whitespace</td>
+<td align="left">Space, newline, tab, carriage return</td>
+</tr>
+
+<tr>
+<td align="center"><code>^ $</code></td>
+<td align="center">&lsquo;Block&rsquo;</td>
+<td align="left">Using these anchors, we can prevent getting matches encased inside words. ex: <code>^Mission: successful$</code></td>
+</tr>
+
+<tr>
+<td align="center"><code>( )</code></td>
+<td align="center">Capture</td>
+<td align="left">If you want to extract a specific piece of information about your matches, you&rsquo;ll wrap it with parentheses. You can nest these as much as you&rsquo;d like, spitting out each group.</td>
+</tr>
+
+<tr>
+<td align="center"><code>pipe</code></td>
+<td align="center">OR</td>
+<td align="left">yep. Markdown tables are fun. The OR (same representation as bitwise OR) applies.</td>
+</tr>
+</tbody>
+</table>
+
+    </section>
+
+    
+    <section class="post-tags" style="padding-bottom:60px;">
+        <div class="post-meta tags">
+            <i class="fa fa-fw fa-tag"></i>
+            
+        </div>
+    </section>
+    
+    
+    <section class="share">
+    <p class="backtotop"><a data-scroll href="#site-head"><i class="fa fa-lg fa-fw fa-angle-double-up"></i></a><a data-scroll class="backtotoptext" href="#site-head"> Back to top</a></p>
+    <p class="info prompt">Share</p>
+    <a href="http://twitter.com/share?text=Regex%27s%3a%20A%20quick%20little%20cheatsheet&url=%2fposts%2fregex_cheatsheet%2f" title="Share on Twitter"
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+        <i class="fa fa-2x fa-fw fa-twitter-square"></i> <span class="hidden">Twitter</span>
+    </a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2fposts%2fregex_cheatsheet%2f" title="Share on Facebook"
+        onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+        <i class="fa fa-2x fa-fw fa-facebook-square" style="margin-left: -8px"></i> <span class="hidden">Facebook</span>
+    </a>
+    <a href="https://plus.google.com/share?url=%2fposts%2fregex_cheatsheet%2f" title="Share on Google+"
+       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+        <i class="fa fa-2x fa-fw fa-google-plus-square" style="margin-left: -8px"></i> <span class="hidden">Google+</span>
+    </a>
+</section>
+
+    <footer class="post-footer">
+        
+<section class="author">
+    <div class="authorimage" style="background: url(/img/profile.png)"></div>
+    <h4>Dylan Fontana</h4>
+    <p class="bio">Explore, learn, and pursue - three of my favorite things.</p>
+    <p class="meta">
+      <i class="fa fa-fw fa-map-marker"></i> America/Boston
+    </p>
+</section>
+    </footer>
+    
+</article>
+
+    </main>
+
+    
+
+<footer class="site-footer">
+	<div class="inner">
+		<section class="footer-social">
+      
+      
+      <a href="//www.linkedin.com/in/dylan-fontana" target="_blank" title="linkedIn"><i class="fa fa-2x fa-fw fa-linkedin"></i> <span class="hidden">LinkedIn</span></a>&nbsp;
+      
+      
+      
+      
+      
+      <a href="//github.com/dfontana" target="_blank" title="GitHub"><i class="fa fa-2x fa-fw fa-github"></i> <span class="hidden">GitHub</span></a>&nbsp;
+      
+      
+      
+      
+  </section>
+
+		<section class="copyright">&copy; 2018 <a href="/about/">Dylan Fontana</a>. Released under the MIT license.</section>
+	</div>
+</footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/index.js"></script>
+<script src="/js/smooth-scroll.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+
+
+<script>
+    smoothScroll.init({
+        speed: 800,
+        easing: 'easeInOutCubic',
+        updateURL: false,
+        offset: 125,
+    });
+</script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+</body>
+</html>

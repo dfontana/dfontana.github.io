@@ -22,6 +22,16 @@ I&amp;rsquo;ve explored a lot, gaining a medley of side-knowledge from the 9-to-
     </item>
     
     <item>
+      <title>Regex&#39;s: A quick little cheatsheet</title>
+      <link>/posts/regex_cheatsheet/</link>
+      <pubDate>Mon, 17 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/regex_cheatsheet/</guid>
+      <description>It&amp;rsquo;s not frequent I come across a need for a regex - perhaps to my own detriment - but when I do, I often find myself forgetting what specific parts may mean. Here&amp;rsquo;s a little cheatsheet I made myself ~ perhaps there&amp;rsquo;s some value for you.
+   Symbol Name Meaning     . Wildcard Anything can take this guy&amp;rsquo;s place. You&amp;rsquo;ll need to escape (\.) it for periods.</description>
+    </item>
+    
+    <item>
       <title>Setting up a Raspberry Pi - Headless</title>
       <link>/posts/raspberry_pi/</link>
       <pubDate>Mon, 17 Dec 2018 00:00:00 +0000</pubDate>
