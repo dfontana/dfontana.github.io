@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>Storing Data with ETags (in Go)</title>
+      <link>/posts/etags/</link>
+      <pubDate>Tue, 01 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/etags/</guid>
+      <description>When a server needs to keep some information client side, Cookies typically get leveraged to save that little snippet. Our data gets set in a Cookie, the lifetime of the Cookie is set, and the Cookie is persisted until our next encounter when the server needs it. On that next visit, we&amp;rsquo;d load up the cookie and continue; &amp;ldquo;Business As Usual.&amp;rdquo; While this data shouldn&amp;rsquo;t be considered guaranteed, developers could treat it as somewhat reliable (present?</description>
+    </item>
+    
+    <item>
       <title>Regex&#39;s: A quick little cheatsheet</title>
       <link>/posts/regex_cheatsheet/</link>
       <pubDate>Mon, 17 Dec 2018 00:00:00 +0000</pubDate>
