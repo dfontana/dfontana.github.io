@@ -12,6 +12,16 @@
     
     
     <item>
+      <title>Previewing Markdown in the Terminal</title>
+      <link>/posts/render_markdown_in_terminal/</link>
+      <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/render_markdown_in_terminal/</guid>
+      <description>Here&amp;rsquo;s a little trick - previewing Markdown in your terminal. Odds are if you&amp;rsquo;ve tried working on a Markdown doc outside of an editor capable of previewing it, you&amp;rsquo;ll find yourself needing to open it elsewhere to get a sense of what&amp;rsquo;s rendering. After looking around for a solution to this, I found a few little utilities capable of helping out.
+Pandoc Pandoc is a utility for converting Markdown files into other formats.</description>
+    </item>
+    
+    <item>
       <title>Storing Data with ETags (in Go)</title>
       <link>/posts/etags/</link>
       <pubDate>Tue, 01 Jan 2019 00:00:00 +0000</pubDate>
