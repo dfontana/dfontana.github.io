@@ -7,7 +7,7 @@
     <title>Posts &middot; </title>
     <meta name="author" content="Dylan Fontana">
     <meta name="description" content="A portfolio site.">
-    <meta name="generator" content="Hugo 0.38.1" />
+    <meta name="generator" content="Hugo 0.60.0" />
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -34,20 +34,102 @@
     
 
     <!-- Stylesheet for theme color -->
-    <style type="text/css">
-    a, a:visited {color: #BFAE48;}
-    .pagination a {color: #BFAE48;}
-    .gist .gist-file .gist-meta a:visited {color: #BFAE48 !important;}
-    a:focus, a:hover {color: #2E294E;}
-    h1.post-title a:focus, h1.post-title a:hover, h1.blog-title a:focus, h1.blog-title a:hover {color: #2E294E;}
-    .older-posts:hover, .newer-posts:hover {color: #2E294E;}
+    <style type="text/css">    
+    @import url('https://fonts.googleapis.com/css?family=Cinzel+Decorative:400,700|Lora:400,400i,700&subset=cyrillic,cyrillic-ext,latin-ext');
+    @import url('//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css');
+
+    a, 
+    a:visited,
+    a.backtotoptext,
+    .gist .gist-file .gist-meta,
+    .pagination,
+    section.post-content h2,
+    section.post-content h3,
+    section.post-content h4,
+    h1.blog-subtitle  {
+        color: #BFAE48;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a:focus,
+    a:hover,
+    h1.post-title a:focus, 
+    h1.post-title a:hover, 
+    h1.blog-title a:focus, 
+    h1.blog-title a:hover,
+    .older-posts:hover, 
+    .newer-posts:hover {
+        color: #84FFC5;
+    }
+
+    h1.post-title a,
+    h1.blog-title a,
+    h1.post-title {
+        color: #dedede
+    }
+
+    .post-meta {
+        color: #95a5a6
+    }
+
+    a.excerptlink,
+    body {
+        color: #ececec;
+    }
+
+    body {
+        background-color: #2A3555;
+    }
+
+    body,
+    h2,
+    h3,
+    h4,
+    p,
+    li,
+    dt,
+    dd,
+    nav ul li,
+    section.author p.attr,
+    section.share p.info,
+    blockquote,
+    .post-meta,
+    footer section,
+    a.archive-link,
+    .pagination,
+    gist .gist-file .gist-meta,
+    table,
+    section.post-content h4,
+    p.backtotop,
+    h1.posts-tagged,
+    article.preview p.readmore {
+        font-family: "Lora", Helvetica, Arial, serif;
+    }
+
+    h1,
+    section.author h4,
+    blockquote p,
+    section.author .meta {
+        font-family: "Cinzel Decorative", Helvetica, Arial, "Nimbus L", cursive;
+    }
+
+    pre,
+    code {
+        color: #84FFC5;
+        background-color: #3E3E3E;
+    }
 </style>
+
 </head>
 
 <body class="home-template">
     <header id="site-head">
 	
-	<h1 class="blog-title"><a href="/">Dylan.</a></h1>
+	<h1 class="blog-title"><a href="/">Frontiers</a></h1>
 	
 	
 	<h1 class="blog-subtitle">Thoughts, ideas, and works.</h1>

@@ -7,7 +7,7 @@
     <title>Previewing Markdown in the Terminal &middot; </title>
     <meta name="author" content="Dylan Fontana">
     <meta name="description" content="A portfolio site.">
-    <meta name="generator" content="Hugo 0.38.1" />
+    <meta name="generator" content="Hugo 0.60.0" />
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -29,20 +29,102 @@
     
 
     <!-- Stylesheet for theme color -->
-    <style type="text/css">
-    a, a:visited {color: #BFAE48;}
-    .pagination a {color: #BFAE48;}
-    .gist .gist-file .gist-meta a:visited {color: #BFAE48 !important;}
-    a:focus, a:hover {color: #2E294E;}
-    h1.post-title a:focus, h1.post-title a:hover, h1.blog-title a:focus, h1.blog-title a:hover {color: #2E294E;}
-    .older-posts:hover, .newer-posts:hover {color: #2E294E;}
+    <style type="text/css">    
+    @import url('https://fonts.googleapis.com/css?family=Cinzel+Decorative:400,700|Lora:400,400i,700&subset=cyrillic,cyrillic-ext,latin-ext');
+    @import url('//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css');
+
+    a, 
+    a:visited,
+    a.backtotoptext,
+    .gist .gist-file .gist-meta,
+    .pagination,
+    section.post-content h2,
+    section.post-content h3,
+    section.post-content h4,
+    h1.blog-subtitle  {
+        color: #BFAE48;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a:focus,
+    a:hover,
+    h1.post-title a:focus, 
+    h1.post-title a:hover, 
+    h1.blog-title a:focus, 
+    h1.blog-title a:hover,
+    .older-posts:hover, 
+    .newer-posts:hover {
+        color: #84FFC5;
+    }
+
+    h1.post-title a,
+    h1.blog-title a,
+    h1.post-title {
+        color: #dedede
+    }
+
+    .post-meta {
+        color: #95a5a6
+    }
+
+    a.excerptlink,
+    body {
+        color: #ececec;
+    }
+
+    body {
+        background-color: #2A3555;
+    }
+
+    body,
+    h2,
+    h3,
+    h4,
+    p,
+    li,
+    dt,
+    dd,
+    nav ul li,
+    section.author p.attr,
+    section.share p.info,
+    blockquote,
+    .post-meta,
+    footer section,
+    a.archive-link,
+    .pagination,
+    gist .gist-file .gist-meta,
+    table,
+    section.post-content h4,
+    p.backtotop,
+    h1.posts-tagged,
+    article.preview p.readmore {
+        font-family: "Lora", Helvetica, Arial, serif;
+    }
+
+    h1,
+    section.author h4,
+    blockquote p,
+    section.author .meta {
+        font-family: "Cinzel Decorative", Helvetica, Arial, "Nimbus L", cursive;
+    }
+
+    pre,
+    code {
+        color: #84FFC5;
+        background-color: #3E3E3E;
+    }
 </style>
+
 </head>
 
 <body class="home-template">
     <header id="site-head">
 	
-	<h1 class="blog-title"><a href="/">Dylan.</a></h1>
+	<h1 class="blog-title"><a href="/">Frontiers</a></h1>
 	
 	
 	<h1 class="blog-subtitle">Thoughts, ideas, and works.</h1>
@@ -77,32 +159,20 @@
     </header>
 
     <section class="post-content">
-        
-
-<p>Here&rsquo;s a little trick - previewing Markdown in your terminal. Odds are if you&rsquo;ve tried working on a Markdown doc outside of an editor capable of previewing it, you&rsquo;ll find yourself needing to open it elsewhere to get a sense of what&rsquo;s rendering. After looking around for a solution to this, I found a few little utilities capable of helping out.</p>
-
+        <p>Here's a little trick - previewing Markdown in your terminal. Odds are if you've tried working on a Markdown doc outside of an editor capable of previewing it, you'll find yourself needing to open it elsewhere to get a sense of what's rendering. After looking around for a solution to this, I found a few little utilities capable of helping out.</p>
 <h2 id="pandoc">Pandoc</h2>
-
-<p>Pandoc is a utility for converting Markdown files into other formats. By default, it will render markdown into HTML - which is all we actually need for this. There&rsquo;s a slew of other things Pandoc is capable of doing so I highly recommend you <a href="https://pandoc.org/">check it out!</a>. Here&rsquo;s how to install:</p>
-
+<p>Pandoc is a utility for converting Markdown files into other formats. By default, it will render markdown into HTML - which is all we actually need for this. There's a slew of other things Pandoc is capable of doing so I highly recommend you <a href="https://pandoc.org/">check it out!</a>. Here's how to install:</p>
 <p><strong>Ubuntu</strong>: <code>sudo apt-get install pandoc</code>
 <strong>Brew</strong>: <code>brew install pandoc</code></p>
-
 <h2 id="lynx">Lynx</h2>
-
-<p>Lynx is a full web browser baked into your terminal. It&rsquo;s strictly a text based browser, so don&rsquo;t expect any fancy animations to start flying over the screen, but nevertheless a cool project! Lynx can be found at <a href="https://lynx.browser.org/">here</a>. Lynx fits the second part of this puzzle by providing a means to render the HTML document generated by Pandoc to our terminal. To install:</p>
-
+<p>Lynx is a full web browser baked into your terminal. It's strictly a text based browser, so don't expect any fancy animations to start flying over the screen, but nevertheless a cool project! Lynx can be found at <a href="https://lynx.browser.org/">here</a>. Lynx fits the second part of this puzzle by providing a means to render the HTML document generated by Pandoc to our terminal. To install:</p>
 <p><strong>Ubuntu</strong>: <code>sudo apt-get install lynx</code>
 <strong>Brew</strong>: <code>brew install lynx</code></p>
-
 <h2 id="and-finally-putting-it-altogether-into-your-bashrc-or-zshrc-etc">And finally, putting it altogether into your <code>.bashrc</code> or <code>.zshrc</code> (etc).</h2>
-
-<pre><code class="language-shell">export md = pandoc $1 | lynx -stdin
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">export md <span style="color:#f92672">=</span> pandoc $1 | lynx -stdin
 
 md testing.md
-</code></pre>
-
-<p>That&rsquo;s it. Pandoc builds the HTML, sends it to lynx reading from stdin. Simple and a little bit nifty from time to time. The rendering isn&rsquo;t perfect (after all there are quite a few markdown flavors out there and everyone seems to render just a little bit differently) but it works.</p>
+</code></pre></div><p>That's it. Pandoc builds the HTML, sends it to lynx reading from stdin. Simple and a little bit nifty from time to time. The rendering isn't perfect (after all there are quite a few markdown flavors out there and everyone seems to render just a little bit differently) but it works.</p>
 
     </section>
 

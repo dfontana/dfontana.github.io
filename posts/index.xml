@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on </title>
@@ -17,7 +17,7 @@
       <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
       
       <guid>/posts/render_markdown_in_terminal/</guid>
-      <description>Here&amp;rsquo;s a little trick - previewing Markdown in your terminal. Odds are if you&amp;rsquo;ve tried working on a Markdown doc outside of an editor capable of previewing it, you&amp;rsquo;ll find yourself needing to open it elsewhere to get a sense of what&amp;rsquo;s rendering. After looking around for a solution to this, I found a few little utilities capable of helping out.
+      <description>Here&#39;s a little trick - previewing Markdown in your terminal. Odds are if you&#39;ve tried working on a Markdown doc outside of an editor capable of previewing it, you&#39;ll find yourself needing to open it elsewhere to get a sense of what&#39;s rendering. After looking around for a solution to this, I found a few little utilities capable of helping out.
 Pandoc Pandoc is a utility for converting Markdown files into other formats.</description>
     </item>
     
@@ -27,7 +27,7 @@ Pandoc Pandoc is a utility for converting Markdown files into other formats.</de
       <pubDate>Tue, 01 Jan 2019 00:00:00 +0000</pubDate>
       
       <guid>/posts/etags/</guid>
-      <description>When a server needs to keep some information client side, Cookies typically get leveraged to save that little snippet. Our data gets set in a Cookie, the lifetime of the Cookie is set, and the Cookie is persisted until our next encounter when the server needs it. On that next visit, we&amp;rsquo;d load up the cookie and continue; &amp;ldquo;Business As Usual.&amp;rdquo; While this data shouldn&amp;rsquo;t be considered guaranteed, developers could treat it as somewhat reliable (present?</description>
+      <description>When a server needs to keep some information client side, Cookies typically get leveraged to save that little snippet. Our data gets set in a Cookie, the lifetime of the Cookie is set, and the Cookie is persisted until our next encounter when the server needs it. On that next visit, we&#39;d load up the cookie and continue; &amp;ldquo;Business As Usual.&amp;rdquo; While this data shouldn&#39;t be considered guaranteed, developers could treat it as somewhat reliable (present?</description>
     </item>
     
     <item>
@@ -36,8 +36,8 @@ Pandoc Pandoc is a utility for converting Markdown files into other formats.</de
       <pubDate>Mon, 17 Dec 2018 00:00:00 +0000</pubDate>
       
       <guid>/posts/regex_cheatsheet/</guid>
-      <description>It&amp;rsquo;s not frequent I come across a need for a regex - perhaps to my own detriment - but when I do, I often find myself forgetting what specific parts may mean. Here&amp;rsquo;s a little cheatsheet I made myself ~ perhaps there&amp;rsquo;s some value for you.
-   Symbol Name Meaning     . Wildcard Anything can take this guy&amp;rsquo;s place. You&amp;rsquo;ll need to escape (\.) it for periods.</description>
+      <description>It&#39;s not frequent I come across a need for a regex - perhaps to my own detriment - but when I do, I often find myself forgetting what specific parts may mean. Here&#39;s a little cheatsheet I made myself ~ perhaps there&#39;s some value for you.
+   Symbol Name Meaning     . Wildcard Anything can take this guy&#39;s place. You&#39;ll need to escape (\.) it for periods.</description>
     </item>
     
     <item>
@@ -46,8 +46,8 @@ Pandoc Pandoc is a utility for converting Markdown files into other formats.</de
       <pubDate>Mon, 17 Dec 2018 00:00:00 +0000</pubDate>
       
       <guid>/posts/raspberry_pi/</guid>
-      <description>This one is more or less straight to the point. We&amp;rsquo;re going to setup a fresh raspberry pi in a headless state. It&amp;rsquo;s fairly easy if you keep your wits about you. Unfortunately you&amp;rsquo;ll need either a keyboard/mouse + monitor or an ethernet connection to your device in order to get the wifi step of these instructions done.
-Raspbian Lite &amp;amp; Wifi Connect  Download the image from raspberrypi Burn to the SD card (straight from the ZIP) with the free Etcher.</description>
+      <description>This one is more or less straight to the point. We&#39;re going to setup a fresh raspberry pi in a headless state. It&#39;s fairly easy if you keep your wits about you. Unfortunately you&#39;ll need either a keyboard/mouse + monitor or an ethernet connection to your device in order to get the wifi step of these instructions done.
+Raspbian Lite &amp;amp; Wifi Connect   Download the image from raspberrypi</description>
     </item>
     
     <item>
@@ -56,8 +56,8 @@ Raspbian Lite &amp;amp; Wifi Connect  Download the image from raspberrypi Burn t
       <pubDate>Fri, 13 Oct 2017 00:00:00 +0000</pubDate>
       
       <guid>/posts/setting_up_zsh/</guid>
-      <description>One of the things I love to do is tinker - to an almost unhealthy degree. Having not been satisfied with the autocompletion bash provides, and curious what alternative shells had to offer, I found ZSH. In this guide, I&amp;rsquo;m going to walk you through how I setup ZSH on my Windows machine (inside WSL) - but the instructions compare similarly for my Mac.
-First Step, ZSH You&amp;rsquo;ll want to boot up your terminal / WSL terminal and install the ZSH package.</description>
+      <description>One of the things I love to do is tinker - to an almost unhealthy degree. Having not been satisfied with the autocompletion bash provides, and curious what alternative shells had to offer, I found ZSH. In this guide, I&#39;m going to walk you through how I setup ZSH on my Windows machine (inside WSL) - but the instructions compare similarly for my Mac.
+First Step, ZSH You&#39;ll want to boot up your terminal / WSL terminal and install the ZSH package.</description>
     </item>
     
     <item>
@@ -66,7 +66,7 @@ First Step, ZSH You&amp;rsquo;ll want to boot up your terminal / WSL terminal an
       <pubDate>Fri, 13 Oct 2017 00:00:00 +0000</pubDate>
       
       <guid>/posts/nodejs_profiling/</guid>
-      <description>While standing up a REST API for a work project, I spent a lot of time editing the IP, port, and other parameters within my server as I swapped from production and development environments. After being fed up with the constant back and forth, I searched for a better solution. In this tidbit, I&amp;rsquo;m going to present my solution.
+      <description>While standing up a REST API for a work project, I spent a lot of time editing the IP, port, and other parameters within my server as I swapped from production and development environments. After being fed up with the constant back and forth, I searched for a better solution. In this tidbit, I&#39;m going to present my solution.
 Reading Environment Variables in Node An easy solution would be to simply pass environment variables when launching NodeJS, pulling the configuration from inside our files to the commandline during launch time.</description>
     </item>
     

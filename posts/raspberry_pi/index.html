@@ -7,7 +7,7 @@
     <title>Setting up a Raspberry Pi - Headless &middot; </title>
     <meta name="author" content="Dylan Fontana">
     <meta name="description" content="A portfolio site.">
-    <meta name="generator" content="Hugo 0.38.1" />
+    <meta name="generator" content="Hugo 0.60.0" />
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -29,20 +29,102 @@
     
 
     <!-- Stylesheet for theme color -->
-    <style type="text/css">
-    a, a:visited {color: #BFAE48;}
-    .pagination a {color: #BFAE48;}
-    .gist .gist-file .gist-meta a:visited {color: #BFAE48 !important;}
-    a:focus, a:hover {color: #2E294E;}
-    h1.post-title a:focus, h1.post-title a:hover, h1.blog-title a:focus, h1.blog-title a:hover {color: #2E294E;}
-    .older-posts:hover, .newer-posts:hover {color: #2E294E;}
+    <style type="text/css">    
+    @import url('https://fonts.googleapis.com/css?family=Cinzel+Decorative:400,700|Lora:400,400i,700&subset=cyrillic,cyrillic-ext,latin-ext');
+    @import url('//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css');
+
+    a, 
+    a:visited,
+    a.backtotoptext,
+    .gist .gist-file .gist-meta,
+    .pagination,
+    section.post-content h2,
+    section.post-content h3,
+    section.post-content h4,
+    h1.blog-subtitle  {
+        color: #BFAE48;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a:focus,
+    a:hover,
+    h1.post-title a:focus, 
+    h1.post-title a:hover, 
+    h1.blog-title a:focus, 
+    h1.blog-title a:hover,
+    .older-posts:hover, 
+    .newer-posts:hover {
+        color: #84FFC5;
+    }
+
+    h1.post-title a,
+    h1.blog-title a,
+    h1.post-title {
+        color: #dedede
+    }
+
+    .post-meta {
+        color: #95a5a6
+    }
+
+    a.excerptlink,
+    body {
+        color: #ececec;
+    }
+
+    body {
+        background-color: #2A3555;
+    }
+
+    body,
+    h2,
+    h3,
+    h4,
+    p,
+    li,
+    dt,
+    dd,
+    nav ul li,
+    section.author p.attr,
+    section.share p.info,
+    blockquote,
+    .post-meta,
+    footer section,
+    a.archive-link,
+    .pagination,
+    gist .gist-file .gist-meta,
+    table,
+    section.post-content h4,
+    p.backtotop,
+    h1.posts-tagged,
+    article.preview p.readmore {
+        font-family: "Lora", Helvetica, Arial, serif;
+    }
+
+    h1,
+    section.author h4,
+    blockquote p,
+    section.author .meta {
+        font-family: "Cinzel Decorative", Helvetica, Arial, "Nimbus L", cursive;
+    }
+
+    pre,
+    code {
+        color: #84FFC5;
+        background-color: #3E3E3E;
+    }
 </style>
+
 </head>
 
 <body class="home-template">
     <header id="site-head">
 	
-	<h1 class="blog-title"><a href="/">Dylan.</a></h1>
+	<h1 class="blog-title"><a href="/">Frontiers</a></h1>
 	
 	
 	<h1 class="blog-subtitle">Thoughts, ideas, and works.</h1>
@@ -77,103 +159,117 @@
     </header>
 
     <section class="post-content">
-        
-
-<p>This one is more or less straight to the point. We&rsquo;re going to setup a fresh raspberry pi in a headless state. It&rsquo;s fairly easy if you keep your wits about you. Unfortunately you&rsquo;ll need either a keyboard/mouse + monitor or an ethernet connection to your device in order to get the wifi step of these instructions done.</p>
-
-<h2 id="raspbian-lite-wifi-connect">Raspbian Lite &amp; Wifi Connect</h2>
-
+        <p>This one is more or less straight to the point. We're going to setup a fresh raspberry pi in a headless state. It's fairly easy if you keep your wits about you. Unfortunately you'll need either a keyboard/mouse + monitor or an ethernet connection to your device in order to get the wifi step of these instructions done.</p>
+<h2 id="raspbian-lite--wifi-connect">Raspbian Lite &amp; Wifi Connect</h2>
 <ol>
-<li>Download the image from <a href="https://www.raspberrypi.org/downloads/raspbian/">raspberrypi</a></li>
-<li>Burn to the SD card (straight from the ZIP) with the free <a href="https://etcher.io/">Etcher</a>.</li>
-<li>In the boot partition, add an empty &amp; extension-less file named <code>ssh</code> to enable ssh connections to the device.</li>
-<li>Now connect the pi to a monitor + keyboard/mouse OR connect it via ethernet and use your router&rsquo;s client list to find it&rsquo;s IP. You will be able to SSH into it if you chose the later route. (And yes, that also means you should be turning on the device in this step)</li>
+<li>
+<p>Download the image from <a href="https://www.raspberrypi.org/downloads/raspbian/">raspberrypi</a></p>
+</li>
+<li>
+<p>Burn to the SD card (straight from the ZIP) with the free <a href="https://etcher.io/">Etcher</a>.</p>
+</li>
+<li>
+<p>In the boot partition, add an empty &amp; extension-less file named <code>ssh</code> to enable ssh connections to the device.</p>
+</li>
+<li>
+<p>Now connect the pi to a monitor + keyboard/mouse OR connect it via ethernet and use your router's client list to find it's IP. You will be able to SSH into it if you chose the later route. (And yes, that also means you should be turning on the device in this step)</p>
+</li>
+<li>
+<p>Setup wifi by editing the <code>wpa_supplicant.conf</code> to point your device at your wifi network.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 
-<li><p>Setup wifi by editing the <code>wpa_supplicant.conf</code> to point your device at your wifi network.</p>
-
-<pre><code class="language-shell">sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
-
-# Add at the bottom, WITH the quotes.
-network={
-  ssid=&quot;YOUR_WIFI_NETWORK_NAME&quot;
-  psk=&quot;YOUR_WIFI_PASSWORD&quot;
-}
-</code></pre></li>
-
-<li><p>Run <code>sudo raspi-config</code> to set things up.</p></li>
+<span style="color:#75715e"># Add at the bottom, WITH the quotes.</span>
+network<span style="color:#f92672">=</span><span style="color:#f92672">{</span>
+  ssid<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;YOUR_WIFI_NETWORK_NAME&#34;</span>
+  psk<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;YOUR_WIFI_PASSWORD&#34;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+<li>
+<p>Run <code>sudo raspi-config</code> to set things up.</p>
+</li>
 </ol>
-
 <h2 id="removing-the-default-pi-account">Removing the Default Pi Account</h2>
-
-<p>Keeping the default account around is a bit of a risk. Let&rsquo;s make it yours.</p>
-
+<p>Keeping the default account around is a bit of a risk. Let's make it yours.</p>
 <ol>
 <li>Make a new user:
-
 <ol>
 <li>Enter root: <code>sudo -i</code></li>
 <li>Make user: <code>adduser [username]</code></li>
 <li>Make that user sudo: <code>adduser [username] sudo</code></li>
-</ol></li>
+</ol>
+</li>
 <li>Enable SSH for the user:
-
 <ol>
 <li><code>mkdir /home/[username]/.ssh</code></li>
 <li><code>chown [username]:[username] /home/[username]/.ssh</code></li>
 <li>Leave root and close SSH connection</li>
-</ol></li>
+</ol>
+</li>
 <li>Give local key to Raspberry Pi for SSH:
-
 <ol>
 <li><code>scp ~/.ssh/id_rsa.pub [username]@[Pi's IP address]:/home/[username]/.ssh/authorized_keys</code></li>
-</ol></li>
+</ol>
+</li>
 <li>SSH in, delete the Pi account, and make a new root password:
-
 <ol>
 <li><code>sudo deluser pi</code></li>
 <li><code>sudo passwd root</code></li>
-</ol></li>
 </ol>
-
-<h2 id="some-extra-random-steps-you-can-take-if-you-d-like">Some extra random steps you can take if you&rsquo;d like:</h2>
-
+</li>
+</ol>
+<h2 id="some-extra-random-steps-you-can-take-if-youd-like">Some extra random steps you can take if you'd like:</h2>
 <ol>
-<li>Regenerate SSH keys stored on the Pi:
-<code>rm /etc/ssh/ssh_host_* &amp;&amp; dpkg-reconfigure openssh-server</code></li>
-<li>Ensure Protocol 2 is uncommented and enabled in <code>/etc/ssh/sshd_config</code></li>
-
-<li><p>Setup IP Tables:</p>
-
+<li>
+<p>Regenerate SSH keys stored on the Pi:
+<code>rm /etc/ssh/ssh_host_* &amp;&amp; dpkg-reconfigure openssh-server</code></p>
+</li>
+<li>
+<p>Ensure Protocol 2 is uncommented and enabled in <code>/etc/ssh/sshd_config</code></p>
+</li>
+<li>
+<p>Setup IP Tables:</p>
 <ol>
-<li><code>sudo apt install iptables</code></li>
-<li>Open ports you want open, for example to open 22: <code>sudo iptables -A INPUT -p tcp --dport 22 -m state --state NEW -j ACCEPT</code></li>
-<li>Allow pinging with: <code>sudo iptables -A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT</code></li>
-<li>Block inbound traffic that is doesn&rsquo;t follow any of the rules: <code>sudo iptables -P INPUT DROP</code></li>
-<li>View the rules: <code>sudo iptables -L</code></li>
-<li>Save the rules: <code>sudo bash -c &quot;iptables-save &gt; /etc/iptables.rules&quot;</code></li>
-
-<li><p>Run the rules on startup:</p>
-
-<pre><code class="language-shell"># Edit this file
+<li>
+<p><code>sudo apt install iptables</code></p>
+</li>
+<li>
+<p>Open ports you want open, for example to open 22: <code>sudo iptables -A INPUT -p tcp --dport 22 -m state --state NEW -j ACCEPT</code></p>
+</li>
+<li>
+<p>Allow pinging with: <code>sudo iptables -A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT</code></p>
+</li>
+<li>
+<p>Block inbound traffic that is doesn't follow any of the rules: <code>sudo iptables -P INPUT DROP</code></p>
+</li>
+<li>
+<p>View the rules: <code>sudo iptables -L</code></p>
+</li>
+<li>
+<p>Save the rules: <code>sudo bash -c &quot;iptables-save &gt; /etc/iptables.rules&quot;</code></p>
+</li>
+<li>
+<p>Run the rules on startup:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># Edit this file</span>
 nano /etc/network/if-pre-up.d/iptables
 
-#put these lines
-#!/bin/bash
+<span style="color:#75715e">#put these lines</span>
+<span style="color:#75715e">#!/bin/bash</span>
 /sbin/iptables-restore &lt; /etc/iptables.rules
 
-# ensure it can execute
+<span style="color:#75715e"># ensure it can execute</span>
 chmod +x /etc/network/if-pre-up.d/iptables
-</code></pre></li>
-</ol></li>
-
-<li><p>Setup Fail2Ban to push off bots.</p>
-
+</code></pre></div></li>
+</ol>
+</li>
+<li>
+<p>Setup Fail2Ban to push off bots.</p>
 <ol>
 <li>Sudo apt install fail2ban</li>
 <li>Configure inside /etc/fail2ban/jail.local</li>
 <li>Set some of the configuration <a href="http://felipeferreira.net/index.php/2008/10/securing-your-ssh-with-fail2ban/">found here</a></li>
 <li>Restart the service: /etc/init.d/fail2ban restart</li>
-</ol></li>
+</ol>
+</li>
 </ol>
 
     </section>

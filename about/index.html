@@ -7,7 +7,7 @@
     <title>About &middot; </title>
     <meta name="author" content="Dylan Fontana">
     <meta name="description" content="A portfolio site.">
-    <meta name="generator" content="Hugo 0.38.1" />
+    <meta name="generator" content="Hugo 0.60.0" />
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -29,20 +29,102 @@
     
 
     <!-- Stylesheet for theme color -->
-    <style type="text/css">
-    a, a:visited {color: #BFAE48;}
-    .pagination a {color: #BFAE48;}
-    .gist .gist-file .gist-meta a:visited {color: #BFAE48 !important;}
-    a:focus, a:hover {color: #2E294E;}
-    h1.post-title a:focus, h1.post-title a:hover, h1.blog-title a:focus, h1.blog-title a:hover {color: #2E294E;}
-    .older-posts:hover, .newer-posts:hover {color: #2E294E;}
+    <style type="text/css">    
+    @import url('https://fonts.googleapis.com/css?family=Cinzel+Decorative:400,700|Lora:400,400i,700&subset=cyrillic,cyrillic-ext,latin-ext');
+    @import url('//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css');
+
+    a, 
+    a:visited,
+    a.backtotoptext,
+    .gist .gist-file .gist-meta,
+    .pagination,
+    section.post-content h2,
+    section.post-content h3,
+    section.post-content h4,
+    h1.blog-subtitle  {
+        color: #BFAE48;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a:focus,
+    a:hover,
+    h1.post-title a:focus, 
+    h1.post-title a:hover, 
+    h1.blog-title a:focus, 
+    h1.blog-title a:hover,
+    .older-posts:hover, 
+    .newer-posts:hover {
+        color: #84FFC5;
+    }
+
+    h1.post-title a,
+    h1.blog-title a,
+    h1.post-title {
+        color: #dedede
+    }
+
+    .post-meta {
+        color: #95a5a6
+    }
+
+    a.excerptlink,
+    body {
+        color: #ececec;
+    }
+
+    body {
+        background-color: #2A3555;
+    }
+
+    body,
+    h2,
+    h3,
+    h4,
+    p,
+    li,
+    dt,
+    dd,
+    nav ul li,
+    section.author p.attr,
+    section.share p.info,
+    blockquote,
+    .post-meta,
+    footer section,
+    a.archive-link,
+    .pagination,
+    gist .gist-file .gist-meta,
+    table,
+    section.post-content h4,
+    p.backtotop,
+    h1.posts-tagged,
+    article.preview p.readmore {
+        font-family: "Lora", Helvetica, Arial, serif;
+    }
+
+    h1,
+    section.author h4,
+    blockquote p,
+    section.author .meta {
+        font-family: "Cinzel Decorative", Helvetica, Arial, "Nimbus L", cursive;
+    }
+
+    pre,
+    code {
+        color: #84FFC5;
+        background-color: #3E3E3E;
+    }
 </style>
+
 </head>
 
 <body class="home-template">
     <header id="site-head">
 	
-	<h1 class="blog-title"><a href="/">Dylan.</a></h1>
+	<h1 class="blog-title"><a href="/">Frontiers</a></h1>
 	
 	
 	<h1 class="blog-subtitle">Thoughts, ideas, and works.</h1>
@@ -77,10 +159,8 @@
     </header>
 
     <section class="post-content">
-        <p>It&rsquo;s simple: I <em>love</em> what I do. And that&rsquo;s what makes me, well, me. I enjoy learning, reading, and exploring - there&rsquo;s a sea of knowledge out there and not enough time to comprehend it all. It&rsquo;s that <em>passion</em> that pushes me to do better; help others understand more; and deliver meaning from the meaningless.</p>
-
-<p>I&rsquo;ve explored a lot, gaining a medley of side-knowledge from the 9-to-5. Here&rsquo;s just a random smattering of some:</p>
-
+        <p>It's simple: I <em>love</em> what I do. And that's what makes me, well, me. I enjoy learning, reading, and exploring - there's a sea of knowledge out there and not enough time to comprehend it all. It's that <em>passion</em> that pushes me to do better; help others understand more; and deliver meaning from the meaningless.</p>
+<p>I've explored a lot, gaining a medley of side-knowledge from the 9-to-5. Here's just a random smattering of some:</p>
 <ul>
 <li>Data Science concepts &amp; some fun in NLP</li>
 <li>Data-Visualization with D3</li>
@@ -88,11 +168,10 @@
 <li>&ldquo;Simpler&rdquo; techniques: Recommender systems, decision trees (&amp; their cousin, the forest)</li>
 <li>AI concepts: Alpha-Beta, Search (A*).</li>
 <li>Web Dev (PHP, NodeJs, ReactJS, Jest, Polymer)</li>
-<li>Linux (Which flavor? Who knows. Arch, Ubuntu (&amp; it&rsquo;s ugly life in WSL), RedHat, Manjaro)</li>
+<li>Linux (Which flavor? Who knows. Arch, Ubuntu (&amp; it's ugly life in WSL), RedHat, Manjaro)</li>
 <li>etc</li>
 </ul>
-
-<p>Now-a-days, though, I live the life of a Full Stack Developer exploring Redux, GraphQL, InfluxDB, and keeping up with realtime serving. I&rsquo;m always exploring new frontiers &ndash; <em>never ready to settle</em>.</p>
+<p>Now-a-days, though, I live the life of a Full Stack Developer exploring Redux, GraphQL, InfluxDB, and keeping up with realtime serving. I'm always exploring new frontiers &ndash; <em>never ready to settle</em>.</p>
 
     </section>
 

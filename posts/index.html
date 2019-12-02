@@ -7,7 +7,7 @@
     <title>Posts &middot; </title>
     <meta name="author" content="Dylan Fontana">
     <meta name="description" content="A portfolio site.">
-    <meta name="generator" content="Hugo 0.38.1" />
+    <meta name="generator" content="Hugo 0.60.0" />
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -34,20 +34,102 @@
     
 
     <!-- Stylesheet for theme color -->
-    <style type="text/css">
-    a, a:visited {color: #BFAE48;}
-    .pagination a {color: #BFAE48;}
-    .gist .gist-file .gist-meta a:visited {color: #BFAE48 !important;}
-    a:focus, a:hover {color: #2E294E;}
-    h1.post-title a:focus, h1.post-title a:hover, h1.blog-title a:focus, h1.blog-title a:hover {color: #2E294E;}
-    .older-posts:hover, .newer-posts:hover {color: #2E294E;}
+    <style type="text/css">    
+    @import url('https://fonts.googleapis.com/css?family=Cinzel+Decorative:400,700|Lora:400,400i,700&subset=cyrillic,cyrillic-ext,latin-ext');
+    @import url('//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css');
+
+    a, 
+    a:visited,
+    a.backtotoptext,
+    .gist .gist-file .gist-meta,
+    .pagination,
+    section.post-content h2,
+    section.post-content h3,
+    section.post-content h4,
+    h1.blog-subtitle  {
+        color: #BFAE48;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a:focus,
+    a:hover,
+    h1.post-title a:focus, 
+    h1.post-title a:hover, 
+    h1.blog-title a:focus, 
+    h1.blog-title a:hover,
+    .older-posts:hover, 
+    .newer-posts:hover {
+        color: #84FFC5;
+    }
+
+    h1.post-title a,
+    h1.blog-title a,
+    h1.post-title {
+        color: #dedede
+    }
+
+    .post-meta {
+        color: #95a5a6
+    }
+
+    a.excerptlink,
+    body {
+        color: #ececec;
+    }
+
+    body {
+        background-color: #2A3555;
+    }
+
+    body,
+    h2,
+    h3,
+    h4,
+    p,
+    li,
+    dt,
+    dd,
+    nav ul li,
+    section.author p.attr,
+    section.share p.info,
+    blockquote,
+    .post-meta,
+    footer section,
+    a.archive-link,
+    .pagination,
+    gist .gist-file .gist-meta,
+    table,
+    section.post-content h4,
+    p.backtotop,
+    h1.posts-tagged,
+    article.preview p.readmore {
+        font-family: "Lora", Helvetica, Arial, serif;
+    }
+
+    h1,
+    section.author h4,
+    blockquote p,
+    section.author .meta {
+        font-family: "Cinzel Decorative", Helvetica, Arial, "Nimbus L", cursive;
+    }
+
+    pre,
+    code {
+        color: #84FFC5;
+        background-color: #3E3E3E;
+    }
 </style>
+
 </head>
 
 <body class="home-template">
     <header id="site-head">
 	
-	<h1 class="blog-title"><a href="/">Dylan.</a></h1>
+	<h1 class="blog-title"><a href="/">Frontiers</a></h1>
 	
 	
 	<h1 class="blog-subtitle">Thoughts, ideas, and works.</h1>
@@ -79,7 +161,7 @@
         <div class="post-meta"><time datetime="03 January 2019">03 January 2019</time></div>
     </header>
     <section class="post-excerpt">
-        <a class="excerptlink" href="/posts/render_markdown_in_terminal/"><p>Here&rsquo;s a little trick - previewing Markdown in your terminal. Odds are if you&rsquo;ve tried working on a Markdown doc outside of an editor capable of previewing it, you&rsquo;ll find yourself needing to open it elsewhere to get a sense of what&rsquo;s rendering.&hellip;</p></a>
+        <a class="excerptlink" href="/posts/render_markdown_in_terminal/"><p>Here's a little trick - previewing Markdown in your terminal. Odds are if you've tried working on a Markdown doc outside of an editor capable of previewing it, you'll find yourself needing to open it elsewhere to get a sense of what's rendering.&hellip;</p></a>
         <p class="readmore"><a href="/posts/render_markdown_in_terminal/">Keep reading <i class="fa fa-angle-double-right" style="padding-left: 5px;"></i></a></p>
     </section>
 </article>
@@ -91,7 +173,7 @@
         <div class="post-meta"><time datetime="01 January 2019">01 January 2019</time></div>
     </header>
     <section class="post-excerpt">
-        <a class="excerptlink" href="/posts/etags/"><p>Yet, what if there were no cookies? Be it paranoid users clearing their browsing data, increasingly stringent cookie policies, or lack of cookie persistence (see <em>WebView</em>) we could realistically find ourselves here. As a result, we&rsquo;ll need a new way to persist some data, one of which I&rsquo;d like to demonstrate today: <strong>ETags</strong>.&hellip;</p></a>
+        <a class="excerptlink" href="/posts/etags/"><p>Yet, what if there were no cookies? Be it paranoid users clearing their browsing data, increasingly stringent cookie policies, or lack of cookie persistence (see <em>WebView</em>) we could realistically find ourselves here. As a result, we'll need a new way to persist some data, one of which I'd like to demonstrate today: <strong>ETags</strong>.&hellip;</p></a>
         <p class="readmore"><a href="/posts/etags/">Keep reading <i class="fa fa-angle-double-right" style="padding-left: 5px;"></i></a></p>
     </section>
 </article>
@@ -103,7 +185,7 @@
         <div class="post-meta"><time datetime="17 December 2018">17 December 2018</time></div>
     </header>
     <section class="post-excerpt">
-        <a class="excerptlink" href="/posts/regex_cheatsheet/"><p>It&rsquo;s not frequent I come across a need for a regex - perhaps to my own detriment - but when I do, I often find myself forgetting what specific parts may mean. Here&rsquo;s a little cheatsheet&hellip;</p></a>
+        <a class="excerptlink" href="/posts/regex_cheatsheet/"><p>It's not frequent I come across a need for a regex - perhaps to my own detriment - but when I do, I often find myself forgetting what specific parts may mean. Here's a little cheatsheet&hellip;</p></a>
         <p class="readmore"><a href="/posts/regex_cheatsheet/">Keep reading <i class="fa fa-angle-double-right" style="padding-left: 5px;"></i></a></p>
     </section>
 </article>
@@ -115,7 +197,7 @@
         <div class="post-meta"><time datetime="17 December 2018">17 December 2018</time></div>
     </header>
     <section class="post-excerpt">
-        <a class="excerptlink" href="/posts/raspberry_pi/"><p>This one is more or less straight to the point. We&rsquo;re going to setup a fresh raspberry pi in a headless state. It&rsquo;s fairly easy if you keep your wits about you.&hellip;</p></a>
+        <a class="excerptlink" href="/posts/raspberry_pi/"><p>This one is more or less straight to the point. We're going to setup a fresh raspberry pi in a headless state. It's fairly easy if you keep your wits about you.&hellip;</p></a>
         <p class="readmore"><a href="/posts/raspberry_pi/">Keep reading <i class="fa fa-angle-double-right" style="padding-left: 5px;"></i></a></p>
     </section>
 </article>

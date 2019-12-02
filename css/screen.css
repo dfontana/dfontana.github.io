@@ -1,19 +1,8 @@
-@import url('https://fonts.googleapis.com/css?family=Cinzel+Decorative:400,700|Lora:400,400i,700&subset=cyrillic,cyrillic-ext,latin-ext');
+@import url('//fonts.googleapis.com/css?subset=latin,cyrillic-ext,latin-ext,cyrillic&family=Open+Sans+Condensed:300|Open+Sans:400,600,400italic,600italic|Merriweather:400,300,300italic,400italic,700,700italic|Roboto+Slab:400,300');
 @import url('//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css');
-
-:root {
-  --page-width: 600px;
-}
-
-@media screen and (min-width: 1000px) {
-  :root {
-    --page-width: 960px;
-  }
-}
-
 /* === Core Styles === */
 body {
-  background-color: #F3EDEA;
+  background-color: #ffffff;
   color: #596364; /* darker color */
   font-size: 15px;
   font-weight: 100;
@@ -34,7 +23,7 @@ p,
 li,
 dt,
 dd {
-  font-family: "Lora", Helvetica, Arial, serif;
+  font-family: "Merriweather", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
 }
 h1,
 .post-meta {
@@ -67,7 +56,7 @@ li {
 }
 pre {
   font-family: Menlo, "Consolas", Courier, monospace;
-  color: #BFAE48;
+  color: #596364;
   font-size: 1em;
   line-height: 1.2em;
   padding: 1em;
@@ -77,15 +66,13 @@ pre {
   white-space: -pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
-  background-color: #2E294E;
-  border-radius: 2px;
+  background-color: #f7f7f7;
 }
 code {
   font-family: Menlo, "Consolas", Courier, monospace;
   font-size: 0.85em;
-  color: #BFAE48;
-  background-color: #2E294E;
-  border-radius: 2px;
+  color: #596364;
+  background-color: #f7f7f7;
   padding: 2px 4px;
   line-height: 1.2em;
 }
@@ -106,7 +93,7 @@ kbd {
 }
 h1 {
   color: #151515;
-  font-family: "Cinzel Decorative", Helvetica, Arial, "Nimbus L", cursive;
+  font-family: "Roboto Slab", "Merriweather", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
   font-size: 36px;
   font-weight: 400;
   line-height: 42px;
@@ -120,7 +107,7 @@ a.archive-link,
 .article-nav,
 .terms-list {
   margin: 20px auto;
-  max-width: var(--page-width);
+  max-width: 600px;
   width: 90%;
 }
 #site-head img {
@@ -130,7 +117,7 @@ article.preview {
   margin-bottom: 4em;
 }
 article.preview p.readmore {
-  font-family: "Lora", "Helvetica Neue", Helvetica, Arial, "Nimbus L", serif;
+  font-family: "Open Sans Condensed", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
   margin-top: 1em;
   text-transform: uppercase;
   font-weight: 400;
@@ -163,7 +150,6 @@ h1.blog-title {
   padding: 0;
 }
 h1.blog-subtitle {
-  color: #BFAE48;
   font-size: 26px;
   line-height: 32px;
   margin-top: -8px;
@@ -211,7 +197,7 @@ section.share p {
   margin: 0;
 }
 section.author h4 {
-  font-family: "Cinzel Decorative", Helvetica, Arial, "Nimbus L", cursive;
+  font-family: "Roboto Slab", "Merriweather", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
   font-weight: 400;
   margin-bottom: 4px;
 }
@@ -220,7 +206,7 @@ section.share p.info {
   font-size: 16px;
   line-height: 20px;
   text-transform: uppercase;
-  font-family: "Lora", "Helvetica Neue", Helvetica, Arial, "Nimbus L", serif;
+  font-family: "Open Sans Condensed", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
 }
 section.share p.info.prompt {
   top: -5px;
@@ -238,7 +224,7 @@ section.author p.bio {
   line-height: 1.2em;
 }
 blockquote {
-  font-family: "Lora", "Helvetica Neue", Helvetica, Arial, "Nimbus L", serif;
+  font-family: "Open Sans Condensed", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
   font-size: 1.6em;
   font-weight: 300;
   line-height: 1.2em;
@@ -251,7 +237,7 @@ blockquote {
 }
 .post-meta {
   color: #95a5a6;
-  font-family: "Lora", "Helvetica Neue", Helvetica, Arial, "Nimbus L", serif;
+  font-family: "Open Sans Condensed", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
   font-size: 18px;
   font-weight: 300;
   margin-top: 0.3em;
@@ -314,11 +300,11 @@ footer {
   text-align: center;
 }
 footer section {
-  font-family: "Lora", "Helvetica Neue", Helvetica, Arial, "Nimbus L", serif;
+  font-family: "Open Sans Condensed", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
   font-weight: 300;
   font-size: 18px;
   margin: 0 auto;
-  max-width: var(--page-width);
+  max-width: 600px;
   text-transform: uppercase;
   width: 90%;
 }
@@ -329,12 +315,12 @@ footer.post-footer {
 }
 /* === Navigation and Pagination === */
 nav {
-  border-bottom: 2px solid #2E294E;
-  border-top: 2px solid #2E294E;
+  border-bottom: 1px solid #ecf0f1;
+  border-top: 1px solid #ecf0f1;
   margin-bottom: 2em;
   text-align: center;
   margin: 20px auto 2em auto;
-  max-width: var(--page-width);
+  max-width: 600px;
 }
 nav ul {
   list-style: none;
@@ -346,7 +332,7 @@ nav ul {
 }
 nav ul li {
   display: inline-block;
-  font-family: "Lora", "Helvetica Neue", Helvetica, Arial, "Nimbus L", serif;
+  font-family: "Open Sans Condensed", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
   font-size: 18px;
   font-weight: 300;
   margin: 0;
@@ -387,7 +373,7 @@ a.archive-link {
   border-bottom: 1px solid #ecf0f1;
   border-top: 1px solid #ecf0f1;
   display: block;
-  font-family: "Lora", "Helvetica Neue", Helvetica, Arial, "Nimbus L", serif;
+  font-family: "Open Sans Condensed", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
   font-size: 24px;
   font-weight: 300;
   margin-bottom: 3em;
@@ -399,8 +385,8 @@ a.archive-link {
 .pagination {
   position: relative;
   width: 100%;
-  max-width: var(--page-width);
-  font-family: "Lora", "Helvetica Neue", Helvetica, Arial, "Nimbus L", serif;
+  max-width: 600px;
+  font-family: "Open Sans Condensed", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
   text-transform: uppercase;
   font-size: 20px;
   color: #596364;
@@ -457,7 +443,7 @@ a.archive-link {
   border: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
 .gist .gist-file .gist-meta {
-  font-family: "Lora", "Helvetica Neue", Helvetica, Arial, "Nimbus L", serif !important;
+  font-family: "Open Sans Condensed", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif !important;
   font-weight: 300 !important;
   text-transform: uppercase !important;
   display: none !important;
@@ -524,7 +510,7 @@ a.archive-link {
 /* Tables */
 table {
   width: 100%;
-  font-family: "Lora", "Helvetica Neue", Helvetica, Arial, "Nimbus L", serif;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
   border-collapse: collapse;
   margin: 1em 0 3em;
 }
@@ -571,12 +557,11 @@ table tfoot {
 section.post-content h2,
 section.post-content h3,
 section.post-content h4 {
-  color: #2E294E;
   margin-top: 33px;
   margin-bottom: -6px;
 }
 section.post-content h4 {
-  font-family: "Lora", "Helvetica Neue", Helvetica, Arial, "Nimbus L", serif;
+  font-family: "Open Sans Condensed", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
   font-size: 23px;
   text-transform: uppercase;
   font-weight: 300;
@@ -598,7 +583,7 @@ pre {
 }
 
 blockquote p {
-  font-family: "Cinzel Decorative", Helvetica, Arial, "Nimbus L", cursive;
+  font-family: "Merriweather", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
   font-size: 0.65em;
   font-weight: 300;
   line-height: 1.55em;
@@ -623,7 +608,7 @@ p.backtotop {
   font-size: 16px;
   line-height: 20px;
   text-transform: uppercase;
-  font-family: "Lora", "Helvetica Neue", Helvetica, Arial, "Nimbus L", serif;
+  font-family: "Open Sans Condensed", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
   top: 5px;
   position: relative;
   text-align: left;
@@ -687,7 +672,7 @@ section.bloginfo {
 section.author .meta {
   font-size: 12px;
   line-height: 19px;
-  font-family: "Cinzel Decorative", Helvetica, Arial, "Nimbus L", cursive;
+  font-family: "Roboto Slab", "Merriweather", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
   color: #bbbbbb;
   padding-top: 7px;
   margin-left: 108px;
@@ -700,8 +685,8 @@ section.author .meta a {
 h1.posts-tagged {
   margin: -17px auto -17px;
   text-align: center;
-  max-width: var(--page-width);
-  font-family: "Lora", "Helvetica Neue", Helvetica, Arial, "Nimbus L", serif;
+  max-width: 600px;
+  font-family: "Open Sans Condensed", "Open Sans", "Helvetica Neue", Helvetica, Arial, "Nimbus L", sans-serif;
   color: #596364;
   text-transform: uppercase;
   font-weight: 400;

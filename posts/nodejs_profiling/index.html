@@ -7,7 +7,7 @@
     <title>Profiling in NodeJS with Environment Variables &middot; </title>
     <meta name="author" content="Dylan Fontana">
     <meta name="description" content="A portfolio site.">
-    <meta name="generator" content="Hugo 0.38.1" />
+    <meta name="generator" content="Hugo 0.60.0" />
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -29,20 +29,102 @@
     
 
     <!-- Stylesheet for theme color -->
-    <style type="text/css">
-    a, a:visited {color: #BFAE48;}
-    .pagination a {color: #BFAE48;}
-    .gist .gist-file .gist-meta a:visited {color: #BFAE48 !important;}
-    a:focus, a:hover {color: #2E294E;}
-    h1.post-title a:focus, h1.post-title a:hover, h1.blog-title a:focus, h1.blog-title a:hover {color: #2E294E;}
-    .older-posts:hover, .newer-posts:hover {color: #2E294E;}
+    <style type="text/css">    
+    @import url('https://fonts.googleapis.com/css?family=Cinzel+Decorative:400,700|Lora:400,400i,700&subset=cyrillic,cyrillic-ext,latin-ext');
+    @import url('//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css');
+
+    a, 
+    a:visited,
+    a.backtotoptext,
+    .gist .gist-file .gist-meta,
+    .pagination,
+    section.post-content h2,
+    section.post-content h3,
+    section.post-content h4,
+    h1.blog-subtitle  {
+        color: #BFAE48;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a:focus,
+    a:hover,
+    h1.post-title a:focus, 
+    h1.post-title a:hover, 
+    h1.blog-title a:focus, 
+    h1.blog-title a:hover,
+    .older-posts:hover, 
+    .newer-posts:hover {
+        color: #84FFC5;
+    }
+
+    h1.post-title a,
+    h1.blog-title a,
+    h1.post-title {
+        color: #dedede
+    }
+
+    .post-meta {
+        color: #95a5a6
+    }
+
+    a.excerptlink,
+    body {
+        color: #ececec;
+    }
+
+    body {
+        background-color: #2A3555;
+    }
+
+    body,
+    h2,
+    h3,
+    h4,
+    p,
+    li,
+    dt,
+    dd,
+    nav ul li,
+    section.author p.attr,
+    section.share p.info,
+    blockquote,
+    .post-meta,
+    footer section,
+    a.archive-link,
+    .pagination,
+    gist .gist-file .gist-meta,
+    table,
+    section.post-content h4,
+    p.backtotop,
+    h1.posts-tagged,
+    article.preview p.readmore {
+        font-family: "Lora", Helvetica, Arial, serif;
+    }
+
+    h1,
+    section.author h4,
+    blockquote p,
+    section.author .meta {
+        font-family: "Cinzel Decorative", Helvetica, Arial, "Nimbus L", cursive;
+    }
+
+    pre,
+    code {
+        color: #84FFC5;
+        background-color: #3E3E3E;
+    }
 </style>
+
 </head>
 
 <body class="home-template">
     <header id="site-head">
 	
-	<h1 class="blog-title"><a href="/">Dylan.</a></h1>
+	<h1 class="blog-title"><a href="/">Frontiers</a></h1>
 	
 	
 	<h1 class="blog-subtitle">Thoughts, ideas, and works.</h1>
@@ -77,71 +159,49 @@
     </header>
 
     <section class="post-content">
-        
-
-<p>While standing up a REST API for a work project, I spent a lot of time editing the IP, port, and other parameters within my server as I swapped from production and development environments. After being fed up with the constant back and forth, I searched for a better solution. In this tidbit, I&rsquo;m going to present my solution.</p>
-
+        <p>While standing up a REST API for a work project, I spent a lot of time editing the IP, port, and other parameters within my server as I swapped from production and development environments. After being fed up with the constant back and forth, I searched for a better solution. In this tidbit, I'm going to present my solution.</p>
 <h2 id="reading-environment-variables-in-node">Reading Environment Variables in Node</h2>
-
 <p>An easy solution would be to simply pass environment variables when launching NodeJS, pulling the configuration from inside our files to the commandline during launch time. We can accomplish this like so:</p>
-
-<pre><code class="language-javascript">location=Boston node server.js
-</code></pre>
-
-<p>Once we&rsquo;ve set these variables, its a simple matter of reading them inside Node. Thankfully, Node has the <code>process</code> object, which allows us to look at environment variables through <code>env</code>. To access a variable called <code>location</code>, for example, we&rsquo;d simple do:</p>
-
-<pre><code class="language-javascript">var location = process.env.location || 'New_York';
-</code></pre>
-
-<p>Notice we set a default value with a logical OR. It&rsquo;s important to remember this, to prevent undefined behavior when someone forgets to set the variable or if you have a default value in mind.</p>
-
-<p>This is still not the ideal scenario, however. Let&rsquo;s harp on the notion of a default configuration. We&rsquo;ve successfully pulled out our configuration using environment variables, but if I want to change the default configs then I&rsquo;m back to my original problem of editing source code! Luckily, we can do one extra tweak to solve just this.</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#a6e22e">location</span><span style="color:#f92672">=</span><span style="color:#a6e22e">Boston</span> <span style="color:#a6e22e">node</span> <span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">js</span>
+</code></pre></div><p>Once we've set these variables, its a simple matter of reading them inside Node. Thankfully, Node has the <code>process</code> object, which allows us to look at environment variables through <code>env</code>. To access a variable called <code>location</code>, for example, we'd simple do:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">location</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">location</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;New_York&#39;</span>;
+</code></pre></div><p>Notice we set a default value with a logical OR. It's important to remember this, to prevent undefined behavior when someone forgets to set the variable or if you have a default value in mind.</p>
+<p>This is still not the ideal scenario, however. Let's harp on the notion of a default configuration. We've successfully pulled out our configuration using environment variables, but if I want to change the default configs then I'm back to my original problem of editing source code! Luckily, we can do one extra tweak to solve just this.</p>
 <h2 id="the-magic-of-profiles-and-jsons">The Magic of Profiles and JSONs</h2>
+<p>Here's where profiling comes in. What if we were to place all our configurations within a file (like a JSON) and load it in at runtime? What if we did one better, and made it a module that can handle comments AND specify all our configurations within itself - rather than specifying our default configuration within our source. Well we can! And we will:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">// config.js
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">env</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">CONFIG</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;default&#39;</span>;
+<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">config</span> <span style="color:#f92672">=</span> {};
 
-<p>Here&rsquo;s where profiling comes in. What if we were to place all our configurations within a file (like a JSON) and load it in at runtime? What if we did one better, and made it a module that can handle comments AND specify all our configurations within itself - rather than specifying our default configuration within our source. Well we can! And we will:</p>
-
-<pre><code class="language-javascript">// config.js
-let env = process.env.CONFIG || 'default';
-let config = {};
-
-/**
- * config.IP: IP of database.
- * config.PORT: Port number of database.
- * config.LOG_LEVEL: Trace level to print when logging events.
- */
-switch(env){
-    case('prod'):
-        config.IP = '127.127.127.127';
-        config.PORT = 80;
-        config.LOG_LEVEL = 1;
-        break;
-    default:
-        config.IP = '127.0.0.0';
-        config.PORT = 8080;
-        config.LOG_LEVEL = 2;
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * config.IP: IP of database.
+</span><span style="color:#75715e"> * config.PORT: Port number of database.
+</span><span style="color:#75715e"> * config.LOG_LEVEL: Trace level to print when logging events.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">switch</span>(<span style="color:#a6e22e">env</span>){
+    <span style="color:#66d9ef">case</span>(<span style="color:#e6db74">&#39;prod&#39;</span>)<span style="color:#f92672">:</span>
+        <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">IP</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;127.127.127.127&#39;</span>;
+        <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">PORT</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">80</span>;
+        <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">LOG_LEVEL</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+        <span style="color:#66d9ef">break</span>;
+    <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+        <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">IP</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;127.0.0.0&#39;</span>;
+        <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">PORT</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">8080</span>;
+        <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">LOG_LEVEL</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;
 }
 
-module.exports = config;
-</code></pre>
-
-<p>And then in our server.js, we:</p>
-
-<pre><code class="language-javascript">//Import configuration
-const config = require('./config');
+<span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">config</span>;
+</code></pre></div><p>And then in our server.js, we:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">//Import configuration
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">config</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;./config&#39;</span>);
 
 ...
 
-//Access it's fields
-console.log(config.IP);
-</code></pre>
-
-<p>And we call our server as such:</p>
-
-<pre><code class="language-shell">CONFIG=prod node server.js
-</code></pre>
-
-<p>That&rsquo;s it! We&rsquo;ve gone from hard coded messes, to flexible, documentable, and &ldquo;gitignore-able&rdquo; configurations that can change without modifying the original source.</p>
+<span style="color:#75715e">//Access it&#39;s fields
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">IP</span>);
+</code></pre></div><p>And we call our server as such:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">CONFIG<span style="color:#f92672">=</span>prod node server.js
+</code></pre></div><p>That's it! We've gone from hard coded messes, to flexible, documentable, and &ldquo;gitignore-able&rdquo; configurations that can change without modifying the original source.</p>
 
     </section>
 
