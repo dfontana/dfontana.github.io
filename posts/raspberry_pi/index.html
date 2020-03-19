@@ -7,7 +7,7 @@
     <title>Setting up a Raspberry Pi - Headless &middot; </title>
     <meta name="author" content="Dylan Fontana">
     <meta name="description" content="A portfolio site.">
-    <meta name="generator" content="Hugo 0.60.0" />
+    <meta name="generator" content="Hugo 0.57.2" />
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -117,6 +117,10 @@
         color: #84FFC5;
         background-color: #3E3E3E;
     }
+
+    table tbody tr:nth-child(even) {
+        background-color: unset;
+    }
 </style>
 
 </head>
@@ -159,117 +163,103 @@
     </header>
 
     <section class="post-content">
-        <p>This one is more or less straight to the point. We're going to setup a fresh raspberry pi in a headless state. It's fairly easy if you keep your wits about you. Unfortunately you'll need either a keyboard/mouse + monitor or an ethernet connection to your device in order to get the wifi step of these instructions done.</p>
-<h2 id="raspbian-lite--wifi-connect">Raspbian Lite &amp; Wifi Connect</h2>
-<ol>
-<li>
-<p>Download the image from <a href="https://www.raspberrypi.org/downloads/raspbian/">raspberrypi</a></p>
-</li>
-<li>
-<p>Burn to the SD card (straight from the ZIP) with the free <a href="https://etcher.io/">Etcher</a>.</p>
-</li>
-<li>
-<p>In the boot partition, add an empty &amp; extension-less file named <code>ssh</code> to enable ssh connections to the device.</p>
-</li>
-<li>
-<p>Now connect the pi to a monitor + keyboard/mouse OR connect it via ethernet and use your router's client list to find it's IP. You will be able to SSH into it if you chose the later route. (And yes, that also means you should be turning on the device in this step)</p>
-</li>
-<li>
-<p>Setup wifi by editing the <code>wpa_supplicant.conf</code> to point your device at your wifi network.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+        
 
-<span style="color:#75715e"># Add at the bottom, WITH the quotes.</span>
-network<span style="color:#f92672">=</span><span style="color:#f92672">{</span>
-  ssid<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;YOUR_WIFI_NETWORK_NAME&#34;</span>
-  psk<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;YOUR_WIFI_PASSWORD&#34;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div></li>
-<li>
-<p>Run <code>sudo raspi-config</code> to set things up.</p>
-</li>
+<p>This one is more or less straight to the point. We&rsquo;re going to setup a fresh raspberry pi in a headless state. It&rsquo;s fairly easy if you keep your wits about you. Unfortunately you&rsquo;ll need either a keyboard/mouse + monitor or an ethernet connection to your device in order to get the wifi step of these instructions done.</p>
+
+<h2 id="raspbian-lite-wifi-connect">Raspbian Lite &amp; Wifi Connect</h2>
+
+<ol>
+<li>Download the image from <a href="https://www.raspberrypi.org/downloads/raspbian/">raspberrypi</a></li>
+<li>Burn to the SD card (straight from the ZIP) with the free <a href="https://etcher.io/">Etcher</a>.</li>
+<li>In the boot partition, add an empty &amp; extension-less file named <code>ssh</code> to enable ssh connections to the device.</li>
+<li>Now connect the pi to a monitor + keyboard/mouse OR connect it via ethernet and use your router&rsquo;s client list to find it&rsquo;s IP. You will be able to SSH into it if you chose the later route. (And yes, that also means you should be turning on the device in this step)</li>
+
+<li><p>Setup wifi by editing the <code>wpa_supplicant.conf</code> to point your device at your wifi network.</p>
+
+<pre><code class="language-shell">sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+
+# Add at the bottom, WITH the quotes.
+network={
+  ssid=&quot;YOUR_WIFI_NETWORK_NAME&quot;
+  psk=&quot;YOUR_WIFI_PASSWORD&quot;
+}
+</code></pre></li>
+
+<li><p>Run <code>sudo raspi-config</code> to set things up.</p></li>
 </ol>
+
 <h2 id="removing-the-default-pi-account">Removing the Default Pi Account</h2>
-<p>Keeping the default account around is a bit of a risk. Let's make it yours.</p>
+
+<p>Keeping the default account around is a bit of a risk. Let&rsquo;s make it yours.</p>
+
 <ol>
 <li>Make a new user:
+
 <ol>
 <li>Enter root: <code>sudo -i</code></li>
 <li>Make user: <code>adduser [username]</code></li>
 <li>Make that user sudo: <code>adduser [username] sudo</code></li>
-</ol>
-</li>
+</ol></li>
 <li>Enable SSH for the user:
+
 <ol>
 <li><code>mkdir /home/[username]/.ssh</code></li>
 <li><code>chown [username]:[username] /home/[username]/.ssh</code></li>
 <li>Leave root and close SSH connection</li>
-</ol>
-</li>
+</ol></li>
 <li>Give local key to Raspberry Pi for SSH:
+
 <ol>
 <li><code>scp ~/.ssh/id_rsa.pub [username]@[Pi's IP address]:/home/[username]/.ssh/authorized_keys</code></li>
-</ol>
-</li>
+</ol></li>
 <li>SSH in, delete the Pi account, and make a new root password:
+
 <ol>
 <li><code>sudo deluser pi</code></li>
 <li><code>sudo passwd root</code></li>
+</ol></li>
 </ol>
-</li>
-</ol>
-<h2 id="some-extra-random-steps-you-can-take-if-youd-like">Some extra random steps you can take if you'd like:</h2>
+
+<h2 id="some-extra-random-steps-you-can-take-if-you-d-like">Some extra random steps you can take if you&rsquo;d like:</h2>
+
 <ol>
-<li>
-<p>Regenerate SSH keys stored on the Pi:
-<code>rm /etc/ssh/ssh_host_* &amp;&amp; dpkg-reconfigure openssh-server</code></p>
-</li>
-<li>
-<p>Ensure Protocol 2 is uncommented and enabled in <code>/etc/ssh/sshd_config</code></p>
-</li>
-<li>
-<p>Setup IP Tables:</p>
+<li>Regenerate SSH keys stored on the Pi:
+<code>rm /etc/ssh/ssh_host_* &amp;&amp; dpkg-reconfigure openssh-server</code></li>
+<li>Ensure Protocol 2 is uncommented and enabled in <code>/etc/ssh/sshd_config</code></li>
+
+<li><p>Setup IP Tables:</p>
+
 <ol>
-<li>
-<p><code>sudo apt install iptables</code></p>
-</li>
-<li>
-<p>Open ports you want open, for example to open 22: <code>sudo iptables -A INPUT -p tcp --dport 22 -m state --state NEW -j ACCEPT</code></p>
-</li>
-<li>
-<p>Allow pinging with: <code>sudo iptables -A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT</code></p>
-</li>
-<li>
-<p>Block inbound traffic that is doesn't follow any of the rules: <code>sudo iptables -P INPUT DROP</code></p>
-</li>
-<li>
-<p>View the rules: <code>sudo iptables -L</code></p>
-</li>
-<li>
-<p>Save the rules: <code>sudo bash -c &quot;iptables-save &gt; /etc/iptables.rules&quot;</code></p>
-</li>
-<li>
-<p>Run the rules on startup:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># Edit this file</span>
+<li><code>sudo apt install iptables</code></li>
+<li>Open ports you want open, for example to open 22: <code>sudo iptables -A INPUT -p tcp --dport 22 -m state --state NEW -j ACCEPT</code></li>
+<li>Allow pinging with: <code>sudo iptables -A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT</code></li>
+<li>Block inbound traffic that is doesn&rsquo;t follow any of the rules: <code>sudo iptables -P INPUT DROP</code></li>
+<li>View the rules: <code>sudo iptables -L</code></li>
+<li>Save the rules: <code>sudo bash -c &quot;iptables-save &gt; /etc/iptables.rules&quot;</code></li>
+
+<li><p>Run the rules on startup:</p>
+
+<pre><code class="language-shell"># Edit this file
 nano /etc/network/if-pre-up.d/iptables
 
-<span style="color:#75715e">#put these lines</span>
-<span style="color:#75715e">#!/bin/bash</span>
+#put these lines
+#!/bin/bash
 /sbin/iptables-restore &lt; /etc/iptables.rules
 
-<span style="color:#75715e"># ensure it can execute</span>
+# ensure it can execute
 chmod +x /etc/network/if-pre-up.d/iptables
-</code></pre></div></li>
-</ol>
-</li>
-<li>
-<p>Setup Fail2Ban to push off bots.</p>
+</code></pre></li>
+</ol></li>
+
+<li><p>Setup Fail2Ban to push off bots.</p>
+
 <ol>
 <li>Sudo apt install fail2ban</li>
 <li>Configure inside /etc/fail2ban/jail.local</li>
 <li>Set some of the configuration <a href="http://felipeferreira.net/index.php/2008/10/securing-your-ssh-with-fail2ban/">found here</a></li>
 <li>Restart the service: /etc/init.d/fail2ban restart</li>
-</ol>
-</li>
+</ol></li>
 </ol>
 
     </section>
@@ -284,20 +274,10 @@ chmod +x /etc/network/if-pre-up.d/iptables
     
     
     <section class="share">
-    <p class="backtotop"><a data-scroll href="#site-head"><i class="fa fa-lg fa-fw fa-angle-double-up"></i></a><a data-scroll class="backtotoptext" href="#site-head"> Back to top</a></p>
+    <p class="backtotop"><a data-scroll href="#site-head"><i class="fa fa-lg fa-fw fa-angle-double-up"></i></a><a data-scroll class="backtotoptext" href="#site-head">Back to top</a></p>
     <p class="info prompt">Share</p>
-    <a href="http://twitter.com/share?text=Setting%20up%20a%20Raspberry%20Pi%20-%20Headless&url=%2fposts%2fraspberry_pi%2f" title="Share on Twitter"
-        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
-        <i class="fa fa-2x fa-fw fa-twitter-square"></i> <span class="hidden">Twitter</span>
-    </a>
-    <a href="https://www.facebook.com/sharer/sharer.php?u=%2fposts%2fraspberry_pi%2f" title="Share on Facebook"
-        onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
-        <i class="fa fa-2x fa-fw fa-facebook-square" style="margin-left: -8px"></i> <span class="hidden">Facebook</span>
-    </a>
-    <a href="https://plus.google.com/share?url=%2fposts%2fraspberry_pi%2f" title="Share on Google+"
-       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
-        <i class="fa fa-2x fa-fw fa-google-plus-square" style="margin-left: -8px"></i> <span class="hidden">Google+</span>
-    </a>
+    <a href="http://twitter.com/share?text=Setting%20up%20a%20Raspberry%20Pi%20-%20Headless&url=%2fposts%2fraspberry_pi%2f" title="Share on Twitter" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;"><i class="fa fa-2x fa-fw fa-twitter-square"></i><span class="hidden">Twitter</span></a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2fposts%2fraspberry_pi%2f" title="Share on Facebook" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;"><i class="fa fa-2x fa-fw fa-facebook-square" style="margin-left: -8px"></i><span class="hidden">Facebook</span></a>
 </section>
 
     <footer class="post-footer">
@@ -323,20 +303,20 @@ chmod +x /etc/network/if-pre-up.d/iptables
 		<section class="footer-social">
       
       
-      <a href="//www.linkedin.com/in/dylan-fontana" target="_blank" title="linkedIn"><i class="fa fa-2x fa-fw fa-linkedin"></i> <span class="hidden">LinkedIn</span></a>&nbsp;
+      <a href="//www.linkedin.com/in/dylan-fontana" target="_blank" title="linkedIn"><i class="fa fa-2x fa-fw fa-linkedin"></i><span class="hidden">LinkedIn</span></a>&nbsp;
       
       
       
       
       
-      <a href="//github.com/dfontana" target="_blank" title="GitHub"><i class="fa fa-2x fa-fw fa-github"></i> <span class="hidden">GitHub</span></a>&nbsp;
+      <a href="//github.com/dfontana" target="_blank" title="GitHub"><i class="fa fa-2x fa-fw fa-github"></i><span class="hidden">GitHub</span></a>&nbsp;
       
       
       
       
   </section>
 
-		<section class="copyright">&copy; 2019 <a href="/about/">Dylan Fontana</a>. Released under the MIT license.</section>
+		<section class="copyright">&copy; 2020 <a href="/about/">Dylan Fontana</a>. Released under the MIT license.</section>
 	</div>
 </footer>
 

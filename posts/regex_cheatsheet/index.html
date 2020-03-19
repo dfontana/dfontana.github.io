@@ -7,7 +7,7 @@
     <title>Regex&#39;s: A quick little cheatsheet &middot; </title>
     <meta name="author" content="Dylan Fontana">
     <meta name="description" content="A portfolio site.">
-    <meta name="generator" content="Hugo 0.60.0" />
+    <meta name="generator" content="Hugo 0.57.2" />
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -117,6 +117,10 @@
         color: #84FFC5;
         background-color: #3E3E3E;
     }
+
+    table tbody tr:nth-child(even) {
+        background-color: unset;
+    }
 </style>
 
 </head>
@@ -159,7 +163,8 @@
     </header>
 
     <section class="post-content">
-        <p>It's not frequent I come across a need for a regex - perhaps to my own detriment - but when I do, I often find myself forgetting what specific parts may mean. Here's a little cheatsheet I made myself ~ perhaps there's some value for you.</p>
+        <p>It&rsquo;s not frequent I come across a need for a regex - perhaps to my own detriment - but when I do, I often find myself forgetting what specific parts may mean. Here&rsquo;s a little cheatsheet I made myself ~ perhaps there&rsquo;s some value for you.</p>
+
 <table>
 <thead>
 <tr>
@@ -168,57 +173,68 @@
 <th align="left">Meaning</th>
 </tr>
 </thead>
+
 <tbody>
 <tr>
 <td align="center"><code>.</code></td>
 <td align="center">Wildcard</td>
-<td align="left">Anything can take this guy's place. You'll need to escape (<code>\.</code>) it for periods.</td>
+<td align="left">Anything can take this guy&rsquo;s place. You&rsquo;ll need to escape (<code>\.</code>) it for periods.</td>
 </tr>
+
 <tr>
 <td align="center"><code>\d</code></td>
 <td align="center">Digit</td>
-<td align="left">Will search for any digit. It's sister, <code>\D</code> is for any non-digit. Ex: <code>\d\d\d</code> looks for 3 digits.</td>
+<td align="left">Will search for any digit. It&rsquo;s sister, <code>\D</code> is for any non-digit. Ex: <code>\d\d\d</code> looks for 3 digits.</td>
 </tr>
+
 <tr>
 <td align="center"><code>[ ]</code></td>
 <td align="center">&lsquo;Only&rsquo;</td>
-<td align="left">Anything inside braces will search through things only containing characters inside. If you were to negate this <code>^</code>, you'll ignore those characters. Ex: <code>[^abc]</code> Looks for 3 characters not starting with a, b, or c</td>
+<td align="left">Anything inside braces will search through things only containing characters inside. If you were to negate this <code>^</code>, you&rsquo;ll ignore those characters. Ex: <code>[^abc]</code> Looks for 3 characters not starting with a, b, or c</td>
 </tr>
+
 <tr>
 <td align="center"><code>{ }</code></td>
 <td align="center">Repeating</td>
 <td align="left">Will look for the proceeding group for the number of times inside. <code>[wxy]{3}</code></td>
 </tr>
+
 <tr>
 <td align="center"><code>*</code></td>
 <td align="center">Any Number</td>
 <td align="left">Looks for any number of the proceeding group</td>
 </tr>
+
 <tr>
 <td align="center"><code>+</code></td>
 <td align="center">At least</td>
 <td align="left">Looks for at least one of the proceeding group</td>
 </tr>
+
 <tr>
 <td align="center"><code>?</code></td>
 <td align="center">Optional</td>
 <td align="left">Will treat the prior group as an optional match. <code>ab?c</code> will match <code>abc</code> or <code>ac</code></td>
 </tr>
+
 <tr>
 <td align="center"><code>\s</code></td>
 <td align="center">Whitespace</td>
 <td align="left">Space, newline, tab, carriage return</td>
 </tr>
+
 <tr>
 <td align="center"><code>^ $</code></td>
 <td align="center">&lsquo;Block&rsquo;</td>
 <td align="left">Using these anchors, we can prevent getting matches encased inside words. ex: <code>^Mission: successful$</code></td>
 </tr>
+
 <tr>
 <td align="center"><code>( )</code></td>
 <td align="center">Capture</td>
-<td align="left">If you want to extract a specific piece of information about your matches, you'll wrap it with parentheses. You can nest these as much as you'd like, spitting out each group.</td>
+<td align="left">If you want to extract a specific piece of information about your matches, you&rsquo;ll wrap it with parentheses. You can nest these as much as you&rsquo;d like, spitting out each group.</td>
 </tr>
+
 <tr>
 <td align="center"><code>pipe</code></td>
 <td align="center">OR</td>
@@ -239,20 +255,10 @@
     
     
     <section class="share">
-    <p class="backtotop"><a data-scroll href="#site-head"><i class="fa fa-lg fa-fw fa-angle-double-up"></i></a><a data-scroll class="backtotoptext" href="#site-head"> Back to top</a></p>
+    <p class="backtotop"><a data-scroll href="#site-head"><i class="fa fa-lg fa-fw fa-angle-double-up"></i></a><a data-scroll class="backtotoptext" href="#site-head">Back to top</a></p>
     <p class="info prompt">Share</p>
-    <a href="http://twitter.com/share?text=Regex%27s%3a%20A%20quick%20little%20cheatsheet&url=%2fposts%2fregex_cheatsheet%2f" title="Share on Twitter"
-        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
-        <i class="fa fa-2x fa-fw fa-twitter-square"></i> <span class="hidden">Twitter</span>
-    </a>
-    <a href="https://www.facebook.com/sharer/sharer.php?u=%2fposts%2fregex_cheatsheet%2f" title="Share on Facebook"
-        onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
-        <i class="fa fa-2x fa-fw fa-facebook-square" style="margin-left: -8px"></i> <span class="hidden">Facebook</span>
-    </a>
-    <a href="https://plus.google.com/share?url=%2fposts%2fregex_cheatsheet%2f" title="Share on Google+"
-       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
-        <i class="fa fa-2x fa-fw fa-google-plus-square" style="margin-left: -8px"></i> <span class="hidden">Google+</span>
-    </a>
+    <a href="http://twitter.com/share?text=Regex%27s%3a%20A%20quick%20little%20cheatsheet&url=%2fposts%2fregex_cheatsheet%2f" title="Share on Twitter" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;"><i class="fa fa-2x fa-fw fa-twitter-square"></i><span class="hidden">Twitter</span></a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2fposts%2fregex_cheatsheet%2f" title="Share on Facebook" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;"><i class="fa fa-2x fa-fw fa-facebook-square" style="margin-left: -8px"></i><span class="hidden">Facebook</span></a>
 </section>
 
     <footer class="post-footer">
@@ -278,20 +284,20 @@
 		<section class="footer-social">
       
       
-      <a href="//www.linkedin.com/in/dylan-fontana" target="_blank" title="linkedIn"><i class="fa fa-2x fa-fw fa-linkedin"></i> <span class="hidden">LinkedIn</span></a>&nbsp;
+      <a href="//www.linkedin.com/in/dylan-fontana" target="_blank" title="linkedIn"><i class="fa fa-2x fa-fw fa-linkedin"></i><span class="hidden">LinkedIn</span></a>&nbsp;
       
       
       
       
       
-      <a href="//github.com/dfontana" target="_blank" title="GitHub"><i class="fa fa-2x fa-fw fa-github"></i> <span class="hidden">GitHub</span></a>&nbsp;
+      <a href="//github.com/dfontana" target="_blank" title="GitHub"><i class="fa fa-2x fa-fw fa-github"></i><span class="hidden">GitHub</span></a>&nbsp;
       
       
       
       
   </section>
 
-		<section class="copyright">&copy; 2019 <a href="/about/">Dylan Fontana</a>. Released under the MIT license.</section>
+		<section class="copyright">&copy; 2020 <a href="/about/">Dylan Fontana</a>. Released under the MIT license.</section>
 	</div>
 </footer>
 
