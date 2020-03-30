@@ -12,6 +12,16 @@
     
     
     <item>
+      <title>Upgrading to WSL2</title>
+      <link>/posts/upgrade_to_wsl2/</link>
+      <pubDate>Sun, 29 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/upgrade_to_wsl2/</guid>
+      <description>WSL2 comes with a performance and feature perks over the old system, including choice of Linux flavor and a different virtualization strategy. If for no other reason, though, it was simply time for an upgrade. Here&amp;rsquo;s the shortnotes:
+Get WSL2 Installed Wasn&amp;rsquo;t as straightforward as the MSDocs made it. I had to opt into the insiders program, with my computer having been out of date for almost a year &amp;ndash; the slow ring was enough to get the right version.</description>
+    </item>
+    
+    <item>
       <title>Previewing Markdown in the Terminal</title>
       <link>/posts/render_markdown_in_terminal/</link>
       <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>Upgrading to WSL2 &middot; </title>
+    <meta name="author" content="Dylan Fontana">
+    <meta name="description" content="A portfolio site.">
+    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <!-- RSS autodiscovery -->
+    
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/screen.css">
+    <link rel="stylesheet" href="/css/github.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/default.min.css">
+    
+
+    
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.png">
+    
+
+    <!-- Stylesheet for theme color -->
+    <style type="text/css">    
+    @import url('https://fonts.googleapis.com/css?family=Cinzel+Decorative:400,700|Lora:400,400i,700&subset=cyrillic,cyrillic-ext,latin-ext');
+    @import url('//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css');
+
+    a, 
+    a:visited,
+    a.backtotoptext,
+    .gist .gist-file .gist-meta,
+    .pagination,
+    section.post-content h2,
+    section.post-content h3,
+    section.post-content h4,
+    h1.blog-subtitle  {
+        color: #BFAE48;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a:focus,
+    a:hover,
+    h1.post-title a:focus, 
+    h1.post-title a:hover, 
+    h1.blog-title a:focus, 
+    h1.blog-title a:hover,
+    .older-posts:hover, 
+    .newer-posts:hover {
+        color: #84FFC5;
+    }
+
+    h1.post-title a,
+    h1.blog-title a,
+    h1.post-title {
+        color: #dedede
+    }
+
+    .post-meta {
+        color: #95a5a6
+    }
+
+    a.excerptlink,
+    body {
+        color: #ececec;
+    }
+
+    body {
+        background-color: #2A3555;
+    }
+
+    body,
+    h2,
+    h3,
+    h4,
+    p,
+    li,
+    dt,
+    dd,
+    nav ul li,
+    section.author p.attr,
+    section.share p.info,
+    blockquote,
+    .post-meta,
+    footer section,
+    a.archive-link,
+    .pagination,
+    gist .gist-file .gist-meta,
+    table,
+    section.post-content h4,
+    p.backtotop,
+    h1.posts-tagged,
+    article.preview p.readmore {
+        font-family: "Lora", Helvetica, Arial, serif;
+    }
+
+    h1,
+    section.author h4,
+    blockquote p,
+    section.author .meta {
+        font-family: "Cinzel Decorative", Helvetica, Arial, "Nimbus L", cursive;
+    }
+
+    pre,
+    code {
+        color: #84FFC5;
+        background-color: #3E3E3E;
+    }
+
+    table tbody tr:nth-child(even) {
+        background-color: unset;
+    }
+</style>
+
+</head>
+
+<body class="home-template">
+    <header id="site-head">
+	
+	<h1 class="blog-title"><a href="/">Frontiers</a></h1>
+	
+	
+	<h1 class="blog-subtitle">Thoughts, ideas, and works.</h1>
+	
+</header>
+    
+<nav class="menu" role="nav">
+    <ul>
+        
+        	<li class="nav nav-current"><a href="/">Home</a></li>
+      	
+        	<li class="nav nav-current"><a href="/posts/">Posts</a></li>
+      	
+        	<li class="nav nav-current"><a href="/projects/">Projects</a></li>
+      	
+        	<li class="nav nav-current"><a href="/about/">About</a></li>
+      	
+    </ul>
+</nav>
+
+    
+    <main class="content" role="main">
+    
+<article class="post">
+    <header>
+        <h1 class="post-title">Upgrading to WSL2</h1>
+        <div class="post-meta">
+            <time datetime="29 March 2020">
+                29 March 2020
+            </time>
+        </div>
+    </header>
+
+    <section class="post-content">
+        
+
+<p>WSL2 comes with a performance and feature perks over the old system, including choice of Linux flavor and a different virtualization strategy. If for no other reason, though, it was simply time for an upgrade. Here&rsquo;s the shortnotes:</p>
+
+<h2 id="get-wsl2-installed">Get WSL2 Installed</h2>
+
+<p>Wasn&rsquo;t as straightforward as <a href="https://docs.microsoft.com/en-us/windows/wsl/wsl2-install">the MSDocs made it</a>. I had to opt into the insiders program, with my computer having been out of date for almost a year &ndash; the slow ring was enough to get the right version. A few restarts later and I had a latest enough build: <code>19041</code>. Then it was a matter of:</p>
+
+<ul>
+<li>Enable Virtual Machine Platform (&lsquo;Turn Windows Features on or off&rsquo; &gt; &lsquo;Virtual Machine Platform&rsquo; &amp; &lsquo;Windows Subsystem for Linux&rsquo;).</li>
+<li>Reboot, and while you&rsquo;re at the BIOS - turn on Intel Virtualization (VT-x). VT-d, if supported on your system, is also a good call - as it allows direct IO by the virtual machines. I had an issue where this was switched off and WSL2 threw a Virtualization error during installation. You might need to comb over some of the &lsquo;Advanced&rsquo; sections of youe BIOS to find it.</li>
+</ul>
+
+<p>Then the system was ready to <em>start</em> installing WSL2.</p>
+
+<h3 id="distro-picking">Distro Picking</h3>
+
+<p>From the MS Store pick out a distro. I stuck with Ubuntu. I had an issue getting the latest Ubuntu to download &ndash; I had apparently tried to install Ubuntu 18.04 before (which is a separate download from Ubuntu latest - simply known as &lsquo;Ubuntu&rsquo; in the store). Uninstalling that version worked fine.</p>
+
+<p>Before booting the new Ubuntu I decided to copy any files I wanted to keep onto a separate drive &ndash; thinks like dotfiles or projects I didn&rsquo;t want to re-clone. Doing this now made it easier later to just flip the switch, so take a moment if you haven&rsquo;t already.</p>
+
+<p>Once ready, launch the new &lsquo;Ubuntu&rsquo; app you downloaded and follow the prompt to setup your user. In my quick searches I couldn&rsquo;t find a way to migrate my existing user over easily, so I found it better to just go with the clean install approach. Once done, boot a Powershell and run <code>wsl --set-default-version 2</code> followed by <code>wsl --set-version &lt;Distro&gt; 2</code>. If the commands suceeded your almost there. If they failed (like they did for me), you&rsquo;ll want to circle back to checking your System Updates.</p>
+
+<h3 id="knock-out-the-old-guy">Knock out the old guy</h3>
+
+<p><code>wsl -l -v</code> will list all your installe distros and their versions. For me this was Ubuntu on WSL 2 and <code>Ubuntu (Legacy)</code>. WSL V1 might be what you&rsquo;ll find if you came to the party after Legacy. If you&rsquo;d like to rid yourself of this, you&rsquo;re looking for the <code>unregister</code> command: <code>wsl --unregister &lt;distroName&gt;</code>. Verify with a <code>wsl -l -v</code> again to confirm it&rsquo;s removal.</p>
+
+<h2 id="system-prep-terminal">System Prep - Terminal</h2>
+
+<p>With the new system ready, I like to get my pieces back in place. First was a terminal emulator. I used to use <a href="https://gist.github.com/dfontana/3e27ec5ea3a6f935b7322b580d3df318">Cmder</a>, but grew tired of that setup pretty quick. I moved onto <a href="https://hyper.is/">Hyper</a> but it too felt clunky after a lot of day-to-day use (little things like copy paste or resizing the window just got a bit too annoying). Recently on my Linux dual-boot I&rsquo;ve been using <a href="https://sw.kovidgoyal.net/kitty/">Kitty</a> which I&rsquo;ve enjoyed, but Windows has no such option.</p>
+
+<p>I opted for the new <a href="https://github.com/microsoft/terminal">&lsquo;Windows Terminal&rsquo;</a>:</p>
+
+<ul>
+<li>Download from the MS Store</li>
+<li>Launch it, Open the Settings</li>
+
+<li><p>Remove any profiles from the list you don&rsquo;t care for and add a new one with the settings you&rsquo;d like:</p>
+
+<pre><code>{
+  &quot;hidden&quot;: false,
+  &quot;name&quot;: &quot;Ubuntu&quot;,
+  &quot;source&quot;: &quot;Windows.Terminal.Wsl&quot;,
+  &quot;startingDirectory&quot;: &quot;\\\\wsl$\\Ubuntu\\home\\&quot;
+  },
+</code></pre></li>
+
+<li><p>If there are some defaults you want to apply to all windows, you can tweak those as well in the <code>&quot;defaults&quot;</code> key. Here&rsquo;s mine:</p>
+
+<pre><code>{
+    &quot;colorScheme&quot;: &quot;Solarized Light&quot;,
+    &quot;startingDirectory&quot;: &quot;~&quot;,
+    &quot;cursorColor&quot;: &quot;#002b36&quot;,
+    &quot;fontFace&quot;: &quot;Fira Code&quot;,
+    &quot;fontSize&quot;: 11
+},
+</code></pre></li>
+
+<li><p>And to wrap up that Solarized scheme, you might want to install the <a href="https://github.com/seebi/dircolors-solarized">Solarized Dir Colors</a>:</p>
+
+<ul>
+<li>Download the file you&rsquo;d like to <code>~/.dir_colors</code>.</li>
+<li>In your bash/zshrc add <code>eval dircolors ~/.dir_colors</code></li>
+</ul></li>
+
+<li><p>If you&rsquo;re interested in a non-emoji version of Fira Code (which instead uses special patched symbols are requires a compatible prompt), you can download one from <a href="https://www.nerdfonts.com/">NerdFonts</a></p></li>
+
+<li><p>Speaking of prompts, I used to use <a href="https://github.com/denysdovhan/spaceship-prompt">Spaceship</a>, but decided to give a pure-Rust version (inpired by Spacehsip) a shot - <a href="https://github.com/starship/starship">Starship</a>.</p></li>
+</ul>
+
+<h2 id="system-prep-environment">System Prep - Environment</h2>
+
+<p>I won&rsquo;t cover everything, but here&rsquo;s a few that you might want:</p>
+
+<ul>
+<li>Basic system tools: <code>build-essentials</code>, <code>exa</code> (an <code>ls</code> replacement), and <code>bat</code> (a <code>cat</code> replacement).</li>
+<li>Rust, if that&rsquo;s your poison: <code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</code></li>
+<li>Go, if you also dabble there: <a href="https://golang.org/dl/">Download the Linux Tar</a>, <code>tar -C /usr/local -xzf &lt;downloaded&gt;</code>, and add to PATH: <code>export PATH=$PATH:/usr/local/go/bin</code></li>
+</ul>
+
+<p>Otherwise that&rsquo;s about it. If you&rsquo;re interested in ZSH, check out my notes on <a href="../setting_up_zsh">Setting up ZSH</a></p>
+
+<h2 id="an-aside-small-tweaks-fixes">An Aside - Small tweaks &amp; Fixes</h2>
+
+<h3 id="annoyance-can-t-copy-from-vim">Annoyance: Can&rsquo;t Copy from Vim</h3>
+
+<p>Problem: I want to <code>y</code>ank some code from Vim and paste it in anything that&rsquo;s <em>not</em> vim. In Hyper I could simply highlight + right click, in Windows Terminal I can&rsquo;t.</p>
+
+<p>Fix: Add the following snippet to your <code>~/.vimrc</code>:</p>
+
+<pre><code>&quot; WSL yank support
+let s:clip = '/mnt/c/Windows/System32/clip.exe'  &quot; default location
+if executable(s:clip)
+    augroup WSLYank
+        autocmd!
+        autocmd TextYankPost * call system('echo '.shellescape(join(v:event.regcontents, &quot;\&lt;CR&gt;&quot;)).' | '.s:clip)
+    augroup END
+end
+</code></pre>
+
+    </section>
+
+    
+    <section class="post-tags" style="padding-bottom:60px;">
+        <div class="post-meta tags">
+            <i class="fa fa-fw fa-tag"></i>
+            
+        </div>
+    </section>
+    
+    
+    <section class="share">
+    <p class="backtotop"><a data-scroll href="#site-head"><i class="fa fa-lg fa-fw fa-angle-double-up"></i></a><a data-scroll class="backtotoptext" href="#site-head">Back to top</a></p>
+    <p class="info prompt">Share</p>
+    <a href="http://twitter.com/share?text=Upgrading%20to%20WSL2&url=%2fposts%2fupgrade_to_wsl2%2f" title="Share on Twitter" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;"><i class="fa fa-2x fa-fw fa-twitter-square"></i><span class="hidden">Twitter</span></a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2fposts%2fupgrade_to_wsl2%2f" title="Share on Facebook" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;"><i class="fa fa-2x fa-fw fa-facebook-square" style="margin-left: -8px"></i><span class="hidden">Facebook</span></a>
+</section>
+
+    <footer class="post-footer">
+        
+<section class="author">
+    <div class="authorimage" style="background: url(/img/profile.png)"></div>
+    <h4>Dylan Fontana</h4>
+    <p class="bio">Explore, learn, and pursue - three of my favorite things.</p>
+    <p class="meta">
+      <i class="fa fa-fw fa-map-marker"></i> America/Boston
+    </p>
+</section>
+    </footer>
+    
+</article>
+
+    </main>
+
+    
+
+<footer class="site-footer">
+	<div class="inner">
+		<section class="footer-social">
+      
+      
+      <a href="//www.linkedin.com/in/dylan-fontana" target="_blank" title="linkedIn"><i class="fa fa-2x fa-fw fa-linkedin"></i><span class="hidden">LinkedIn</span></a>&nbsp;
+      
+      
+      
+      
+      
+      <a href="//github.com/dfontana" target="_blank" title="GitHub"><i class="fa fa-2x fa-fw fa-github"></i><span class="hidden">GitHub</span></a>&nbsp;
+      
+      
+      
+      
+  </section>
+
+		<section class="copyright">&copy; 2020 <a href="/about/">Dylan Fontana</a>. Released under the MIT license.</section>
+	</div>
+</footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/index.js"></script>
+<script src="/js/smooth-scroll.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+
+
+<script>
+    smoothScroll.init({
+        speed: 800,
+        easing: 'easeInOutCubic',
+        updateURL: false,
+        offset: 125,
+    });
+</script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+</body>
+</html>
