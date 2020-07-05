@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on </title>
@@ -57,7 +57,7 @@ Pandoc Pandoc is a utility for converting Markdown files into other formats.</de
       
       <guid>/posts/raspberry_pi/</guid>
       <description>This one is more or less straight to the point. We&amp;rsquo;re going to setup a fresh raspberry pi in a headless state. It&amp;rsquo;s fairly easy if you keep your wits about you. Unfortunately you&amp;rsquo;ll need either a keyboard/mouse + monitor or an ethernet connection to your device in order to get the wifi step of these instructions done.
-Raspbian Lite &amp;amp; Wifi Connect  Download the image from raspberrypi Burn to the SD card (straight from the ZIP) with the free Etcher.</description>
+Raspbian Lite &amp;amp; Wifi Connect   Download the image from raspberrypi</description>
     </item>
     
     <item>

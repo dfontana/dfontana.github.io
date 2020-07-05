@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Home on </title>
+    <title></title>
     <link>/</link>
-    <description>Recent content in Home on </description>
+    <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 15 May 2017 00:18:12 -0400</lastBuildDate>
+    <lastBuildDate>Mon, 17 Dec 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
@@ -67,7 +67,7 @@ Pandoc Pandoc is a utility for converting Markdown files into other formats.</de
       
       <guid>/posts/raspberry_pi/</guid>
       <description>This one is more or less straight to the point. We&amp;rsquo;re going to setup a fresh raspberry pi in a headless state. It&amp;rsquo;s fairly easy if you keep your wits about you. Unfortunately you&amp;rsquo;ll need either a keyboard/mouse + monitor or an ethernet connection to your device in order to get the wifi step of these instructions done.
-Raspbian Lite &amp;amp; Wifi Connect  Download the image from raspberrypi Burn to the SD card (straight from the ZIP) with the free Etcher.</description>
+Raspbian Lite &amp;amp; Wifi Connect   Download the image from raspberrypi</description>
     </item>
     
     <item>
