@@ -1,0 +1,25 @@
+.hack {
+  pre {
+    border-radius: 3px;
+    tab-size: 4;
+    -o-tab-size: 4;
+    -moz-tab-size: 4;
+    font-size: 15px;
+    line-height: 1.2em;
+    padding: 1em;
+    margin: 1rem 0;
+    code {
+      line-height: 15px;
+      display: block;
+    }
+  }
+
+  code {
+    border-radius: 3px;
+    padding: 2px 4px;
+    font-size: 0.75em;
+    &:after, &:before {
+      content: unset;
+    }
+  }
+}

@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import "fa/fontawesome.scss";
+@import "fa/solid.scss";
+@import "screenSizes";
+@import "colorsAndFonts";
+@import "list";
+@import "author";
+@import "anchor";
+@import "code";
+@import "search";
+@import "pager";
+@import "headerAndRule";
+
+a.navhome {
+  &:after {
+    all:unset;
+  }
+  font-size: 1.75rem;
+  margin-right: 5px;
+  border-right: {
+    width: 1px;
+    style: solid;
+  }
+  padding: 0 5px;
+}
+
+.hack em {
+  font-style: italic;
+  &:after, &:before {
+    content: unset;
+  }
+}
