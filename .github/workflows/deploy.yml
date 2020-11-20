@@ -19,7 +19,7 @@ jobs:
           TOKEN: ${{ secrets.TOKEN }}
   build_deploy:
     runs-on: ubuntu-latest
-    name: Validate Compilation
+    name: Deploy to Prod
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout
