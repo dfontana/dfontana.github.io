@@ -1,0 +1,48 @@
+section.author {
+  overflow: hidden;
+  width: 100%;
+  text-align: left;
+  text-transform: none;
+
+  .authorimage {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    -webkit-background-size: cover !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    margin-right: 17px;
+    float: left;
+  }
+
+  h4 {
+    margin: 0;
+    margin-bottom: 4px;
+    padding-top: 4px;
+    padding-left: 99px;
+    &:before {
+      content: unset;
+    }
+  }
+
+  .meta {
+    font-size: 12px;
+    line-height: 19px;
+    padding-top: 7px;
+    margin-left:99px;
+    text-transform: uppercase;
+  }
+
+  .bio {
+    font-size: 14px;
+    margin-left: 99px;
+    line-height: 1.2em;
+  }
+
+  p {
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    line-height: 20px;
+  }
+}

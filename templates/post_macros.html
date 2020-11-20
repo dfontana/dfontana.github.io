@@ -1,0 +1,23 @@
+{% extends "after-dark/templates/post_macros.html" %}
+{% macro meta(page) %}
+    <i class="fas fa-clock"></i>
+    <span>{{ page.reading_time }} minute read</span>
+    {% if page.date %}published on {{ page.date | date(format="%F") }}{% endif %}
+{% endmacro meta %}
+
+{% macro page_in_list(page) %}
+    <article itemscope itemtype="http://schema.org/CreativeWork">
+        <header>
+            <h2 class="pagetitle" itemprop="name">
+                <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
+                <div class="muted pagemeta">{{ self::meta(page=page) }}</div>
+            </h2>
+        </header>
+        {% if page.summary %}
+            <div class="pagesummary" itemprop="summary">
+                {{ page.summary | safe }}
+                <a itemprop="url" href="{{ page.permalink | safe }}">Read More&nbsp;&raquo;</a>
+            </div>
+        {% endif %}
+    </article>
+{% endmacro page_in_list %}

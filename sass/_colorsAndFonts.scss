@@ -1,0 +1,117 @@
+// Underscores / Primary Accent (pink)
+$color-violet: #6c71c4;
+$color-cyan: #2aa198;
+$color-yellow: #b58900;
+
+$color-accent: $color-cyan;
+$color-accent--secondary: $color-violet;
+$color-accent--compliment: $color-yellow;
+$color-primaryText: #586e75;
+$color-bg--dark: #002b36;
+$color-bg--light: #fdf6e3;
+
+@mixin primaryText { color: $color-primaryText; } // Base00
+@mixin secondaryText { color: #93a1a1; } // Base 1
+@mixin boldText { color: #586e75; } // base 01
+@mixin primaryBg { background-color: $color-bg--light } // base 3
+@mixin secondaryBg { background-color:#eee8d5; } // base2
+
+@mixin titleFont { font-family: 'Cinzel Decorative'; }
+@mixin bodyFont { font-family: 'Lora' }
+@mixin codeFont { font-family: Menlo, "Consolas", Courier, monospace; }
+
+// Hyper links
+a.navhome {
+  @include titleFont;
+  color: $color-accent--secondary;
+  border-color: $color-accent;
+}
+a {
+  border-color: $color-accent;
+  color: $color-accent;
+}
+a:hover {
+  background-color: $color-accent;
+  color: $color-bg--light;
+}
+a[itemprop="url"] {
+  color: $color-accent--secondary;
+}
+:target {
+  color: $color-bg--light;
+  background-color: $color-accent--secondary;
+}
+
+.dark {
+  @include primaryBg;
+  @include primaryText;
+  h1,h2,h3,h4,h5,h6 {
+    a {
+      border-color: $color-accent;
+      color: $color-accent;
+    }
+    a:hover {
+      background-color: $color-accent;
+      color: $color-bg--light;
+    }
+  }
+  strong {
+    @include primaryText;
+  }
+  code {
+    background-color: $color-bg--dark;
+    color: $color-accent--compliment;
+  }
+}
+
+.hack {
+  @include bodyFont;
+  blockquote, em, strong {
+    @include bodyFont;
+  }
+  pre code {
+    // Keep these dark
+    background-color: inherit;
+    color: inherit;
+  }
+  code {
+    @include codeFont;
+    background-color: #002b36;
+    color: #b58900;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @include titleFont;
+    a {
+      @include titleFont;
+    }
+  }
+}
+h1, h2, h3, h4, h5, h6 {
+  @include titleFont;
+  a {
+    @include titleFont;
+  }
+}
+
+.muted {
+  @include secondaryText;
+  @include bodyFont;
+  font-weight: 400;
+}
+
+// Search
+.search-container input {
+  @include bodyFont;
+  color: $color-accent--secondary;
+  & + div svg {
+    stroke: $color-accent;
+  }
+}
+.search-results {
+  @include secondaryBg;
+  @include primaryText;
+}
+
+section.author .meta {
+    @include titleFont;
+}

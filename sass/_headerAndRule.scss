@@ -1,0 +1,45 @@
+// Nav fixes
+header nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  line-height: 3rem;
+  position: relative;
+  padding-bottom: 5px;
+}
+
+.navitems {
+  @include sm {
+    order: 3;
+    width: 100%;
+  }
+}
+
+// Rule fixes
+.hack hr {
+  height: unset;
+  margin: 0;
+  border: 0;
+  border-top: {
+    width: 0.5em;
+    style: double;
+  }
+  margin-bottom: 10px;
+}
+
+.hack hr:after {
+  all: unset;
+}
+
+// Header fixes
+.hack h1::before, .hack h2::before, .hack h3::before, .hack h4::before, .hack h5::before, .hack h6::before {
+  content: unset;
+}
+
+.hack h1 {
+  padding-top: 0;
+}
+
+.hack header + article {
+  margin-top: 0;
+}

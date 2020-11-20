@@ -1,0 +1,32 @@
+name: Build and deploy GH Pages
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Validate Compilation
+    if: github.ref != 'refs/heads/master'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Compile
+        uses: shalzz/zola-deploy-action@v0.12.0
+        env:
+          BUILD_DIR: .
+          BUILD_ONLY: true
+          TOKEN: ${{ secrets.TOKEN }}
+  build_deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to Prod
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Deploy
+        uses: shalzz/zola-deploy-action@v0.12.0
+        env:
+          BUILD_DIR: .
+          PAGES_BRANCH: gh-pages
+          TOKEN: ${{ secrets.TOKEN }}

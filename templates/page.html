@@ -1,0 +1,19 @@
+{% extends "after-dark/templates/page.html" %}
+
+{% block extra_footer %}
+{% if config.extra.footer %}
+<hr>
+<section class="author">
+  <div class="authorimage" style="background: url({{ config.extra.footer.profile }})"></div>
+  <h4>{{ config.extra.footer.author }}</h4>
+  {% if config.extra.footer.bio %}
+    <p class="bio">{{config.extra.footer.bio}}</p>
+  {% endif %}
+  {% if config.extra.footer.location %}
+  <p class="meta">
+    <i class="fa fa-fw fa-map-marker"></i> {{config.extra.footer.location}}
+  </p>
+  {% endif %}
+</section>
+{% endif %}
+{% endblock extra_footer %}
