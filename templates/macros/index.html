@@ -1,0 +1,15 @@
+{% macro page_in_list(page) %}
+<article itemscope itemtype="http://schema.org/CreativeWork">
+  <header>
+    <h2 class="pagetitle" itemprop="name">
+      <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
+    </h2>
+  </header>
+  {% if page.summary %}
+    <div class="pagesummary" itemprop="summary">
+      {{ page.summary | safe }}
+      <a itemprop="url" href="{{ page.permalink | safe }}">Read More&nbsp;&raquo;</a>
+    </div>
+  {% endif %}
+</article>
+{% endmacro page_in_list %}

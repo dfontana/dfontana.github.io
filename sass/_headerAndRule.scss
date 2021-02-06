@@ -1,45 +1,41 @@
-// Nav fixes
-header nav {
+.navbox {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  line-height: 3rem;
-  position: relative;
-  padding-bottom: 5px;
+  justify-content: flex-start;
+  margin: 15px 0 0 0;
 }
 
-.navitems {
+.nav-content {
+  margin-left: 10px;
+}
+
+.nav-image {
+  background-size: cover !important;
+  border-radius: 50%;
+  background-position: center center;
+  width: 60px;
+  height: 60px;
+  border: 3px solid #f4f3f3;
+}
+
+.nav-items {
   @include sm {
     order: 3;
     width: 100%;
   }
-}
-
-// Rule fixes
-.hack hr {
-  height: unset;
-  margin: 0;
-  border: 0;
-  border-top: {
-    width: 0.5em;
-    style: double;
+  .nav-item {
+    padding-right: 5px;
+    &:after {
+      all:unset;
+    }
   }
-  margin-bottom: 10px;
 }
 
-.hack hr:after {
-  all: unset;
-}
-
-// Header fixes
-.hack h1::before, .hack h2::before, .hack h3::before, .hack h4::before, .hack h5::before, .hack h6::before {
-  content: unset;
-}
-
-.hack h1 {
-  padding-top: 0;
-}
-
-.hack header + article {
-  margin-top: 0;
+a.nav-title {
+  &:after {
+    all:unset;
+  }
+  font-size: 1.75rem;
+  margin-right: 5px;
+  padding: 0;
 }

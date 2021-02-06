@@ -1,9 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Cinzel+Decorative:wght@400&family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import "fa/fontawesome.scss";
 @import "fa/solid.scss";
 @import "screenSizes";
 @import "colorsAndFonts";
-@import "list";
 @import "author";
 @import "anchor";
 @import "code";
@@ -11,20 +10,17 @@
 @import "pager";
 @import "headerAndRule";
 
-a.navhome {
-  &:after {
-    all:unset;
+body {
+  margin: 0 15% 5% 15%;
+  @include sm {
+    margin: 0 5% 5% 5%;
   }
-  font-size: 1.75rem;
-  margin-right: 5px;
-  border-right: {
-    width: 1px;
-    style: solid;
+  @include md {
+    margin: 0 5% 5% 5%;
   }
-  padding: 0 5px;
 }
 
-.hack em {
+em {
   font-style: italic;
   &:after, &:before {
     content: unset;

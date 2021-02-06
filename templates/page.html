@@ -1,19 +1,22 @@
-{% extends "after-dark/templates/page.html" %}
+{% extends "index.html" %}
+{% import "macros/footer.html" as footer_macros %}
+{% import "macros/index.html" as index_macros %}
 
-{% block extra_footer %}
-{% if config.extra.footer %}
-<hr>
-<section class="author">
-  <div class="authorimage" style="background: url({{ config.extra.footer.profile }})"></div>
-  <h4>{{ config.extra.footer.author }}</h4>
-  {% if config.extra.footer.bio %}
-    <p class="bio">{{config.extra.footer.bio}}</p>
+{% block content %}
+  {% block header %}
+    {{ super() }}
+  {% endblock header %}
+
+  <article itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+        <h1 itemprop="headline">{{ page.title }}</h1>
+    </header>
+    <div itemprop="articleBody">
+      {{ page.content | safe }}
+    </div>
+  </article>
+
+  {% if config.extra.footer %}
+    {{ footer_macros::footer(foot=config.extra.footer) }}
   {% endif %}
-  {% if config.extra.footer.location %}
-  <p class="meta">
-    <i class="fa fa-fw fa-map-marker"></i> {{config.extra.footer.location}}
-  </p>
-  {% endif %}
-</section>
-{% endif %}
-{% endblock extra_footer %}
+{% endblock content %}

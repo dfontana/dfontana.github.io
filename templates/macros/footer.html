@@ -1,0 +1,39 @@
+{% macro footer(foot) %}
+  <footer>
+    <hr>
+    <p>
+      {% if page.taxonomies.categories %}
+        {% set category = page.taxonomies.categories[0] %}
+        in <a href="{{ get_taxonomy_url(kind="categories", name=category) | safe }}">{{ category }}</a>
+      {% endif %}
+      {% if page.taxonomies.tags %}
+        and tagged
+        {% for tag in page.taxonomies.tags %}
+          <a href="{{ get_taxonomy_url(kind="tags", name=tag) | safe }}">{{ tag }}</a>
+          {% if page.taxonomies.tags | length > 1 %}
+            {% if loop.index != page.taxonomies.tags | length %}
+              {% if loop.index == page.taxonomies.tags | length - 1 %}
+                and
+              {% else %}
+                ,
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </p>
+    <hr>
+    <section class="author">
+    <div class="authorimage" style="background: url({{ foot.profile }})"></div>
+    <h4>{{ foot.author }}</h4>
+    {% if foot.bio %}
+        <p class="bio">{{foot.bio}}</p>
+    {% endif %}
+    {% if foot.location %}
+    <p class="meta">
+        <i class="fa fa-fw fa-map-marker"></i> {{foot.location}}
+    </p>
+    {% endif %}
+    </section>
+    </footer>
+{% endmacro meta %}
