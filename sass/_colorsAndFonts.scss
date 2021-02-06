@@ -6,9 +6,10 @@ $color-yellow: #b58900;
 $color-accent: $color-cyan;
 $color-accent--secondary: $color-violet;
 $color-accent--compliment: $color-yellow;
-$color-primaryText: #586e75;
+$color-primaryText: #485e64;
+$color-focusText: #263336;
 $color-bg--dark: #002b36;
-$color-bg--light: #fdf6e3;
+$color-bg--light: #faf9f4;
 
 @mixin primaryText { color: $color-primaryText; } // Base00
 @mixin secondaryText { color: #93a1a1; } // Base 1
@@ -16,9 +17,9 @@ $color-bg--light: #fdf6e3;
 @mixin primaryBg { background-color: $color-bg--light } // base 3
 @mixin secondaryBg { background-color:#eee8d5; } // base2
 
-@mixin titleFont { font-family: 'Cinzel Decorative'; }
+@mixin titleFont { font-family: 'Cinzel'; font-weight: 400; }
 @mixin bodyFont { font-family: 'Lora' }
-@mixin codeFont { font-family: Menlo, "Consolas", Courier, monospace; }
+@mixin codeFont { font-family: Menlo, "Consolas", Courier, monospace; font-size: 0.75em;}
 
 // Hyper links
 a.navhome {
@@ -42,10 +43,13 @@ a[itemprop="url"] {
   background-color: $color-accent--secondary;
 }
 
-.dark {
-  @include primaryBg;
+body {
+  @include bodyFont;
   @include primaryText;
+  @include primaryBg;
   h1,h2,h3,h4,h5,h6 {
+    @include titleFont;
+    color: $color-focusText;
     a {
       border-color: $color-accent;
       color: $color-accent;
@@ -55,17 +59,6 @@ a[itemprop="url"] {
       color: $color-bg--light;
     }
   }
-  strong {
-    @include primaryText;
-  }
-  code {
-    background-color: $color-bg--dark;
-    color: $color-accent--compliment;
-  }
-}
-
-.hack {
-  @include bodyFont;
   blockquote, em, strong {
     @include bodyFont;
   }
@@ -76,20 +69,8 @@ a[itemprop="url"] {
   }
   code {
     @include codeFont;
-    background-color: #002b36;
-    color: #b58900;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    @include titleFont;
-    a {
-      @include titleFont;
-    }
-  }
-}
-h1, h2, h3, h4, h5, h6 {
-  @include titleFont;
-  a {
-    @include titleFont;
+    background-color: $color-bg--dark;
+    color: $color-accent--compliment;
   }
 }
 
@@ -113,5 +94,5 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 section.author .meta {
-    @include titleFont;
+  @include titleFont;
 }

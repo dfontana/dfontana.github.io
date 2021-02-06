@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import "fa/fontawesome.scss";
 @import "fa/solid.scss";
 @import "screenSizes";
@@ -10,6 +10,10 @@
 @import "search";
 @import "pager";
 @import "headerAndRule";
+
+body {
+  margin: 0 15% 5% 15%;
+}
 
 a.navhome {
   &:after {

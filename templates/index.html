@@ -1,42 +1,71 @@
-{% extends "after-dark/templates/index.html" %}
-{% block extra_head %}
-  <link rel="stylesheet" href="{{ get_url(path="theme.css", trailing_slash=false) | safe }}">
-  <script src="{{ get_url(path="search_index.en.js", trailing_slash=false) | safe }}"></script>
-  <script src="{{ get_url(path="elasticlunr.min.js", trailing_slash=false) | safe }}"></script>
-  <script src="{{ get_url(path="search.js", trailing_slash=false) | safe }}"></script>
-{% endblock extra_head %}
-{% block header %}
-  {% if config.extra.after_dark_menu %}
-    <header>
-      <nav itemscope itemtype="http://schema.org/SiteNavigationElement">
-        <a class="navhome" href="{{config.base_url}}">{{config.title}}</a><!--
-      --><div class="navitems"><!--
-      -->{% for item in config.extra.after_dark_menu %}<!--
-        --><a itemprop="url"
-              class="{% if item.url | replace(from="$BASE_URL", to=config.base_url) == current_url %}active{% endif %}"
-              href="{{ item.url | safe | replace(from="$BASE_URL", to=config.base_url) }}"><!--
-          --><span itemprop="name">{{ item.name }}</span><!--
-        --></a>
-          {% endfor %}
-        </div>
-        <div class="search-container">
-          <input id="search" type="text" placeholder=" ">
-          <div>
-            <svg>
-                <use xlink:href="#path">
-            </svg>
-        </div>
-          <div class="search-results">
-            <div class="search-results__items"></div>
+{% import "macros/index.html" as index_macros %}
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+
+    <link rel="stylesheet" href="{{ get_url(path="theme.css", trailing_slash=false) | safe }}">
+    <script src="{{ get_url(path="search_index.en.js", trailing_slash=false) | safe }}"></script>
+    <script src="{{ get_url(path="elasticlunr.min.js", trailing_slash=false) | safe }}"></script>
+    <script src="{{ get_url(path="search.js", trailing_slash=false) | safe }}"></script>
+  </head>
+
+  <body>
+    {% block content %}
+      {% block header %}
+        {% if config.extra.menu %}
+        <header>
+          <nav itemscope itemtype="http://schema.org/SiteNavigationElement">
+            <a class="navhome" href="{{config.base_url}}">{{config.title}}</a>
+            <div class="navitems">
+              {% for item in config.extra.menu %}
+              <a itemprop="url"
+                  class="{% if item.url | replace(from="$BASE_URL", to=config.base_url) == current_url %}active{% endif %}"
+                  href="{{ item.url | safe | replace(from="$BASE_URL", to=config.base_url) }}">
+                  <span itemprop="name">{{ item.name }}</span>
+              </a>
+              {% endfor %}
+            </div>
+          </nav>
+          <div class="search-container">
+            <input id="search" type="text" placeholder=" ">
+            <div>
+              <svg>
+                  <use xlink:href="#path">
+              </svg>
           </div>
-        </div>
-      </nav>
-      <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 28" id="path">
-            <path d="M32.9418651,-20.6880772 C37.9418651,-20.6880772 40.9418651,-16.6880772 40.9418651,-12.6880772 C40.9418651,-8.68807717 37.9418651,-4.68807717 32.9418651,-4.68807717 C27.9418651,-4.68807717 24.9418651,-8.68807717 24.9418651,-12.6880772 C24.9418651,-16.6880772 27.9418651,-20.6880772 32.9418651,-20.6880772 L32.9418651,-29.870624 C32.9418651,-30.3676803 33.3448089,-30.770624 33.8418651,-30.770624 C34.08056,-30.770624 34.3094785,-30.6758029 34.4782612,-30.5070201 L141.371843,76.386562" transform="translate(83.156854, 22.171573) rotate(-225.000000) translate(-83.156854, -22.171573)"></path>
-        </symbol>
-      </svg>
-      <hr/>
-    </header>
-  {% endif %}
-{% endblock header %}
+            <div class="search-results">
+              <div class="search-results__items"></div>
+            </div>
+          </div>
+          <div class="search-button" style="background: url(/img/icon-bronze.png)"></div>
+          <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+            <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 28" id="path">
+                <path d="M32.9418651,-20.6880772 C37.9418651,-20.6880772 40.9418651,-16.6880772 40.9418651,-12.6880772 C40.9418651,-8.68807717 37.9418651,-4.68807717 32.9418651,-4.68807717 C27.9418651,-4.68807717 24.9418651,-8.68807717 24.9418651,-12.6880772 C24.9418651,-16.6880772 27.9418651,-20.6880772 32.9418651,-20.6880772 L32.9418651,-29.870624 C32.9418651,-30.3676803 33.3448089,-30.770624 33.8418651,-30.770624 C34.08056,-30.770624 34.3094785,-30.6758029 34.4782612,-30.5070201 L141.371843,76.386562" transform="translate(83.156854, 22.171573) rotate(-225.000000) translate(-83.156854, -22.171573)"></path>
+            </symbol>
+          </svg>
+          <hr/>
+        </header>
+        {% endif %}
+      {% endblock header %}
+
+      <main>
+        {% for page in paginator.pages %}
+            {{ index_macros::page_in_list(page=page) }}
+        {% endfor %}
+
+        <nav>
+          <p>
+            {% if paginator.previous %}
+              <a href="{{ paginator.previous }}">&laquo; Previous</a> |
+            {% endif %}
+            <span>Page {{ paginator.current_index }} of {{ paginator.number_pagers }}</span>
+            {% if paginator.next %}
+              | <a href="{{ paginator.next }}">Next &raquo;</a>
+            {% endif %}
+          </p>
+        </nav>
+      </main>
+    {% endblock content %}
+  </body>
+</html>

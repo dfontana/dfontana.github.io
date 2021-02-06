@@ -1,20 +1,20 @@
 base_url = "https://dfontana.github.io"
 title = "Frontiers"
 description = "Thoughts, ideas, and works."
-theme="after-dark"
-highlight_code = true
-highlight_theme = "solarized-dark"
 compile_sass = true
 taxonomies = [
-    # You can enable/disable RSS
     {name = "categories", rss = true},
     {name = "tags", rss = true},
 ]
 
 build_search_index = true
 
+[markdown]
+highlight_code = true
+highlight_theme = "solarized-dark"
+
 [extra]
-after_dark_menu = [
+menu = [
     {url = "$BASE_URL/categories", name = "Categories"},
     {url = "$BASE_URL/tags", name = "Tags"},
     {url = "$BASE_URL/about", name = "About"},
