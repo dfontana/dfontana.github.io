@@ -17,23 +17,22 @@ $color-bg--light: #faf9f4;
 @mixin primaryBg { background-color: $color-bg--light } // base 3
 @mixin secondaryBg { background-color:#eee8d5; } // base2
 
+@mixin bannerFont { font-family: 'Cinzel Decorative'; font-weight: 400; }
 @mixin titleFont { font-family: 'Cinzel'; font-weight: 400; }
 @mixin bodyFont { font-family: 'Lora' }
 @mixin codeFont { font-family: Menlo, "Consolas", Courier, monospace; font-size: 0.75em;}
 
 // Hyper links
-a.navhome {
-  @include titleFont;
+a.nav-title {
+  @include bannerFont;
   color: $color-accent--secondary;
-  border-color: $color-accent;
 }
 a {
-  border-color: $color-accent;
   color: $color-accent;
 }
 a:hover {
   background-color: $color-accent;
-  color: $color-bg--light;
+  color: $color-bg--light !important;
 }
 a[itemprop="url"] {
   color: $color-accent--secondary;
@@ -74,6 +73,10 @@ body {
   }
 }
 
+tbody tr:nth-child(2n+1) {
+  background-color: rgba($color-accent, .4);
+}
+
 .muted {
   @include secondaryText;
   @include bodyFont;
@@ -84,6 +87,11 @@ body {
 .search-container input {
   @include bodyFont;
   color: $color-accent--secondary;
+  &:focus {
+    @include sm {
+    color: #000;
+    }
+  }
   & + div svg {
     stroke: $color-accent;
   }
@@ -93,6 +101,8 @@ body {
   @include primaryText;
 }
 
-section.author .meta {
-  @include titleFont;
+section.author {
+  .meta, h4 {
+    @include bannerFont;
+  }
 }

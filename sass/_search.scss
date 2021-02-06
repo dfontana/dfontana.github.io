@@ -1,18 +1,21 @@
-.search-button {
-  background-size: cover !important;
-  border-radius: 50%;
-  background-position: center center;
-  width: 50px;
-  height: 50px;
-  border: 1px solid;
+header {
+  position: relative;
 }
 
 .search-container {
-  display: table;
-  margin-left: auto;
   direction: rtl;
+  position: absolute;
+  top: 15px;
+  right: 15px;
 
   input {
+    &:focus {
+      @include sm {
+        background-color: #2aa198;
+        width: 230px !important;
+        height: 40px;
+      }
+    }
     background: none;
     border: none;
     outline: none;
