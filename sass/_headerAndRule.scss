@@ -9,6 +9,15 @@
   margin-left: 10px;
 }
 
+.nav-image-link {
+  &:after {
+    content: none !important;
+  }
+  &:hover {
+    background-color: unset;
+  }
+}
+
 .nav-image {
   background-size: cover !important;
   border-radius: 50%;
@@ -16,6 +25,11 @@
   width: 60px;
   height: 60px;
   border: 3px solid #f4f3f3;
+  transition-duration: 400ms;
+
+  &:hover {
+    filter: invert(1);
+  }
 }
 
 .nav-items {
@@ -27,6 +41,12 @@
     padding-right: 5px;
     &:after {
       all:unset;
+    }
+    &-mobile {
+      display: none;
+      @include sm {
+        display: unset;
+      }
     }
   }
 }

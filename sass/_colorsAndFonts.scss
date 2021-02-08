@@ -1,10 +1,9 @@
-// Underscores / Primary Accent (pink)
-$color-violet: #6c71c4;
+// Underscores / Primary Accent
 $color-cyan: #2aa198;
 $color-yellow: #b58900;
 
 $color-accent: $color-cyan;
-$color-accent--secondary: $color-violet;
+$color-accent--secondary: $color-yellow;
 $color-accent--compliment: $color-yellow;
 $color-primaryText: #485e64;
 $color-focusText: #263336;
@@ -29,6 +28,7 @@ a.nav-title {
 }
 a {
   color: $color-accent;
+  transition-duration: 400ms;
 }
 a:hover {
   background-color: $color-accent;
