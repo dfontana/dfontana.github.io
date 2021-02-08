@@ -42,6 +42,12 @@
     &:after {
       all:unset;
     }
+    &-mobile {
+      display: none;
+      @include sm {
+        display: unset;
+      }
+    }
   }
 }
 

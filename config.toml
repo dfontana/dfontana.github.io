@@ -15,9 +15,9 @@ highlight_theme = "solarized-dark"
 
 [extra]
 menu = [
-    {url = "$BASE_URL/categories", name = "Categories"},
-    {url = "$BASE_URL/tags", name = "Tags"},
-    {url = "$BASE_URL/about", name = "About"},
+    {url = "$BASE_URL/categories", mobile=true, name = "Categories"},
+    {url = "$BASE_URL/tags", mobile=true, name = "Tags"},
+    {url = "$BASE_URL/about", mobile=false, name = "About"},
 ]
 
     [extra.footer]
