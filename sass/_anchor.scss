@@ -1,10 +1,20 @@
 .zola-anchor {
   opacity: 50%;
+  :before {
+    font-size: 15px;
+    vertical-align: middle;
+  }
 }
 
 a[href*="://"]:after, a[rel*="external"] {
   @extend %fa-icon;
   @extend .fas;
   content: fa-content($fa-var-external-link-square-alt);
-  padding-left: 5px;
+  padding-left: 3px;
+  font-size: 10px;
+  vertical-align: middle;
+}
+
+h1> a:after, h2> a:after, h3> a:after, h4> a:after, h5> a:after, h6 > a:after {
+  content: none !important;
 }
