@@ -1,12 +1,11 @@
 +++
-title = "Profiling in NodeJS with Environment Variables"
+title = "NodeJS Environment Profiles"
 date = 2017-10-13
 [taxonomies]
 tags = ["js", "configuration", "environment"]
-categories = ["code"]
 +++
 
-While standing up a REST API for a work project, I spent a lot of time editing the IP, port, and other parameters within my server as I swapped from production and development environments. After being fed up with the constant back and forth, I searched for a better solution.<!-- more --> In this tidbit, I'm going to present my solution.
+Switching configuration between production and development can be tedious and error prone. Fed up with the constant back and forth, I searched for a better solution.<!-- more -->
 
 ## Reading Environment Variables in Node
 An easy solution would be to simply pass environment variables when launching NodeJS, pulling the configuration from inside our files to the commandline during launch time. We can accomplish this like so:
@@ -25,8 +24,8 @@ Notice we set a default value with a logical OR. It's important to remember this
 
 This is still not the ideal scenario, however. Let's harp on the notion of a default configuration. We've successfully pulled out our configuration using environment variables, but if I want to change the default configs then I'm back to my original problem of editing source code! Luckily, we can do one extra tweak to solve just this.
 
-## The Magic of Profiles and JSONs
-Here's where profiling comes in. What if we were to place all our configurations within a file (like a JSON) and load it in at runtime? What if we did one better, and made it a module that can handle comments AND specify all our configurations within itself - rather than specifying our default configuration within our source. Well we can! And we will:
+## The Magic of Environments and JSONs
+Here's where setting up an environment profile comes in. What if we were to place all our configurations within a file (like a JSON) and load it in at runtime? What if we did one better, and made it a module that can handle comments AND specify all our configurations within itself - rather than specifying our default configuration within our source. Well we can! And we will:
 
 ```javascript
 // config.js

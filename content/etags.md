@@ -4,7 +4,6 @@ date = 2019-01-01
 description = "Yet, what if there were no cookies? Be it paranoid users clearing their browsing data, increasingly stringent cookie policies, or lack of cookie persistence (see _WebView_) we could realistically find ourselves here. As a result, we'll need a new way to persist some data, one of which I'd like to demonstrate today: **ETags**."
 [taxonomies]
 tags = ["go", "etag", "http"]
-categories = ["code"]
 +++
 
 What if there were no cookies? Be it paranoid users clearing their browsing data, increasingly stringent cookie policies, or lack of cookie persistence (see _WebView_) we could realistically find ourselves here. As a result, we'll need a new way to persist some data, one of which I'd like to demonstrate today: **ETags**.<!-- more -->

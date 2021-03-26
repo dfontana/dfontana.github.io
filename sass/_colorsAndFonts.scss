@@ -1,41 +1,34 @@
-// Underscores / Primary Accent
-$color-cyan: #2aa198;
-$color-yellow: #b58900;
-
-$color-accent: $color-cyan;
-$color-accent--secondary: $color-yellow;
-$color-accent--compliment: $color-yellow;
-$color-primaryText: #485e64;
-$color-focusText: #263336;
-$color-bg--dark: #002b36;
-$color-bg--light: #faf9f4;
+$color-primary: #B68800;
+$color-accent: #CA054D;
+$color-accent--secondary: #06D6A0;
+$color-primaryText: #033F63;
+$color-secondaryText: #28666E;
+$color-bg--light: #E0E0E0;
 
 @mixin primaryText { color: $color-primaryText; } // Base00
-@mixin secondaryText { color: #93a1a1; } // Base 1
-@mixin boldText { color: #586e75; } // base 01
+@mixin secondaryText { color: $color-secondaryText; } // Base 1
 @mixin primaryBg { background-color: $color-bg--light } // base 3
-@mixin secondaryBg { background-color:#eee8d5; } // base2
 
-@mixin bannerFont { font-family: 'Cinzel Decorative'; font-weight: 400; }
-@mixin titleFont { font-family: 'Cinzel'; font-weight: 400; }
-@mixin bodyFont { font-family: 'Lora' }
-@mixin codeFont { font-family: Menlo, "Consolas", Courier, monospace; font-size: 0.75em;}
+@mixin titleFont { font-family: 'Cinzel Decorative'; font-style: bold; }
+@mixin bodyFont { font-family: 'Lora'; font-size: 18px; }
+@mixin codeFont { font-family: Menlo, "Consolas", Courier, monospace; font-size: 1em;}
+@mixin codeInline {background-color: #393939; color: #d68686}
 
 // Hyper links
 a.nav-title {
-  @include bannerFont;
-  color: $color-accent--secondary;
+  @include titleFont;
+  color: $color-primary;
 }
 a {
   color: $color-accent;
   transition-duration: 400ms;
 }
-a:hover {
-  background-color: $color-accent;
+a:hover:not(.zola-anchor) {
+  background-color: $color-secondaryText;
   color: $color-bg--light !important;
 }
 a[itemprop="url"] {
-  color: $color-accent--secondary;
+  color: $color-accent;
 }
 :target {
   color: $color-bg--light;
@@ -48,28 +41,28 @@ body {
   @include primaryBg;
   h1,h2,h3,h4,h5,h6 {
     @include titleFont;
-    color: $color-focusText;
+    color: $color-primary;
     a {
-      border-color: $color-accent;
-      color: $color-accent;
-    }
-    a:hover {
-      background-color: $color-accent;
-      color: $color-bg--light;
+      border-color: $color-primary;
+      color: $color-primary;
     }
   }
   blockquote, em, strong {
     @include bodyFont;
   }
-  pre code {
-    // Keep these dark
-    background-color: inherit;
-    color: inherit;
-  }
   code {
     @include codeFont;
-    background-color: $color-bg--dark;
-    color: $color-accent--compliment;
+    @include codeInline;
+    overflow-x: auto;
+  }
+  p code, li code {
+    font-size: 0.75em;
+  }
+  pre code { 
+    font-size: 1em;
+  }
+  strong, em {
+    color: $color-accent;
   }
 }
 
@@ -83,26 +76,8 @@ tbody tr:nth-child(2n+1) {
   font-weight: 400;
 }
 
-// Search
-.search-container input {
-  @include bodyFont;
-  color: $color-accent--secondary;
-  &:focus {
-    @include sm {
-    color: #000;
-    }
-  }
-  & + div svg {
-    stroke: $color-accent;
-  }
-}
-.search-results {
-  @include secondaryBg;
-  @include primaryText;
-}
-
 section.author {
   .meta, h4 {
-    @include bannerFont;
+    @include titleFont;
   }
 }

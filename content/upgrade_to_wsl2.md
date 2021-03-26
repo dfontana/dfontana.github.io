@@ -3,7 +3,6 @@ title = "Upgrading to WSL2"
 date = 2020-03-29
 [taxonomies]
 tags = ["terminal", "wsl2", "configuration"]
-categories = ["system"]
 +++
 
 WSL2 comes with a performance and feature perks over the old system, including choice of Linux flavor and a different virtualization strategy. If for no other reason, though, it was simply time for an upgrade.<!-- more --> Here's the shortnotes:
@@ -25,9 +24,9 @@ Before booting the new Ubuntu I decided to copy any files I wanted to keep onto 
 
 Once ready, launch the new 'Ubuntu' app you downloaded and follow the prompt to setup your user. In my quick searches I couldn't find a way to migrate my existing user over easily, so I found it better to just go with the clean install approach. Once done, boot a Powershell and run `wsl --set-default-version 2` followed by `wsl --set-version <Distro> 2`. If the commands suceeded your almost there. If they failed (like they did for me), you'll want to circle back to checking your System Updates.
 
-### Knock out the old guy ###
+### Retire the Old System ###
 
-`wsl -l -v` will list all your installe distros and their versions. For me this was Ubuntu on WSL 2 and `Ubuntu (Legacy)`. WSL V1 might be what you'll find if you came to the party after Legacy. If you'd like to rid yourself of this, you're looking for the `unregister` command: `wsl --unregister <distroName>`. Verify with a `wsl -l -v` again to confirm it's removal.
+`wsl -l -v` will list all your installed distros and their versions. For me this was Ubuntu on WSL 2 and `Ubuntu (Legacy)`. WSL V1 might be what you'll find if you came to the party after Legacy. If you'd like to rid yourself of this, you're looking for the `unregister` command: `wsl --unregister <distroName>`. Verify with a `wsl -l -v` again to confirm it's removal.
 
 ## System Prep - Terminal ##
 

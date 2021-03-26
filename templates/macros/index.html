@@ -4,6 +4,9 @@
     <h2 class="pagetitle" itemprop="name">
       <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
     </h2>
+    <p>
+      {% if page.date %}{{ page.date }}{% else %}<em>Evergreen</em>{% endif %}
+    </p>
   </header>
   {% if page.summary %}
     <div class="pagesummary" itemprop="summary">
