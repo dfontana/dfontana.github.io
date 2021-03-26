@@ -5,7 +5,7 @@ date = 2021-03-26
 tags = ["rust", "discord", "bot", "project"]
 +++
 
-Quarentine has lead to some _oddities_ to pass the time, and this post is no different. I created a Discord Bot in Rust, hosted on my [Raspberry Pi](@/raspberry_pi.md). It's purpose? To __shrug__. This is the way {{em(id="shrug-dog")}}<!-- more -->
+Quarantine has lead to some _oddities_ to pass the time, and this post is no different. I created a Discord Bot in Rust, hosted on my [Raspberry Pi](@/raspberry_pi.md). It's purpose? To __shrug__. This is the way {{em(id="shrug-dog")}}<!-- more -->
 
 {{em(id="shrug-dog")}}{{em(id="shrug-dog")}} Warning - _this post is gonna get silly_ {{em(id="shrug-dog")}}{{em(id="shrug-dog")}}
 
@@ -24,14 +24,14 @@ Some of the other dependencies we'll rely on:
 
 ## Before the Code Came the Build
 
-Sadly in order to {{em(id="shrug-dog")}} we first need an instance to run. In short: A Rasperry Pi hosting a Docker container of our bot, with a separate env for testing and production. Let's unpack these.
+Sadly in order to {{em(id="shrug-dog")}} we first need an instance to run. In short: A Raspberry Pi hosting a Docker container of our bot, with a separate env for testing and production. Let's unpack these.
 
-### 1. Defining our Enviornments
+### 1. Defining our Environments
 
 Recall, [I don't like manually changing values and neither should you!](@/nodejs_profiling.md) I want to quickly run something locally - futz with it - and have zero impact on the production running instance. For this, it means defining _two_ bots in the [Discord Application Portal](https://discord.com/developers/applications) - aptly named `disbot` and `disbot-dev`. I can then configure two `.env` files containing the following:
 
 ```.env
-API_KEY=<Your Bot's Token Here>
+API_KEY=<Your Bot Token Here>
 EMOTE_NAME=<your-emote-to-react-with || shrug_dog>
 EMOTE_USERS=<csv-of-users-to-target-when-mentioned || User1,User2,User3>
 ```
@@ -109,7 +109,7 @@ fn main() {
 Building won't require any special `Cargo.toml` options, but it will require the help of the [rust-musl-cross](https://github.com/messense/rust-musl-cross) base Docker Image for compiling a binary that can run on the ARMv7 Architecture of the Pi. The general approach I take here is:
 
 1. Use a Multi-stage build
-1. Cache dependencies in the first step, so they only redownload on change
+1. Cache dependencies in the first step, so they only re-download on change
 1. Compile the application in the next step, using whatever build dependencies I need (eg `rust-musl-cross`, or maybe your fav `jdk` if that's your poison {{em(id="shrug-dog")}})
 1. Copy the final artifact into an optimized run container (eg `Alpine Linux`, or your fav `jre` if you're _still_ sipping that {{em(id="shrug-dog")}})
 
@@ -214,7 +214,7 @@ Since this is pretty well defined unit of behavior, I decided to break out a mod
 - I want this cache to be thread-safe
 - And I want the cache capable of populating itself
 
-With these needs in mind, I turned to `lazy_static!` to help setup that global instance. This little macro makes it simple to create static references, which can be made thread safe using the proper syncronization primitives (eg `RwLock`, etc). Rather than store an entire `EmojiLookup` struct, though, I decided to only store the configuration values needed to rebuild the struct. Internally, `Serenity-rs` handle caching of API calls so we don't actually need to recache these values ourselves (how nifty), so I'm dancing around the requirement a little (_oh well_ {{em(id="shrug-dog")}}). 
+With these needs in mind, I turned to `lazy_static!` to help setup that global instance. This little macro makes it simple to create static references, which can be made thread safe using the proper synchronization primitives (eg `RwLock`, etc). Rather than store an entire `EmojiLookup` struct, though, I decided to only store the configuration values needed to rebuild the struct. Internally, `Serenity-rs` handle caching of API calls so we don't actually need to re-cache these values ourselves (how nifty), so I'm dancing around the requirement a little (_oh well_ {{em(id="shrug-dog")}}). 
 
 ```rust
 lazy_static! {
@@ -244,7 +244,7 @@ With the above, we can now setup the `EmojiLookup` once on application start and
 mod emoji;
 
 async fn main() {
-	// ... config and env pasing
+	// ... config and env parsing
   emoji::configure(&config).expect("Failed to setup emoji lookup");
 	// ... client setup
 }
@@ -253,7 +253,7 @@ async fn main() {
 When it comes to actually finding the emoji itself, we'll just do a simple search over the `Guild`'s stored emotes (noting that this only works for custom emojis -- baked in emotes you'll just need to use the hardcoded unicode representation of them {{em(id="shrug-dog")}}). 
 
 ```rust
-impl EmojiLoookup {
+impl EmojiLookup {
 	pub async fn get(&self, guild_id: GuildId, cache: &Cache) -> Result<Emoji, String> {
     // Pull the emoji from the guild attached to the message
     let maybe_emoji = cache
@@ -296,14 +296,14 @@ pub struct Handler {
 #[async_trait]
 impl EventHandler for Handler {
 	async fn message(&self, ctx: Context, msg: Message) {
-    // TODO Enact your shrugging vengence
+    // TODO Enact your shrugging vengeance
   }
 }
 ```
 
 The general flow looks like this:
 
-1. Don't react if the message comes from yourself (otherwise we get all kinds of odd infinte loop-y behavior)
+1. Don't react if the message comes from yourself (otherwise we get all kinds of odd infinite loop-y behavior)
 
 	```rust
 	if msg.is_own(&ctx.cache).await {      
@@ -357,6 +357,6 @@ Which in sum is [captured here](https://github.com/dfontana/disbot/blob/master/s
 
 ## Unleash the Shiba {{em(id="shrug-dog")}}
 
-![Shruggin' Shibba](/img/shiba-has-shrugged.png)
+![Shruggin' Shiba](/img/shiba-has-shrugged.png)
 
 ... Well, it is mostly useless {{em(id="shrug-dog")}}. If anything, hopefully this post has laid the groundwork for you to try out your own silly bot!
