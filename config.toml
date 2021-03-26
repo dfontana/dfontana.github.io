@@ -7,11 +7,9 @@ taxonomies = [
     {name = "tags", rss = true},
 ]
 
-build_search_index = true
-
 [markdown]
 highlight_code = true
-highlight_theme = "solarized-dark"
+highlight_theme = "zenburn"
 
 [extra]
 menu = [
