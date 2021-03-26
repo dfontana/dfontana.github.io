@@ -3,7 +3,6 @@ title = "Upgrading to WSL2"
 date = 2020-03-29
 [taxonomies]
 tags = ["terminal", "wsl2", "configuration"]
-categories = ["system"]
 +++
 
 WSL2 comes with a performance and feature perks over the old system, including choice of Linux flavor and a different virtualization strategy. If for no other reason, though, it was simply time for an upgrade.<!-- more --> Here's the shortnotes:

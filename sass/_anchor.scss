@@ -6,13 +6,18 @@
   }
 }
 
-a[href*="://"]:after, a[rel*="external"] {
+a[rel*="nofollow"]:after {
   @extend %fa-icon;
   @extend .fas;
   content: fa-content($fa-var-external-link-square-alt);
   padding-left: 3px;
   font-size: 10px;
   vertical-align: middle;
+}
+
+a:not(.nav-image-link, .zola-anchor) {
+  text-decoration: none;
+  border-bottom: 2px solid #CA054D;
 }
 
 h1> a:after, h2> a:after, h3> a:after, h4> a:after, h5> a:after, h6 > a:after {

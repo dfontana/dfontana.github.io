@@ -3,19 +3,19 @@ title = "Frontiers"
 description = "Thoughts, ideas, and works."
 compile_sass = true
 taxonomies = [
-    {name = "categories", rss = true},
     {name = "tags", rss = true},
 ]
 
 [markdown]
 highlight_code = true
 highlight_theme = "zenburn"
+render_emoji = true
+external_links_no_follow = true
 
 [extra]
 menu = [
-    {url = "$BASE_URL/categories", mobile=true, name = "Categories"},
-    {url = "$BASE_URL/tags", mobile=true, name = "Tags"},
-    {url = "$BASE_URL/about", mobile=false, name = "About"},
+    {url = "$BASE_URL/about", name = "About"},
+    {url = "$BASE_URL/tags", name = "Tags"},
 ]
 
     [extra.footer]

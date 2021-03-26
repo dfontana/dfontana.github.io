@@ -3,7 +3,6 @@ title = "Using Cmder, Mintty, & ZSH on Windows"
 date = 2017-01-23
 [taxonomies]
 tags = ["terminal", "zsh", "configuration"]
-categories = ["system"]
 +++
 
 [_Originally Shared as a Gist_](https://gist.github.com/dfontana/3e27ec5ea3a6f935b7322b580d3df318). Instructions to obtain ZSH on a windows environment, without the input funny business presented by some other attempted solutions. The final result is ZSH running on a mintty terminal, emulated by cygwin, and being handled by the popular cmder. <!-- more -->

@@ -3,23 +3,8 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
     <title>{% block title %}{{ config.title }}{% endblock title %}</title>
-
     <link rel="stylesheet" href="{{ get_url(path="theme.css", trailing_slash=false) | safe }}">
   </head>
-  <div class="directory">
-    <i class="directory-icon fa fa-fw fa-bars"></i>
-    <div class="directory-contents">
-      {% for entry in config.taxonomies %}
-        {% set tax = get_taxonomy(kind=entry.name) %}
-        <div class="directory-contents-title">{{tax.kind.name}}</div>
-        <ol>
-          {% for term in tax.items %}
-            <li><a href="{{ term.permalink | safe }}">{{ term.name }}</a> ({{ term.pages | length }})</li>
-          {% endfor %}
-        </ol>
-      {% endfor %}
-    </div>
-  </div>
   <body>
     {% block content %}
       {% block header %}
@@ -32,7 +17,7 @@
               <div class="nav-items">
                 {% for item in config.extra.menu %}
                 <a itemprop="url"
-                    class="nav-item {% if item.mobile %}nav-item-mobile{% endif %}{% if item.url | replace(from="$BASE_URL", to=config.base_url) == current_url %}active{% endif %}"
+                    class="nav-item {% if item.url | replace(from="$BASE_URL", to=config.base_url) == current_url %}active{% endif %}"
                     href="{{ item.url | safe | replace(from="$BASE_URL", to=config.base_url) }}">
                     <span itemprop="name">{{ item.name }}</span></a>
                 {% endfor %}

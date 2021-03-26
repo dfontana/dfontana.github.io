@@ -58,6 +58,9 @@ body {
   p code, li code {
     font-size: 0.75em;
   }
+  pre code { 
+    font-size: 1em;
+  }
   strong, em {
     color: $color-accent;
   }

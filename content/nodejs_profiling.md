@@ -3,7 +3,6 @@ title = "Profiling in NodeJS with Environment Variables"
 date = 2017-10-13
 [taxonomies]
 tags = ["js", "configuration", "environment"]
-categories = ["code"]
 +++
 
 While standing up a REST API for a work project, I spent a lot of time editing the IP, port, and other parameters within my server as I swapped from production and development environments. After being fed up with the constant back and forth, I searched for a better solution.<!-- more --> In this tidbit, I'm going to present my solution.

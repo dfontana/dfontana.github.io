@@ -8,7 +8,6 @@
 @import "code";
 @import "pager";
 @import "headerAndRule";
-@import "directory";
 
 body {
   margin: 0 15% 5% 15%;
@@ -25,4 +24,17 @@ em {
   &:after, &:before {
     content: unset;
   }
+}
+
+header {
+  h1 {
+    margin-bottom: 0;
+  }
+  p {
+    margin-top: 0;
+  }
+}
+
+li.tag {
+  padding: 2px;
 }

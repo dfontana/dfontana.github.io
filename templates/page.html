@@ -1,5 +1,6 @@
 {% extends "index.html" %}
 {% import "macros/footer.html" as footer_macros %}
+{% import "macros/page-tags.html" as tag_macros %}
 {% import "macros/index.html" as index_macros %}
 
 {% block content %}
@@ -10,6 +11,10 @@
   <article itemscope itemtype="http://schema.org/BlogPosting">
     <header>
         <h1 itemprop="headline">{{ page.title }}</h1>
+        <p>
+          {% if page.date %}{{ page.date }}{% else %}<em>Evergreen</em>{% endif %}&nbsp;{{tag_macros::tags()}}
+        </p>
+        <hr>
     </header>
     <div itemprop="articleBody">
       {{ page.content | safe }}
