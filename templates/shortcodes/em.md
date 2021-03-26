@@ -1,0 +1,1 @@
+<img class="emote{% if jumbo %} jumbo{% endif%}" src="/img/{{id}}.png"/>

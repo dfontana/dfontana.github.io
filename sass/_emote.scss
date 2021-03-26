@@ -1,0 +1,12 @@
+.emote {
+  display: inline;
+  height: auto;
+  width: 25px;
+  padding: 0 1px;
+  filter: drop-shadow(1px 1px 1px #222);
+  vertical-align: bottom;
+
+  &.jumbo {
+    width: 35px;
+  }
+}
