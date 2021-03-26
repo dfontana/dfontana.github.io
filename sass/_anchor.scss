@@ -1,8 +1,12 @@
-.zola-anchor {
-  opacity: 50%;
-  :before {
-    font-size: 15px;
-    vertical-align: middle;
+h1,h2,h3,h4,h5,h6 {
+  position: relative;
+  
+  .zola-anchor {
+    &:before {
+      position: absolute;
+      content: "# ";
+      left: -.8em;
+    }
   }
 }
 
@@ -18,8 +22,4 @@ a[rel*="nofollow"]:after {
 a:not(.nav-image-link, .zola-anchor) {
   text-decoration: none;
   border-bottom: 2px solid #CA054D;
-}
-
-h1> a:after, h2> a:after, h3> a:after, h4> a:after, h5> a:after, h6 > a:after {
-  content: none !important;
 }

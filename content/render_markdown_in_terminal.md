@@ -5,7 +5,7 @@ date = 2019-01-03
 tags = ["terminal", "markdown", "configuration"]
 +++
 
-Here's a little trick - previewing Markdown in your terminal. Odds are if you've tried working on a Markdown doc outside of an editor capable of previewing it, you'll find yourself needing to open it elsewhere to get a sense of what's rendering.<!-- more --> After looking around for a solution to this, I found a few little utilities capable of helping out.
+Here's a little trick - previewing Markdown in your terminal.<!-- more --> Odds are if you've tried working on a Markdown doc outside of an editor capable of previewing it, you'll find yourself needing to open it elsewhere to get a sense of what's rendering. After looking around for a solution to this, I found a few little utilities capable of helping out.
 
 ## Pandoc
 

@@ -7,15 +7,13 @@
 @import "anchor";
 @import "code";
 @import "pager";
-@import "headerAndRule";
+@import "navigation";
 
 body {
-  margin: 0 15% 5% 15%;
-  @include sm {
-    margin: 0 5% 5% 5%;
-  }
+  max-width: 750px;
+  margin: 0 auto;
   @include md {
-    margin: 0 5% 5% 5%;
+    margin: 0 7%;
   }
 }
 
@@ -37,4 +35,12 @@ header {
 
 li.tag {
   padding: 2px;
+}
+
+div.articlebody h2 {
+  border-bottom: 2px dotted #28666E;
+}
+
+footer {
+  margin-bottom: 15px;
 }

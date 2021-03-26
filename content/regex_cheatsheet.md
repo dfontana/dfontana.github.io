@@ -5,7 +5,7 @@ date = 2018-12-17
 tags = ["cheatsheet"]
 +++
 
-It's not frequent I come across a need for a regex - perhaps to my own detriment - but when I do, I often find myself forgetting what specific parts may mean. Here's a little cheatsheet<!-- more --> I made myself ~ perhaps there's some value for you.
+It's not frequent I come across a need for a regex  but when I do, I often find myself forgetting what specific parts may mean. Here's a little cheatsheet<!-- more --> I made myself ~ perhaps there's some value for you.
 
 Symbol      | Name        | Meaning
 :----------:|:-----------:|:----------

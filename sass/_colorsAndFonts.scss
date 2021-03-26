@@ -10,7 +10,7 @@ $color-bg--light: #E0E0E0;
 @mixin primaryBg { background-color: $color-bg--light } // base 3
 
 @mixin titleFont { font-family: 'Cinzel Decorative'; font-style: bold; }
-@mixin bodyFont { font-family: 'Lora' }
+@mixin bodyFont { font-family: 'Lora'; font-size: 18px; }
 @mixin codeFont { font-family: Menlo, "Consolas", Courier, monospace; font-size: 1em;}
 @mixin codeInline {background-color: #393939; color: #d68686}
 
@@ -23,7 +23,7 @@ a {
   color: $color-accent;
   transition-duration: 400ms;
 }
-a:hover {
+a:hover:not(.zola-anchor) {
   background-color: $color-secondaryText;
   color: $color-bg--light !important;
 }

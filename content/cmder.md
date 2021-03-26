@@ -5,7 +5,7 @@ date = 2017-01-23
 tags = ["terminal", "zsh", "configuration"]
 +++
 
-[_Originally Shared as a Gist_](https://gist.github.com/dfontana/3e27ec5ea3a6f935b7322b580d3df318). Instructions to obtain ZSH on a windows environment, without the input funny business presented by some other attempted solutions. The final result is ZSH running on a mintty terminal, emulated by cygwin, and being handled by the popular cmder. <!-- more -->
+[_Originally Shared as a Gist_](https://gist.github.com/dfontana/3e27ec5ea3a6f935b7322b580d3df318). ZSH setup on Windows, minus the input funny business. We'll use mintty emulated by cygwin running on cmder. <!-- more -->
 
 ### Why is this here?
 For the benefit of myself and others. I've already followed these instructions twice. It took me hours to figure all this out, maybe someone else can save a few.
