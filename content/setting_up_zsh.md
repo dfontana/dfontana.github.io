@@ -41,7 +41,7 @@ Plugins get to be added via the `.zshrc` file and can be found on the official r
 
 plugins=(z git ssh-agent)
 
-# Tells what identities to load. Can be more than one seperated by spaces.
+# Tells what identities to load. Can be more than one separated by spaces.
 zstyle :omz:plugins:ssh-agent identities id_rsa
 
 # How long to keep these identities loaded before reasking for password.
@@ -76,7 +76,7 @@ Now that I've gotten you started, check out other [plugins](https://github.com/r
 ### Old Troubleshooting Steps that You Shouldn't Need?
 On a final side note, the zsh-syntax-highlighting plugin has given me trouble installing before. I've always gotten it working, but it's taken a combination of some of the following suggestions, so if it doesn't work first go - try adding some of these fixes in your `.zshrc`:
 
-1. List the `zsh-syntax-highlghting` plugin last. This apparently matters according to prior github issues, but I have a hunch it may not matter any longer after looking at how plugins are loaded by oh-my-zsh in debug logs.
+1. List the `zsh-syntax-highlighting` plugin last. This apparently matters according to prior github issues, but I have a hunch it may not matter any longer after looking at how plugins are loaded by oh-my-zsh in debug logs.
 
 2. Try manually sourcing the plugin. This one definitely isn't the best solution, but it can help diagnose. Just add the following to `.zshrc`:
 ```sh

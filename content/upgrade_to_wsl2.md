@@ -12,7 +12,7 @@ WSL2 comes with a performance and feature perks over the old system, including c
 Wasn't as straightforward as [the MSDocs made it][ms_docs]. I had to opt into the insiders program, with my computer having been out of date for almost a year -- the slow ring was enough to get the right version. A few restarts later and I had a latest enough build: `19041`. Then it was a matter of:
 
 - Enable Virtual Machine Platform ('Turn Windows Features on or off' > 'Virtual Machine Platform' & 'Windows Subsystem for Linux').
-- Reboot, and while you're at the BIOS - turn on Intel Virtualization (VT-x). VT-d, if supported on your system, is also a good call - as it allows direct IO by the virtual machines. I had an issue where this was switched off and WSL2 threw a Virtualization error during installation. You might need to comb over some of the 'Advanced' sections of youe BIOS to find it.
+- Reboot, and while you're at the BIOS - turn on Intel Virtualization (VT-x). VT-d, if supported on your system, is also a good call - as it allows direct IO by the virtual machines. I had an issue where this was switched off and WSL2 threw a Virtualization error during installation. You might need to comb over some of the 'Advanced' sections of your BIOS to find it.
 
 Then the system was ready to _start_ installing WSL2.
 
@@ -22,7 +22,7 @@ From the MS Store pick out a distro. I stuck with Ubuntu. I had an issue getting
 
 Before booting the new Ubuntu I decided to copy any files I wanted to keep onto a separate drive -- thinks like dotfiles or projects I didn't want to re-clone. Doing this now made it easier later to just flip the switch, so take a moment if you haven't already.
 
-Once ready, launch the new 'Ubuntu' app you downloaded and follow the prompt to setup your user. In my quick searches I couldn't find a way to migrate my existing user over easily, so I found it better to just go with the clean install approach. Once done, boot a Powershell and run `wsl --set-default-version 2` followed by `wsl --set-version <Distro> 2`. If the commands suceeded your almost there. If they failed (like they did for me), you'll want to circle back to checking your System Updates.
+Once ready, launch the new 'Ubuntu' app you downloaded and follow the prompt to setup your user. In my quick searches I couldn't find a way to migrate my existing user over easily, so I found it better to just go with the clean install approach. Once done, boot a Powershell and run `wsl --set-default-version 2` followed by `wsl --set-version <Distro> 2`. If the commands succeeded your almost there. If they failed (like they did for me), you'll want to circle back to checking your System Updates.
 
 ### Retire the Old System ###
 
@@ -63,7 +63,7 @@ I opted for the new ['Windows Terminal'][windows_terminal]:
     - Download the file you'd like to `~/.dir_colors`.
     - In your bash/zshrc add `eval dircolors ~/.dir_colors`
   - If you're interested in a non-emoji version of Fira Code (which instead uses special patched symbols are requires a compatible prompt), you can download one from [NerdFonts][nerd_fonts]
-  - Speaking of prompts, I used to use [Spaceship][spaceship], but decided to give a pure-Rust version (inpired by Spacehsip) a shot - [Starship][starship].
+  - Speaking of prompts, I used to use [Spaceship][spaceship], but decided to give a pure-Rust version (inspired by Spaceship) a shot - [Starship][starship].
 
 ## System Prep - Environment ##
 

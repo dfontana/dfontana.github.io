@@ -46,7 +46,7 @@ That's it for cygwin, you can close the terminal. Unless you are adding more pac
 1. Download and install some or all of the [powerline fonts](https://github.com/powerline/fonts). I only use Hack in this guide, so feel free to stick to this. Powerline fonts, for the uneducated, are patched fonts that include some fancy symbols related to git and such. You don't **need** this, but it's a plus!
   - "There's a install.ps1 in the folder. Set execution policy and run it." (Thanks @yiufung)
 2. [Download cmder](http://cmder.net/) to get started (the full version!). This is a conemu derivative to run shells inside of. It's flexible and highly customizable, which tends to make it desireable. Features a quake-style drop down shell if you're that kind of person, but more importantly plays really nice with keyboard interactions.
-3. Unpack cmder to a desired location, this is where you'll be keeping cmder permenantly, so pick a cozy spot. Run cmder.exe.
+3. Unpack cmder to a desired location, this is where you'll be keeping cmder permanently, so pick a cozy spot. Run cmder.exe.
 4. Right click the tab bar of cmder to open the settings. We're going to tweak a few things. Tweak as you like of course.
     1. Under *Main* (Check `General > Fonts` if missing - Thanks @SturmB!) we're going to set the font for non-mintty terminals, just for consistency: Hack, Size 16, Uncheck the option for an alternative font.
     2. Under *Size&Position* we're going to tweak the size of the final window. This applies for the quake style drop down too, which I'm going to lead you into setting up. Set width to 95%, height 75% (be sure to type the %!).
@@ -66,7 +66,7 @@ That's it for cygwin, you can close the terminal. Unless you are adding more pac
     Win+Right:  Switch next console
     ```
     7. Under *Keyboard* check "Install keyboard hooks" (Might now be called  `Support special hotkeys` if missing - Thanks @SturmB!)
-    8. Under *Paste* make sure each mode is in "Multi-line". This only affects cmd / non-mintty terminals from what I've seen, but is pleasent to have set for when not using mintty.
+    8. Under *Paste* make sure each mode is in "Multi-line". This only affects cmd / non-mintty terminals from what I've seen, but is pleasant to have set for when not using mintty.
 5. Save settings and hit Win+Down, run your task. Tada you have a ConEmu running cygwin, running mintty. Wonderful. This is what we'll be using to tweak from here out! If you're prompted to generate configuration files, feel free to. If you keep following, I'll be providing my configuration which you can poke around. We're also about to overwrite the default .zshrc with the oh-my-zsh one, so hold out on tweaking that!
 
 ### 3. Setting up oh-my-zsh and plugins
