@@ -1,0 +1,215 @@
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>Frontiers</title>
+    <link rel="stylesheet" href="https://dfontana.github.io/theme.css">
+  </head>
+  <body>
+    
+  
+    
+        
+        <header>
+          <nav class="navbox" itemscope itemtype="http://schema.org/SiteNavigationElement">
+            <a class="nav-title" href="https:&#x2F;&#x2F;dfontana.github.io"><div class="nav-image-box"><div class="nav-image" style="background: url(/img/icon-bronze.png)"></div></div>Frontiers</a>&nbsp;
+            
+            <a itemprop="url"
+                class=""
+                href="https:&#x2F;&#x2F;dfontana.github.io&#x2F;about">
+                <span itemprop="name">About</span></a>&nbsp;&nbsp;
+            
+            <a itemprop="url"
+                class=""
+                href="https:&#x2F;&#x2F;dfontana.github.io&#x2F;tags">
+                <span itemprop="name">Tags</span></a>&nbsp;&nbsp;
+            
+          </nav>
+          <hr/>
+        </header>
+        
+      
+  
+
+  <article itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+        <h1 itemprop="headline">Storing Data with ETags (in Go)</h1>
+        <p>
+          2019-01-01&nbsp;
+  
+    |&nbsp;
+    
+      <a href="https://dfontana.github.io/tags/go/"># go</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://dfontana.github.io/tags/etag/"># etag</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://dfontana.github.io/tags/http/"># http</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://dfontana.github.io/tags/project/"># project</a>
+      
+        
+      
+    
+  
+
+        </p>
+        <hr>
+    </header>
+    <div class="articlebody" itemprop="articleBody">
+      <p>What if there were no cookies? Be it paranoid users clearing their browsing data, increasingly stringent cookie policies, or lack of cookie persistence (see <em>WebView</em>) we could realistically find ourselves here. As a result, we'll need a new way to persist some data, one of which I'd like to demonstrate today: <strong>ETags</strong>.<span id="continue-reading"></span></p>
+<p>When a server needs to keep some information client side, Cookies typically get leveraged to save that little snippet. Our data gets set in a Cookie, the lifetime of the Cookie is set, and the Cookie is persisted until our next encounter when the server needs it. On that next visit, we'd load up the cookie and continue; &quot;Business As Usual.&quot; While this data shouldn't be considered <em>guaranteed</em>, developers could treat it as somewhat <em>reliable</em> (present?) since the average user really doesn't touch their cookies. In other words, <em>&quot;if the user has been to my site before, I probably still have my cookie data&quot;</em>.</p>
+<h2 id="primer-control-using-cookies">Primer &amp; Control: Using Cookies <a class="zola-anchor" href="#primer-control-using-cookies" aria-label="Anchor link for: primer-control-using-cookies"></a>
+</h2>
+<p>Before we dive into an ETag example, however, we should first remind ourselves what a cookie interaction might look like (in this case, Go).</p>
+<pre style="background-color:#393939;">
+<code class="language-go" data-lang="go"><span style="color:#fed6af;">import </span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">net/http</span><span style="color:#d6d6d680;">&quot;
+
+</span><span style="color:#fffb9d;">func </span><span style="color:#fffd87;">handler</span><span style="color:#dedede;">(w http.</span><span style="color:#fffb9d;">ResponseWriter</span><span style="color:#dedede;">, req </span><span style="color:#ececec;">*</span><span style="color:#dedede;">http.</span><span style="color:#fffb9d;">Request</span><span style="color:#dedede;">) {
+  </span><span style="color:#a0cfa1;">//</span><span style="color:#87ae86;"> Getting a cookie
+  </span><span style="color:#dedede;">cookie, err </span><span style="color:#ececec;">:= </span><span style="color:#dedede;">req.Cookie(</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">cookiename</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#dedede;">)
+  </span><span style="color:#fed6af;">if </span><span style="color:#dedede;">err </span><span style="color:#ececec;">!= </span><span style="font-weight:bold;color:#d6d6ae;">nil </span><span style="color:#dedede;">{
+    </span><span style="color:#a0cfa1;">//</span><span style="color:#87ae86;"> Setting a cookie
+      </span><span style="color:#dedede;">cookie </span><span style="color:#ececec;">= &amp;</span><span style="color:#dedede;">http.Cookie{
+        Name:  </span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">cookiename</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#dedede;">,
+        Value: </span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">random_id</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#dedede;">,
+      }
+      http.SetCookie(w, cookie)
+  }
+  </span><span style="color:#a0cfa1;">//</span><span style="color:#87ae86;"> ...
+</span><span style="color:#dedede;">}
+</span></code></pre>
+<p>Fairly straightforward, our Cookie <code>cookiename</code> is requested. Should the server not obtain it, we'll generate a new Cookie for the client to save which will contain a singular value <code>random_id</code>. After which, we'll be safe to use our data as-per-usual.</p>
+<p>Some properties of this transaction we should keep in mind for our ETag discussion:</p>
+<ol>
+<li>Cookies are available only when the browser supports it &amp; the user allows it. The aforementioned <em>WebViews</em> found on Android and IOS devices (typically making a presence when an App embeds web data or opens a webpage outside the native browser) do not support persistent cookies - only session.</li>
+<li>Cookies are explicitly stored, serving as a Key-Value store that the browser exposes. That may seem like a very obvious assertion, but in a moment we'll see why it's important to remember.</li>
+<li>Cookies have a lifetime; if not set, they persist only for the active session (akin to browser process running-<em>ish</em>, after considering session restoration).</li>
+</ol>
+<h2 id="an-example-with-etags">An Example with ETags <a class="zola-anchor" href="#an-example-with-etags" aria-label="Anchor link for: an-example-with-etags"></a>
+</h2>
+<p>ETags, on the other hand, are supported by all major browsers and <a rel="nofollow" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag#Browser_compatibility">WebView</a>. They are not, however, a traditional Key-Value store. Instead ETags are a way to intelligently manage a cached resource, preventing the need to request a new copy of it if the version (specified by the ETag) is unchanged. That is the key mechanism to be exploited: If the browser sends us the ETag each time it requests our page, then we'll know a specific value tied to that client's <em>cache</em>.</p>
+<p>Specifically, we need to set the <code>Etag</code> Header to the value we want and <code>Cache-Control</code> to <code>private, must-revalidate</code> signaling that our cache should be unshared and that the browser <em>must</em> send us the <code>If-None-Match</code> header whenever requesting the item related to this cache. When obtaining the item once more, we'll be looking at this <code>If-None-Match</code>, as that is what the browser is asking us to compare against - what it doesn't know is we'll never tell it there is a match.</p>
+<pre style="background-color:#393939;">
+<code class="language-go" data-lang="go"><span style="color:#fffb9d;">const </span><span style="color:#dedede;">(
+	</span><span style="color:#d6d6ae;">ETAG_SET      </span><span style="color:#ececec;">= </span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">Etag</span><span style="color:#d6d6d680;">&quot;
+	</span><span style="color:#d6d6ae;">ETAG_GET      </span><span style="color:#ececec;">= </span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">If-None-Match</span><span style="color:#d6d6d680;">&quot;
+	</span><span style="color:#d6d6ae;">CACHE_CONTROL </span><span style="color:#ececec;">= </span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">Cache-Control</span><span style="color:#d6d6d680;">&quot;
+</span><span style="color:#dedede;">)
+
+</span><span style="color:#a0cfa1;">//</span><span style="color:#87ae86;"> ...
+</span><span style="color:#dedede;">http.HandleFunc(</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">/etag</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#dedede;">, </span><span style="color:#fffb9d;">func</span><span style="color:#dedede;">(w http.</span><span style="color:#fffb9d;">ResponseWriter</span><span style="color:#dedede;">, r </span><span style="color:#ececec;">*</span><span style="color:#dedede;">http.</span><span style="color:#fffb9d;">Request</span><span style="color:#dedede;">) {
+  </span><span style="color:#a0cfa1;">//</span><span style="color:#87ae86;"> Get the ETag
+  </span><span style="color:#dedede;">etag </span><span style="color:#ececec;">:= </span><span style="color:#dedede;">r.Header.Get(ETAG_GET)
+  </span><span style="color:#fed6af;">if </span><span style="color:#dedede;">etag </span><span style="color:#ececec;">== </span><span style="color:#d6d6d680;">&quot;&quot; </span><span style="color:#dedede;">{
+    etag </span><span style="color:#ececec;">= </span><span style="color:#dedede;">uuid()
+  }
+
+  </span><span style="color:#a0cfa1;">//</span><span style="color:#87ae86;"> Use the ETag
+
+  </span><span style="color:#a0cfa1;">//</span><span style="color:#87ae86;"> Respond, restoring the ETag
+  </span><span style="color:#dedede;">w.Header().Set(CACHE_CONTROL, </span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">private, must-revalidate</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#dedede;">)
+  w.Header().Set(ETAG_SET, etag)
+})
+
+</span><span style="color:#a0cfa1;">//</span><span style="color:#87ae86;"> ...
+</span></code></pre>
+<p>(<a href="https://dfontana.github.io/etags/#full-source-example"><em>See full source below</em></a>)</p>
+<p>This approach differs from our cookie example in a few meaningful ways:</p>
+<ol>
+<li>This is not a Key-Value store; rather it lets us store a single identifier that IDs the client.To that extent we're able to accomplish much more; we could store that client specific data server side if we wanted to, tying it to this ID!</li>
+<li>We always need to reset the ETag when sending a response. Since we don't want the browser to draw our true response from cache, we'll set the ETag header again when setting the response. This will have the browser cache with the ETag value, even if it is the same as before.</li>
+<li>ETags are tied to the resource requested, meaning we get one ETag per URI the browser requests. Depending on our application's function, this may impact the overall architecture.</li>
+</ol>
+<h2 id="closing-thoughts">Closing Thoughts <a class="zola-anchor" href="#closing-thoughts" aria-label="Anchor link for: closing-thoughts"></a>
+</h2>
+<p>ETags can help replace the need for Cookies if we'd like. If our data is small enough and in a valid ETag format, we could just save all our data as the ETag itself. More likely than not, however, we would not meet these constraints. In that case, we could get more creative - we could use the ETag to store a reference identifier, to which we relate our client-specific data server-side. There comes the pros and cons of storing this data, but this could prove to be an interesting enhancement for some use cases.</p>
+<p>Regardless, it's important to remember one thing: ETags were not meant to be a form of data storage. They're a cache management tool that happens to allow snippets of data to persist. If your definition of &quot;hack&quot; is to &quot;use a system in a way it was not designed for,&quot; then this article boils down to a <em>hack</em>.</p>
+<h2 id="full-source-example">Full Source Example: <a class="zola-anchor" href="#full-source-example" aria-label="Anchor link for: full-source-example"></a>
+</h2>
+<p><strong>main.go</strong></p>
+<pre style="background-color:#393939;">
+<code class="language-go" data-lang="go"><span style="color:#fed6af;">package </span><span style="color:#dedede;">main
+
+</span><span style="color:#fed6af;">import </span><span style="color:#dedede;">(
+	</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">crypto/rand</span><span style="color:#d6d6d680;">&quot;
+	&quot;</span><span style="color:#d68686;">fmt</span><span style="color:#d6d6d680;">&quot;
+	&quot;</span><span style="color:#d68686;">html/template</span><span style="color:#d6d6d680;">&quot;
+	&quot;</span><span style="color:#d68686;">net/http</span><span style="color:#d6d6d680;">&quot;
+</span><span style="color:#dedede;">)
+
+</span><span style="color:#fffb9d;">const </span><span style="color:#dedede;">(
+	</span><span style="color:#d6d6ae;">ETAG_SET      </span><span style="color:#ececec;">= </span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">Etag</span><span style="color:#d6d6d680;">&quot;
+	</span><span style="color:#d6d6ae;">ETAG_GET      </span><span style="color:#ececec;">= </span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">If-None-Match</span><span style="color:#d6d6d680;">&quot;
+	</span><span style="color:#d6d6ae;">CACHE_CONTROL </span><span style="color:#ececec;">= </span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">Cache-Control</span><span style="color:#d6d6d680;">&quot;
+</span><span style="color:#dedede;">)
+
+</span><span style="color:#fffb9d;">func </span><span style="color:#fffd87;">main</span><span style="color:#dedede;">() {
+	http.HandleFunc(</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">/</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#dedede;">, </span><span style="color:#fffb9d;">func</span><span style="color:#dedede;">(w http.</span><span style="color:#fffb9d;">ResponseWriter</span><span style="color:#dedede;">, r </span><span style="color:#ececec;">*</span><span style="color:#dedede;">http.</span><span style="color:#fffb9d;">Request</span><span style="color:#dedede;">) {
+		</span><span style="color:#a0cfa1;">//</span><span style="color:#87ae86;"> 1. If we have an etag use it, else make a new one
+		</span><span style="color:#dedede;">etag </span><span style="color:#ececec;">:= </span><span style="color:#dedede;">r.Header.Get(ETAG_GET)
+		</span><span style="color:#fed6af;">if </span><span style="color:#dedede;">etag </span><span style="color:#ececec;">== </span><span style="color:#d6d6d680;">&quot;&quot; </span><span style="color:#dedede;">{
+			etag </span><span style="color:#ececec;">= </span><span style="color:#dedede;">uuid()
+		}
+
+		</span><span style="color:#a0cfa1;">//</span><span style="color:#87ae86;"> 2. Do other things with it
+
+		</span><span style="color:#a0cfa1;">//</span><span style="color:#87ae86;"> 3. Respond, setting it again
+		</span><span style="color:#dedede;">w.Header().Set(CACHE_CONTROL, </span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">private, must-revalidate, proxy-revalidate</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#dedede;">)
+		w.Header().Set(ETAG_SET, etag)
+		p </span><span style="color:#ececec;">:= </span><span style="color:#fffb9d;">struct</span><span style="color:#dedede;">{ Tag </span><span style="color:#fffb9d;">string </span><span style="color:#dedede;">}{etag}
+		t, _ </span><span style="color:#ececec;">:= </span><span style="color:#dedede;">template.ParseFiles(</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">template.html</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#dedede;">)
+		t.Execute(w, p)
+	})
+
+	http.ListenAndServe(</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">:3000</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#dedede;">, </span><span style="font-weight:bold;color:#d6d6ae;">nil</span><span style="color:#dedede;">)
+}
+
+</span><span style="color:#fffb9d;">func </span><span style="color:#fffd87;">uuid</span><span style="color:#dedede;">() </span><span style="color:#fffb9d;">string </span><span style="color:#dedede;">{
+	b </span><span style="color:#ececec;">:= </span><span style="color:#fffd87;">make</span><span style="color:#dedede;">([]</span><span style="color:#fffb9d;">byte</span><span style="color:#dedede;">, </span><span style="font-weight:bold;color:#87d6d5;">16</span><span style="color:#dedede;">)
+	_, err </span><span style="color:#ececec;">:= </span><span style="color:#dedede;">rand.Read(b)
+	</span><span style="color:#fed6af;">if </span><span style="color:#dedede;">err </span><span style="color:#ececec;">!= </span><span style="font-weight:bold;color:#d6d6ae;">nil </span><span style="color:#dedede;">{
+		fmt.Println(</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#d68686;">Error: </span><span style="color:#d6d6d680;">&quot;</span><span style="color:#dedede;">, err)
+		</span><span style="color:#fed6af;">return </span><span style="color:#d6d6d680;">&quot;&quot;
+	</span><span style="color:#dedede;">}
+
+	</span><span style="color:#fed6af;">return </span><span style="color:#dedede;">fmt.Sprintf(</span><span style="color:#d6d6d680;">&quot;</span><span style="font-weight:bold;color:#cc9495;">%X</span><span style="color:#d6d6d680;">&quot;</span><span style="color:#dedede;">, b)
+}
+</span></code></pre>
+<p><strong>template.html</strong></p>
+<pre style="background-color:#393939;">
+<code class="language-html" data-lang="html"><span style="font-weight:bold;color:#fed5ae94;">&lt;</span><span style="color:#d6d7af;">h1</span><span style="font-weight:bold;color:#fed5ae94;">&gt;</span><span style="color:#dedede;">Your Etag {{.Tag}}</span><span style="font-weight:bold;color:#fed5ae94;">&lt;/</span><span style="color:#d6d7af;">h1</span><span style="font-weight:bold;color:#fed5ae94;">&gt;
+</span></code></pre>
+    </div>
+  </article>
+
+  
+    
+  <footer>
+    <hr>
+    <hr>
+    <section class="author">
+    <div class="authorimage" style="background: url(&#x2F;img&#x2F;profile.png)"></div>
+    <h4>Dylan Fontana</h4>
+    
+        <p class="bio">Explore, learn, and pursue - three of my favorite things.</p>
+    
+    
+    <p class="meta">
+        <i class="fa fa-fw fa-map-marker"></i> America&#x2F;Boston
+    </p>
+    
+    </section>
+    </footer>
+
+  
+
+  </body>
+</html>
