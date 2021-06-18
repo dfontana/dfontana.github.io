@@ -9,7 +9,7 @@ $color-bg--light: #E0E0E0;
 @mixin secondaryText { color: $color-secondaryText; } // Base 1
 @mixin primaryBg { background-color: $color-bg--light } // base 3
 
-@mixin titleFont { font-family: 'Cinzel Decorative'; font-style: bold; }
+@mixin titleFont { font-family: 'Lora'; }
 @mixin bodyFont { font-family: 'Lora'; font-size: 18px; }
 @mixin codeFont { font-family: Menlo, "Consolas", Courier, monospace; font-size: 1em;}
 @mixin codeInline {background-color: #393939; color: #d68686}
@@ -63,6 +63,10 @@ body {
   }
   strong, em {
     color: $color-accent;
+  }
+  .pageDate {
+    font-size: 0.75em;
+    opacity: 50%;
   }
 }
 
