@@ -1,0 +1,25 @@
+{
+  "scripts": {
+    "bundle": "parcel build",
+    "watch": "parcel watch"
+  },
+  "devDependencies": {
+    "@emotion/babel-plugin": "^11.9.2",
+    "parcel": "^2.5.0"
+  },
+  "dependencies": {
+    "@babel/core": "^7.17.10",
+    "@babel/preset-react": "^7.16.7",
+    "@emotion/react": "^11.9.0",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
+  },
+  "source": [
+    "./src-js/ark/ark.js"
+  ],
+  "targets": {
+    "default": {
+      "distDir": "./static/js/"
+    }
+  }
+}

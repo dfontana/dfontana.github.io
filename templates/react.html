@@ -1,10 +1,15 @@
-<html lang="en">
-  <head>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  </head>
-  <body>
-    <div id="app-root"></div>
-    <script src="{{src}}"></script>
-  </body>
-</html>
+{% extends "index.html" %}
+{% import "macros/footer.html" as footer_macros %}
+
+{% block content %}
+  {% block header %}
+    {{ super() }}
+  {% endblock header %}
+
+  <div id="app-root"></div>
+  <script src="js/{{page.extra.src}}"></script>
+
+  {% if config.extra.footer %}
+    {{ footer_macros::footer(foot=config.extra.footer) }}
+  {% endif %}
+{% endblock content %}
