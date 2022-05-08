@@ -1,36 +1,36 @@
 import React from 'react';
 import styled from '@emotion/styled'
-import { css } from "@emotion/react";
 import CheckButton from './checkButton';
 
 const SectionDiv = styled.div`
+  min-width: 370px;
   border: 3px solid black;
   border-radius: 5px;
-  margin: 5 0;
+  box-sizing: border-box;
+  margin: 5 2;
   padding: 5px;
 `;
 const SectionTitle = styled.div`
   display: inline-block;
-  width: 200px;
+  width: 180px;
   font-size: 20px;
   font-weight: bold;
 `;
 const CharacterName = styled.div`
   display: inline-block;
   box-sizing: border-box;
-  width: 200px;
+  width: 180px;
   overflow-x: clip;
   padding-left: 15px;
 `;
-// TODO alternating stripes on each row
 const Buttons = styled.div`
   display: inline-flex;
   justify-content: center;
-  width: 100px;
+  width: 80px;
 `;
 const Title = styled.div`
   display: inline-block;
-  width: 100px;
+  width: 80px;
   text-align: center;
   font-size: 13px;
   font-style: italic;

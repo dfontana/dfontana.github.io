@@ -20,13 +20,13 @@ function TextInput({
     <input
       {...rest}
       css={css`
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      padding: 5 10;
-      border: 1px solid black;
-      border-radius: 4px;
-    `}
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        padding: 5 10;
+        border: 1px solid black;
+        border-radius: 4px;
+      `}
       type="text"
       value={input}
       onChange={event => setInput(event.target.value)}

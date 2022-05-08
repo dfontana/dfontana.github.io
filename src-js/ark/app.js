@@ -1,73 +1,34 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { css } from "@emotion/react";
 import { useLocalStorage } from './useLocalStorage.js';
 import Section from './section.js';
 import TextInput from './textInput.js';
 import Countdown from './countdown.js';
-import { Model, Character, TITLES } from './model.js';
+import { Model, AddCharacter, TITLES, RESET_KEYS, UpdateTask } from './model.js';
 
 
 export default function App() {
   const [tasks, setTasks, resetTasks] = useLocalStorage('ark-todos', Model());
 
   // TODO show tooltip on hover if add char box disabled/invalid (explaining rules)
-
-  // TODO optimize. I don't like how entire page re-renders on checkbutton click
-  // Not sure why atm, it's something obvious here.
-
   // TODO disable button bank for char until next reset 
   //      if completed.
   // TODO clear state on reset
   // TODO show animation on bank completion, highlighting
   //      entire row in some way. Need to distinguish from
   //      weeklies which should highlight in some other way
-  const toggleDaily = useMemo(() => (key, charKey, idx) => {
-    setTasks(prev => {
-      let updating = [...prev[key][charKey].daily];
-      updating[idx] = !prev[key][charKey].daily[idx];
-      return {
-        ...prev,
-        [key]: {
-          ...prev[key],
-          [charKey]: {
-            ...prev[key][charKey],
-            daily: updating
-          }
-        }
-      }
-    });
-  }, [setTasks])
+  // TODO alternating stripes on each character row for easier lineup)
+  // TODO ability to re-order chars
+  // TODO ability to re-order sections
+  // TODO consider icons next to specific chars to signify
+  //      main vs alt1 vs alt2 vs...
+  // TODO consider icons to signify solo vs group content
+  // TODO consider multiple rosters possible (max 6 char each)
 
-  const toggleWeekly = useMemo(() => (key, charKey, idx) => {
-    setTasks(prev => {
-      let updating = [...prev[key][charKey].weekly];
-      updating[idx] = !prev[key][charKey].weekly[idx];
-      return {
-        ...prev,
-        [key]: {
-          ...prev[key],
-          [charKey]: {
-            ...prev[key][charKey],
-            weekly: updating
-          }
-        }
-      }
-    });
-  }, [setTasks])
+  const toggleDaily = (key, charKey, idx) => setTasks(prev => UpdateTask(prev, key, charKey, RESET_KEYS.DAY, idx));
+  const toggleWeekly = (key, charKey, idx) => setTasks(prev => UpdateTask(prev, key, charKey, RESET_KEYS.WEK, idx));
 
-
-  const addCharacter = name => {
-    setTasks(prev => {
-      let updating = { ...prev, chars: { ...prev.chars, [name]: {} } };
-      prev.sections.forEach(section => {
-        updating[section.key] = {
-          ...updating[section.key],
-          [name]: Character(section.key)
-        }
-      })
-      return updating
-    })
-  }
+  const addCharacter = name => setTasks(prev => AddCharacter(prev, name));
 
   const removeCharacter = name => {
     if (window.confirm(`Remove ${name} from Roster?`)) {
@@ -81,12 +42,6 @@ export default function App() {
     }
   }
 
-  // TODO ability to re-order chars
-  // TODO ability to re-order sections
-  // TODO consider icons next to specific chars to signify
-  //      main vs alt1 vs alt2 vs...
-  // TODO consider icons to signify solo vs group content
-  // TODO consider multiple rosters possible (max 6 char each)
   return (
     <>
       <div css={css`position: relative;`}>
@@ -113,7 +68,12 @@ export default function App() {
           onSubmit={addCharacter}
         />
       </div>
-      <div>
+      <div
+        css={css`
+          display: flex;
+          flex-wrap: wrap;
+        `}
+      >
         {tasks.sections.map(({ key }) => (
           <Section
             key={key}
