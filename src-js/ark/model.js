@@ -39,10 +39,11 @@ function Model() {
       { key: KEYS.GUARD_RD, order: 3 },
       { key: KEYS.UNA_TASK, order: 4 },
     ],
-    [KEYS.CHAOS_DG]: Character(KEYS.CHAOS_DG),
-    [KEYS.ABYSS_DG]: Character(KEYS.ABYSS_DG),
-    [KEYS.GUARD_RD]: Character(KEYS.GUARD_RD),
-    [KEYS.UNA_TASK]: Character(KEYS.UNA_TASK)
+    chars: {},
+    [KEYS.CHAOS_DG]: {},
+    [KEYS.ABYSS_DG]: {},
+    [KEYS.GUARD_RD]: {},
+    [KEYS.UNA_TASK]: {}
   }
 }
 

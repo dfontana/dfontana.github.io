@@ -12,7 +12,9 @@ const useLocalStorage = (storageKey, fallbackState) => {
     localStorage.setItem(storageKey, JSON.stringify(value));
   }, [value, storageKey]);
 
-  return [value, setValue];
+  return [value, setValue, () => {
+    setValue(fallbackState)
+  }];
 };
 
 export { useLocalStorage }

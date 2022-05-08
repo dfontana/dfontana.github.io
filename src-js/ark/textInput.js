@@ -8,7 +8,7 @@ function TextInput({
   const [input, setInput] = useState("");
 
   const onKeyPress = event => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && !!event.target.value.trim() && event.target.validity.valid) {
       event.preventDefault();
       let v = input;
       setInput("");
