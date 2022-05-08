@@ -27012,32 +27012,171 @@ var _jsxDevRuntime = require("@emotion/react/jsx-dev-runtime");
 var _react = require("react");
 var _reactDefault = parcelHelpers.interopDefault(_react);
 var _react1 = require("@emotion/react");
+var _useLocalStorageJs = require("./useLocalStorage.js");
+var _sectionJs = require("./section.js");
+var _sectionJsDefault = parcelHelpers.interopDefault(_sectionJs);
+var _textInputJs = require("./textInput.js");
+var _textInputJsDefault = parcelHelpers.interopDefault(_textInputJs);
+var _countdownJs = require("./countdown.js");
+var _countdownJsDefault = parcelHelpers.interopDefault(_countdownJs);
+var _modelJs = require("./model.js");
 var _s = $RefreshSig$();
 function _EMOTION_STRINGIFIED_CSS_ERROR__() {
     return "You have tried to stringify object returned from `css` function. It isn't supposed to be used directly (e.g. as value of the `className` prop), but rather handed to emotion so it can handle it (e.g. as value of `css` prop).";
 }
 var _ref = {
-    name: "lx8cx0-App",
-    styles: "background:hotpink;label:App;",
-    map: "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFwcC5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFVZ0IiLCJmaWxlIjoiYXBwLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlIH0gZnJvbSAncmVhY3QnO1xuaW1wb3J0IHsgY3NzIH0gZnJvbSBcIkBlbW90aW9uL3JlYWN0XCI7XG5cbmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIEFwcCgpIHtcbiBjb25zdCBbbGlrZWQsIHNldExpa2VkXSA9IHVzZVN0YXRlKGZhbHNlKTtcblxuICByZXR1cm4gbGlrZWQgXG4gICAgPyAnWW91IGxpa2VkIHRoaXMnXG4gICAgOiAoXG4gICAgICA8YnV0dG9uIFxuICAgICAgICBjc3M9e2Nzc2BcbiAgICAgICAgICBiYWNrZ3JvdW5kOiBob3RwaW5rXG4gICAgICAgIGB9IFxuICAgICAgICBvbkNsaWNrPXsoKSA9PiBzZXRMaWtlZCh0cnVlKX0+TGlrZTwvYnV0dG9uPlxuICAgIClcbn1cblxuIl19 */",
+    name: "be3k87-App",
+    styles: "display:inline-block;label:App;",
+    map: "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFwcC5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUErRXFCIiwiZmlsZSI6ImFwcC5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCwgeyB1c2VNZW1vLCB1c2VFZmZlY3QgfSBmcm9tICdyZWFjdCc7XG5pbXBvcnQgeyBjc3MgfSBmcm9tIFwiQGVtb3Rpb24vcmVhY3RcIjtcbmltcG9ydCB7IHVzZUxvY2FsU3RvcmFnZSB9IGZyb20gJy4vdXNlTG9jYWxTdG9yYWdlLmpzJztcbmltcG9ydCBTZWN0aW9uIGZyb20gJy4vc2VjdGlvbi5qcyc7XG5pbXBvcnQgVGV4dElucHV0IGZyb20gJy4vdGV4dElucHV0LmpzJztcbmltcG9ydCBDb3VudGRvd24gZnJvbSAnLi9jb3VudGRvd24uanMnO1xuaW1wb3J0IHsgTW9kZWwsIENoYXJhY3RlciwgVElUTEVTIH0gZnJvbSAnLi9tb2RlbC5qcyc7XG5cblxuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gQXBwKCkge1xuICAvLyBUT0RPIGFiaWxpdHkgdG8gcmVzZXQgc3RhdGVcbiAgY29uc3QgW3Rhc2tzLCBzZXRUYXNrc10gPSB1c2VMb2NhbFN0b3JhZ2UoJ2Fyay10b2RvcycsIE1vZGVsKCkpO1xuXG4gIC8vIFRPRE8gb3B0aW1pemUuIEkgZG9uJ3QgbGlrZSBob3cgZW50aXJlIHBhZ2UgcmUtcmVuZGVyc1xuICAvLyBOb3Qgc3VyZSB3aHkgYXRtLCBpdCdzIHNvbWV0aGluZyBvYnZpb3VzIGhlcmUuXG5cbiAgLy8gVE9ETyBkaXNhYmxlIGJ1dHRvbiBiYW5rIGZvciBjaGFyIHVudGlsIG5leHQgcmVzZXQgXG4gIC8vICAgICAgaWYgY29tcGxldGVkLlxuICAvLyBUT0RPIHNob3cgYW5pbWF0aW9uIG9uIGJhbmsgY29tcGxldGlvbiwgaGlnaGxpZ2h0aW5nXG4gIC8vICAgICAgZW50aXJlIHJvdyBpbiBzb21lIHdheS4gTmVlZCB0byBkaXN0aW5ndWlzaCBmcm9tXG4gIC8vICAgICAgd2Vla2xpZXMgd2hpY2ggc2hvdWxkIGhpZ2hsaWdodCBpbiBzb21lIG90aGVyIHdheVxuICBjb25zdCB0b2dnbGVEYWlseSA9IHVzZU1lbW8oKCkgPT4gKGtleSwgY2hhcktleSwgaWR4KSA9PiB7XG4gICAgc2V0VGFza3MocHJldiA9PiB7XG4gICAgICBsZXQgdXBkYXRpbmcgPSBbLi4ucHJldltrZXldW2NoYXJLZXldLmRhaWx5XTtcbiAgICAgIHVwZGF0aW5nW2lkeF0gPSAhcHJldltrZXldW2NoYXJLZXldLmRhaWx5W2lkeF07XG4gICAgICByZXR1cm4ge1xuICAgICAgICAuLi5wcmV2LFxuICAgICAgICBba2V5XToge1xuICAgICAgICAgIC4uLnByZXZba2V5XSxcbiAgICAgICAgICBbY2hhcktleV06IHtcbiAgICAgICAgICAgIC4uLnByZXZba2V5XVtjaGFyS2V5XSxcbiAgICAgICAgICAgIGRhaWx5OiB1cGRhdGluZ1xuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgfVxuICAgIH0pO1xuICB9LCBbc2V0VGFza3NdKVxuXG4gIGNvbnN0IHRvZ2dsZVdlZWtseSA9IHVzZU1lbW8oKCkgPT4gKGtleSwgY2hhcktleSwgaWR4KSA9PiB7XG4gICAgc2V0VGFza3MocHJldiA9PiB7XG4gICAgICBsZXQgdXBkYXRpbmcgPSBbLi4ucHJldltrZXldW2NoYXJLZXldLndlZWtseV07XG4gICAgICB1cGRhdGluZ1tpZHhdID0gIXByZXZba2V5XVtjaGFyS2V5XS53ZWVrbHlbaWR4XTtcbiAgICAgIHJldHVybiB7XG4gICAgICAgIC4uLnByZXYsXG4gICAgICAgIFtrZXldOiB7XG4gICAgICAgICAgLi4ucHJldltrZXldLFxuICAgICAgICAgIFtjaGFyS2V5XToge1xuICAgICAgICAgICAgLi4ucHJldltrZXldW2NoYXJLZXldLFxuICAgICAgICAgICAgd2Vla2x5OiB1cGRhdGluZ1xuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgfVxuICAgIH0pO1xuICB9LCBbc2V0VGFza3NdKVxuXG4gIC8vIFRPRE8gYWJpbGl0eSB0byByZW1vdmUgY2hhclxuICAvLyBUT0RPIHZhbGlkYXRlIG5hbWUgaXMgb2sgbGVuZ3RoLCBjaGFyYWN0ZXJzXG4gIC8vIFRPRE8gdmFsaWRhdGUgbm90IGFkZGluZyBtb3JlIHRoYW4gNiB0byBjdXJyZW50IHJvc3RlclxuICBjb25zdCBhZGRDaGFyYWN0ZXIgPSBuYW1lID0+IHtcbiAgICBzZXRUYXNrcyhwcmV2ID0+IHtcbiAgICAgIGxldCB1cGRhdGluZyA9IHsgLi4ucHJldiB9O1xuICAgICAgcHJldi5zZWN0aW9ucy5mb3JFYWNoKHNlY3Rpb24gPT4ge1xuICAgICAgICB1cGRhdGluZ1tzZWN0aW9uLmtleV0gPSB7XG4gICAgICAgICAgLi4udXBkYXRpbmdbc2VjdGlvbi5rZXldLFxuICAgICAgICAgIFtuYW1lXTogQ2hhcmFjdGVyKHNlY3Rpb24ua2V5KVxuICAgICAgICB9XG4gICAgICB9KVxuICAgICAgcmV0dXJuIHVwZGF0aW5nXG4gICAgfSlcbiAgfVxuXG4gIC8vIFRPRE8gYWJpbGl0eSB0byByZS1vcmRlciBjaGFyc1xuICAvLyBUT0RPIGFiaWxpdHkgdG8gcmUtb3JkZXIgc2VjdGlvbnNcbiAgLy8gVE9ETyBjb25zaWRlciBpY29ucyBuZXh0IHRvIHNwZWNpZmljIGNoYXJzIHRvIHNpZ25pZnlcbiAgLy8gICAgICBtYWluIHZzIGFsdDEgdnMgYWx0MiB2cy4uLlxuICAvLyBUT0RPIGNvbnNpZGVyIG11bHRpcGxlIHJvc3RlcnMgcG9zc2libGUgKG1heCA2IGNoYXIgZWFjaClcbiAgcmV0dXJuIChcbiAgICA8PlxuICAgICAgPGRpdiBjc3M9e2Nzc2Bwb3NpdGlvbjogcmVsYXRpdmU7YH0+XG4gICAgICAgIDxkaXYgY3NzPXtjc3NgZGlzcGxheTogaW5saW5lLWJsb2NrYH0+XG4gICAgICAgICAgPENvdW50ZG93biBsYWJlbD1cIkRhaWx5XCIgLz5cbiAgICAgICAgICA8Q291bnRkb3duIGxhYmVsPVwiV2Vla2x5XCIgLz5cbiAgICAgICAgPC9kaXY+XG4gICAgICAgIHsvKiBUT0RPIGFkZCB2YWxpZGF0aW9ucyAgKi99XG4gICAgICAgIDxUZXh0SW5wdXRcbiAgICAgICAgICBwbGFjZWhvbGRlcj1cIkFkZCBDaGFyYWN0ZXJcIlxuICAgICAgICAgIG9uU3VibWl0PXthZGRDaGFyYWN0ZXJ9XG4gICAgICAgIC8+XG4gICAgICA8L2Rpdj5cbiAgICAgIDxkaXY+XG4gICAgICAgIHt0YXNrcy5zZWN0aW9ucy5tYXAoKHsga2V5IH0pID0+IChcbiAgICAgICAgICA8U2VjdGlvblxuICAgICAgICAgICAga2V5PXtrZXl9XG4gICAgICAgICAgICBkYXRhS2V5PXtrZXl9XG4gICAgICAgICAgICB0aXRsZT17VElUTEVTW2tleV19XG4gICAgICAgICAgICBjaGFycz17dGFza3Nba2V5XX1cbiAgICAgICAgICAgIHRvZ2dsZURhaWx5PXt0b2dnbGVEYWlseX1cbiAgICAgICAgICAgIHRvZ2dsZVdlZWtseT17dG9nZ2xlV2Vla2x5fVxuICAgICAgICAgIC8+XG4gICAgICAgICkpfVxuICAgICAgPC9kaXY+XG4gICAgPC8+XG4gIClcbn1cblxuIl19 */",
+    toString: _EMOTION_STRINGIFIED_CSS_ERROR__
+};
+var _ref2 = {
+    name: "19h747a-App",
+    styles: "position:relative;label:App;",
+    map: "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFwcC5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUE4RW1CIiwiZmlsZSI6ImFwcC5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCwgeyB1c2VNZW1vLCB1c2VFZmZlY3QgfSBmcm9tICdyZWFjdCc7XG5pbXBvcnQgeyBjc3MgfSBmcm9tIFwiQGVtb3Rpb24vcmVhY3RcIjtcbmltcG9ydCB7IHVzZUxvY2FsU3RvcmFnZSB9IGZyb20gJy4vdXNlTG9jYWxTdG9yYWdlLmpzJztcbmltcG9ydCBTZWN0aW9uIGZyb20gJy4vc2VjdGlvbi5qcyc7XG5pbXBvcnQgVGV4dElucHV0IGZyb20gJy4vdGV4dElucHV0LmpzJztcbmltcG9ydCBDb3VudGRvd24gZnJvbSAnLi9jb3VudGRvd24uanMnO1xuaW1wb3J0IHsgTW9kZWwsIENoYXJhY3RlciwgVElUTEVTIH0gZnJvbSAnLi9tb2RlbC5qcyc7XG5cblxuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gQXBwKCkge1xuICAvLyBUT0RPIGFiaWxpdHkgdG8gcmVzZXQgc3RhdGVcbiAgY29uc3QgW3Rhc2tzLCBzZXRUYXNrc10gPSB1c2VMb2NhbFN0b3JhZ2UoJ2Fyay10b2RvcycsIE1vZGVsKCkpO1xuXG4gIC8vIFRPRE8gb3B0aW1pemUuIEkgZG9uJ3QgbGlrZSBob3cgZW50aXJlIHBhZ2UgcmUtcmVuZGVyc1xuICAvLyBOb3Qgc3VyZSB3aHkgYXRtLCBpdCdzIHNvbWV0aGluZyBvYnZpb3VzIGhlcmUuXG5cbiAgLy8gVE9ETyBkaXNhYmxlIGJ1dHRvbiBiYW5rIGZvciBjaGFyIHVudGlsIG5leHQgcmVzZXQgXG4gIC8vICAgICAgaWYgY29tcGxldGVkLlxuICAvLyBUT0RPIHNob3cgYW5pbWF0aW9uIG9uIGJhbmsgY29tcGxldGlvbiwgaGlnaGxpZ2h0aW5nXG4gIC8vICAgICAgZW50aXJlIHJvdyBpbiBzb21lIHdheS4gTmVlZCB0byBkaXN0aW5ndWlzaCBmcm9tXG4gIC8vICAgICAgd2Vla2xpZXMgd2hpY2ggc2hvdWxkIGhpZ2hsaWdodCBpbiBzb21lIG90aGVyIHdheVxuICBjb25zdCB0b2dnbGVEYWlseSA9IHVzZU1lbW8oKCkgPT4gKGtleSwgY2hhcktleSwgaWR4KSA9PiB7XG4gICAgc2V0VGFza3MocHJldiA9PiB7XG4gICAgICBsZXQgdXBkYXRpbmcgPSBbLi4ucHJldltrZXldW2NoYXJLZXldLmRhaWx5XTtcbiAgICAgIHVwZGF0aW5nW2lkeF0gPSAhcHJldltrZXldW2NoYXJLZXldLmRhaWx5W2lkeF07XG4gICAgICByZXR1cm4ge1xuICAgICAgICAuLi5wcmV2LFxuICAgICAgICBba2V5XToge1xuICAgICAgICAgIC4uLnByZXZba2V5XSxcbiAgICAgICAgICBbY2hhcktleV06IHtcbiAgICAgICAgICAgIC4uLnByZXZba2V5XVtjaGFyS2V5XSxcbiAgICAgICAgICAgIGRhaWx5OiB1cGRhdGluZ1xuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgfVxuICAgIH0pO1xuICB9LCBbc2V0VGFza3NdKVxuXG4gIGNvbnN0IHRvZ2dsZVdlZWtseSA9IHVzZU1lbW8oKCkgPT4gKGtleSwgY2hhcktleSwgaWR4KSA9PiB7XG4gICAgc2V0VGFza3MocHJldiA9PiB7XG4gICAgICBsZXQgdXBkYXRpbmcgPSBbLi4ucHJldltrZXldW2NoYXJLZXldLndlZWtseV07XG4gICAgICB1cGRhdGluZ1tpZHhdID0gIXByZXZba2V5XVtjaGFyS2V5XS53ZWVrbHlbaWR4XTtcbiAgICAgIHJldHVybiB7XG4gICAgICAgIC4uLnByZXYsXG4gICAgICAgIFtrZXldOiB7XG4gICAgICAgICAgLi4ucHJldltrZXldLFxuICAgICAgICAgIFtjaGFyS2V5XToge1xuICAgICAgICAgICAgLi4ucHJldltrZXldW2NoYXJLZXldLFxuICAgICAgICAgICAgd2Vla2x5OiB1cGRhdGluZ1xuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgfVxuICAgIH0pO1xuICB9LCBbc2V0VGFza3NdKVxuXG4gIC8vIFRPRE8gYWJpbGl0eSB0byByZW1vdmUgY2hhclxuICAvLyBUT0RPIHZhbGlkYXRlIG5hbWUgaXMgb2sgbGVuZ3RoLCBjaGFyYWN0ZXJzXG4gIC8vIFRPRE8gdmFsaWRhdGUgbm90IGFkZGluZyBtb3JlIHRoYW4gNiB0byBjdXJyZW50IHJvc3RlclxuICBjb25zdCBhZGRDaGFyYWN0ZXIgPSBuYW1lID0+IHtcbiAgICBzZXRUYXNrcyhwcmV2ID0+IHtcbiAgICAgIGxldCB1cGRhdGluZyA9IHsgLi4ucHJldiB9O1xuICAgICAgcHJldi5zZWN0aW9ucy5mb3JFYWNoKHNlY3Rpb24gPT4ge1xuICAgICAgICB1cGRhdGluZ1tzZWN0aW9uLmtleV0gPSB7XG4gICAgICAgICAgLi4udXBkYXRpbmdbc2VjdGlvbi5rZXldLFxuICAgICAgICAgIFtuYW1lXTogQ2hhcmFjdGVyKHNlY3Rpb24ua2V5KVxuICAgICAgICB9XG4gICAgICB9KVxuICAgICAgcmV0dXJuIHVwZGF0aW5nXG4gICAgfSlcbiAgfVxuXG4gIC8vIFRPRE8gYWJpbGl0eSB0byByZS1vcmRlciBjaGFyc1xuICAvLyBUT0RPIGFiaWxpdHkgdG8gcmUtb3JkZXIgc2VjdGlvbnNcbiAgLy8gVE9ETyBjb25zaWRlciBpY29ucyBuZXh0IHRvIHNwZWNpZmljIGNoYXJzIHRvIHNpZ25pZnlcbiAgLy8gICAgICBtYWluIHZzIGFsdDEgdnMgYWx0MiB2cy4uLlxuICAvLyBUT0RPIGNvbnNpZGVyIG11bHRpcGxlIHJvc3RlcnMgcG9zc2libGUgKG1heCA2IGNoYXIgZWFjaClcbiAgcmV0dXJuIChcbiAgICA8PlxuICAgICAgPGRpdiBjc3M9e2Nzc2Bwb3NpdGlvbjogcmVsYXRpdmU7YH0+XG4gICAgICAgIDxkaXYgY3NzPXtjc3NgZGlzcGxheTogaW5saW5lLWJsb2NrYH0+XG4gICAgICAgICAgPENvdW50ZG93biBsYWJlbD1cIkRhaWx5XCIgLz5cbiAgICAgICAgICA8Q291bnRkb3duIGxhYmVsPVwiV2Vla2x5XCIgLz5cbiAgICAgICAgPC9kaXY+XG4gICAgICAgIHsvKiBUT0RPIGFkZCB2YWxpZGF0aW9ucyAgKi99XG4gICAgICAgIDxUZXh0SW5wdXRcbiAgICAgICAgICBwbGFjZWhvbGRlcj1cIkFkZCBDaGFyYWN0ZXJcIlxuICAgICAgICAgIG9uU3VibWl0PXthZGRDaGFyYWN0ZXJ9XG4gICAgICAgIC8+XG4gICAgICA8L2Rpdj5cbiAgICAgIDxkaXY+XG4gICAgICAgIHt0YXNrcy5zZWN0aW9ucy5tYXAoKHsga2V5IH0pID0+IChcbiAgICAgICAgICA8U2VjdGlvblxuICAgICAgICAgICAga2V5PXtrZXl9XG4gICAgICAgICAgICBkYXRhS2V5PXtrZXl9XG4gICAgICAgICAgICB0aXRsZT17VElUTEVTW2tleV19XG4gICAgICAgICAgICBjaGFycz17dGFza3Nba2V5XX1cbiAgICAgICAgICAgIHRvZ2dsZURhaWx5PXt0b2dnbGVEYWlseX1cbiAgICAgICAgICAgIHRvZ2dsZVdlZWtseT17dG9nZ2xlV2Vla2x5fVxuICAgICAgICAgIC8+XG4gICAgICAgICkpfVxuICAgICAgPC9kaXY+XG4gICAgPC8+XG4gIClcbn1cblxuIl19 */",
     toString: _EMOTION_STRINGIFIED_CSS_ERROR__
 };
 function App() {
     _s();
-    const [liked, setLiked] = _react.useState(false);
-    return liked ? 'You liked this' : /*#__PURE__*/ _jsxDevRuntime.jsxDEV("button", {
-        css: _ref,
-        onClick: ()=>setLiked(true)
-        ,
-        children: "Like"
-    }, void 0, false, {
-        fileName: "src-js/ark/app.js",
-        lineNumber: 18,
-        columnNumber: 37
-    }, this);
+    // TODO ability to reset state
+    const [tasks, setTasks] = _useLocalStorageJs.useLocalStorage('ark-todos', _modelJs.Model()); // TODO optimize. I don't like how entire page re-renders
+    // Not sure why atm, it's something obvious here.
+    // TODO disable button bank for char until next reset 
+    //      if completed.
+    // TODO show animation on bank completion, highlighting
+    //      entire row in some way. Need to distinguish from
+    //      weeklies which should highlight in some other way
+    const toggleDaily = _react.useMemo(()=>(key, charKey, idx)=>{
+            setTasks((prev)=>{
+                let updating = [
+                    ...prev[key][charKey].daily
+                ];
+                updating[idx] = !prev[key][charKey].daily[idx];
+                return {
+                    ...prev,
+                    [key]: {
+                        ...prev[key],
+                        [charKey]: {
+                            ...prev[key][charKey],
+                            daily: updating
+                        }
+                    }
+                };
+            });
+        }
+    , [
+        setTasks
+    ]);
+    const toggleWeekly = _react.useMemo(()=>(key, charKey, idx)=>{
+            setTasks((prev)=>{
+                let updating = [
+                    ...prev[key][charKey].weekly
+                ];
+                updating[idx] = !prev[key][charKey].weekly[idx];
+                return {
+                    ...prev,
+                    [key]: {
+                        ...prev[key],
+                        [charKey]: {
+                            ...prev[key][charKey],
+                            weekly: updating
+                        }
+                    }
+                };
+            });
+        }
+    , [
+        setTasks
+    ]); // TODO ability to remove char
+    // TODO validate name is ok length, characters
+    // TODO validate not adding more than 6 to current roster
+    const addCharacter = (name)=>{
+        setTasks((prev)=>{
+            let updating = {
+                ...prev
+            };
+            prev.sections.forEach((section)=>{
+                updating[section.key] = {
+                    ...updating[section.key],
+                    [name]: _modelJs.Character(section.key)
+                };
+            });
+            return updating;
+        });
+    }; // TODO ability to re-order chars
+    // TODO ability to re-order sections
+    // TODO consider icons next to specific chars to signify
+    //      main vs alt1 vs alt2 vs...
+    // TODO consider multiple rosters possible (max 6 char each)
+    return /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_jsxDevRuntime.Fragment, {
+        children: [
+            /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
+                css: _ref2,
+                children: [
+                    /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
+                        css: _ref,
+                        children: [
+                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_countdownJsDefault.default, {
+                                label: "Daily"
+                            }, void 0, false, {
+                                fileName: "src-js/ark/app.js",
+                                lineNumber: 91,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_countdownJsDefault.default, {
+                                label: "Weekly"
+                            }, void 0, false, {
+                                fileName: "src-js/ark/app.js",
+                                lineNumber: 92,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src-js/ark/app.js",
+                        lineNumber: 90,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_textInputJsDefault.default, {
+                        placeholder: "Add Character",
+                        onSubmit: addCharacter
+                    }, void 0, false, {
+                        fileName: "src-js/ark/app.js",
+                        lineNumber: 97,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "src-js/ark/app.js",
+                lineNumber: 89,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
+                children: tasks.sections.map(({ key  })=>/*#__PURE__*/ _jsxDevRuntime.jsxDEV(_sectionJsDefault.default, {
+                        dataKey: key,
+                        title: _modelJs.TITLES[key],
+                        chars: tasks[key],
+                        toggleDaily: toggleDaily,
+                        toggleWeekly: toggleWeekly
+                    }, key, false, {
+                        fileName: "src-js/ark/app.js",
+                        lineNumber: 102,
+                        columnNumber: 13
+                    }, this)
+                )
+            }, void 0, false, {
+                fileName: "src-js/ark/app.js",
+                lineNumber: 99,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true);
 }
 exports.default = App;
-_s(App, "5oFMLl0KA2P+7Df5hTCAaQ+yYE8=");
+_s(App, "m39iet9xFnSORiC/isFwAFYk1VM=", false, function() {
+    return [
+        _useLocalStorageJs.useLocalStorage
+    ];
+});
 _c = App;
 var _c;
 $RefreshReg$(_c, "App");
@@ -27047,7 +27186,7 @@ $RefreshReg$(_c, "App");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"@emotion/react/jsx-dev-runtime":"99Ler","react":"21dqq","@emotion/react":"9qiaY","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"9qiaY":[function(require,module,exports) {
+},{"@emotion/react/jsx-dev-runtime":"99Ler","react":"21dqq","@emotion/react":"9qiaY","./useLocalStorage.js":"1hvVh","./section.js":"d932d","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./textInput.js":"ge2Lg","./countdown.js":"7r9mT","./model.js":"fhlYX"}],"9qiaY":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "CacheProvider", ()=>_emotionElementCbed451FBrowserEsmJs.C
@@ -27346,7 +27485,45 @@ if (isBrowser && !isJest) {
     globalContext[globalKey] = true;
 }
 
-},{"react":"21dqq","@emotion/cache":"3Umtj","./emotion-element-cbed451f.browser.esm.js":"2bTfE","@babel/runtime/helpers/extends":"vw3vn","@emotion/weak-memoize":"iicyL","hoist-non-react-statics":"1GfsB","../_isolated-hnrs/dist/emotion-react-_isolated-hnrs.browser.esm.js":"cUsDD","@emotion/utils":"6UI8e","@emotion/serialize":"kS2E2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"km3Ru":[function(require,module,exports) {
+},{"react":"21dqq","@emotion/cache":"3Umtj","./emotion-element-cbed451f.browser.esm.js":"2bTfE","@babel/runtime/helpers/extends":"vw3vn","@emotion/weak-memoize":"iicyL","hoist-non-react-statics":"1GfsB","../_isolated-hnrs/dist/emotion-react-_isolated-hnrs.browser.esm.js":"cUsDD","@emotion/utils":"6UI8e","@emotion/serialize":"kS2E2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1hvVh":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$5c14 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$5c14.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "useLocalStorage", ()=>useLocalStorage
+);
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _s = $RefreshSig$();
+const useLocalStorage = (storageKey, fallbackState)=>{
+    _s();
+    const [value, setValue] = _react.useState(()=>{
+        let initValue = localStorage.getItem(storageKey);
+        return typeof initValue !== 'undefined' ? JSON.parse(initValue) : fallbackState;
+    });
+    _react.useEffect(()=>{
+        localStorage.setItem(storageKey, JSON.stringify(value));
+    }, [
+        value,
+        storageKey
+    ]);
+    return [
+        value,
+        setValue
+    ];
+};
+_s(useLocalStorage, "RySzaKHiYbIUBECN0eNQflN5EKM=");
+
+  $parcel$ReactRefreshHelpers$5c14.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"km3Ru":[function(require,module,exports) {
 "use strict";
 var Refresh = require('react-refresh/runtime');
 function debounce(func, delay) {
@@ -27466,6 +27643,579 @@ function registerExportsForReactRefresh(module) {
     }
 }
 
-},{"react-refresh/runtime":"786KC"}]},["kn9T2","cGhgd","bMoXb"], "bMoXb", "parcelRequire94c2")
+},{"react-refresh/runtime":"786KC"}],"d932d":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$c2ae = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$c2ae.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("@emotion/react/jsx-dev-runtime");
+var _base = require("@emotion/styled/base");
+var _baseDefault = parcelHelpers.interopDefault(_base);
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _react1 = require("@emotion/react");
+var _checkButton = require("./checkButton");
+var _checkButtonDefault = parcelHelpers.interopDefault(_checkButton);
+function _EMOTION_STRINGIFIED_CSS_ERROR__() {
+    return "You have tried to stringify object returned from `css` function. It isn't supposed to be used directly (e.g. as value of the `className` prop), but rather handed to emotion so it can handle it (e.g. as value of `css` prop).";
+}
+const SectionDiv = _baseDefault.default("div", {
+    target: "e1yxdmyx4",
+    label: "SectionDiv"
+})({
+    name: "fazeoa",
+    styles: "border:3px solid black;border-radius:5px;margin:5 0;padding:5px",
+    map: "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNlY3Rpb24uanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBSzZCIiwiZmlsZSI6InNlY3Rpb24uanMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QgZnJvbSAncmVhY3QnO1xuaW1wb3J0IHN0eWxlZCBmcm9tICdAZW1vdGlvbi9zdHlsZWQnXG5pbXBvcnQgeyBjc3MgfSBmcm9tIFwiQGVtb3Rpb24vcmVhY3RcIjtcbmltcG9ydCBDaGVja0J1dHRvbiBmcm9tICcuL2NoZWNrQnV0dG9uJztcblxuY29uc3QgU2VjdGlvbkRpdiA9IHN0eWxlZC5kaXZgXG4gIGJvcmRlcjogM3B4IHNvbGlkIGJsYWNrO1xuICBib3JkZXItcmFkaXVzOiA1cHg7XG4gIG1hcmdpbjogNSAwO1xuICBwYWRkaW5nOiA1cHg7XG5gO1xuY29uc3QgU2VjdGlvblRpdGxlID0gc3R5bGVkLmRpdmBcbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB3aWR0aDogMjAwcHg7XG4gIGZvbnQtc2l6ZTogMjBweDtcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XG5gO1xuY29uc3QgQ2hhcmFjdGVyTmFtZSA9IHN0eWxlZC5kaXZgXG4gIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbiAgd2lkdGg6IDIwMHB4O1xuICBvdmVyZmxvdy14OiBjbGlwO1xuICBwYWRkaW5nLWxlZnQ6IDE1cHg7XG5gO1xuLy8gVE9ETyBhbHRlcm5hdGluZyBzdHJpcGVzIG9uIGVhY2ggcm93XG5jb25zdCBCdXR0b25zID0gc3R5bGVkLmRpdmBcbiAgZGlzcGxheTogaW5saW5lLWZsZXg7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICB3aWR0aDogMTAwcHg7XG5gO1xuY29uc3QgVGl0bGUgPSBzdHlsZWQuZGl2YFxuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG4gIHdpZHRoOiAxMDBweDtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBmb250LXNpemU6IDEzcHg7XG4gIGZvbnQtc3R5bGU6IGl0YWxpYztcbiAgb3BhY2l0eTogNTAlO1xuYDtcblxuZnVuY3Rpb24gU2VjdGlvbih7XG4gIGRhdGFLZXksXG4gIHRpdGxlLFxuICBjaGFycyxcbiAgdG9nZ2xlRGFpbHksXG4gIHRvZ2dsZVdlZWtseVxufSkge1xuICByZXR1cm4gKFxuICAgIDxTZWN0aW9uRGl2PlxuICAgICAgPFNlY3Rpb25UaXRsZT57dGl0bGV9PC9TZWN0aW9uVGl0bGU+XG4gICAgICA8VGl0bGU+RGFpbHk8L1RpdGxlPlxuICAgICAgPFRpdGxlPldlZWtseTwvVGl0bGU+XG4gICAgICB7T2JqZWN0LmVudHJpZXMoY2hhcnMpLm1hcCgoW2ssIHZdKSA9PiAoXG4gICAgICAgIDxkaXYga2V5PXtrfT5cbiAgICAgICAgICA8Q2hhcmFjdGVyTmFtZT57a308L0NoYXJhY3Rlck5hbWU+XG4gICAgICAgICAgPEJ1dHRvbnM+XG4gICAgICAgICAgICB7di5kYWlseS5tYXAoKGNoZWNrZWQsIGlkeCkgPT4gKFxuICAgICAgICAgICAgICA8Q2hlY2tCdXR0b25cbiAgICAgICAgICAgICAgICBrZXk9e2lkeH1cbiAgICAgICAgICAgICAgICBkaXNwbGF5VGV4dD17aWR4fVxuICAgICAgICAgICAgICAgIGNoZWNrZWQ9e2NoZWNrZWR9XG4gICAgICAgICAgICAgICAgb25DbGljaz17KCkgPT4gdG9nZ2xlRGFpbHkoZGF0YUtleSwgaywgaWR4KX1cbiAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICkpfVxuICAgICAgICAgIDwvQnV0dG9ucz5cbiAgICAgICAgICA8QnV0dG9ucz5cbiAgICAgICAgICAgIHt2LndlZWtseT8ubWFwKChjaGVja2VkLCBpZHgpID0+IChcbiAgICAgICAgICAgICAgPENoZWNrQnV0dG9uXG4gICAgICAgICAgICAgICAga2V5PXtpZHh9XG4gICAgICAgICAgICAgICAgZGlzcGxheVRleHQ9e2lkeH1cbiAgICAgICAgICAgICAgICBjaGVja2VkPXtjaGVja2VkfVxuICAgICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHRvZ2dsZVdlZWtseShkYXRhS2V5LCBrLCBpZHgpfVxuICAgICAgICAgICAgICAvPlxuICAgICAgICAgICAgKSl9XG4gICAgICAgICAgPC9CdXR0b25zPlxuICAgICAgICA8L2Rpdj5cbiAgICAgICkpfVxuICAgIDwvU2VjdGlvbkRpdj5cbiAgKVxufVxuXG5leHBvcnQgZGVmYXVsdCBTZWN0aW9uO1xuIl19 */",
+    toString: _EMOTION_STRINGIFIED_CSS_ERROR__
+});
+_c = SectionDiv;
+const SectionTitle = _baseDefault.default("div", {
+    target: "e1yxdmyx3",
+    label: "SectionTitle"
+})({
+    name: "13ycjjj",
+    styles: "display:inline-block;width:200px;font-size:20px;font-weight:bold",
+    map: "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNlY3Rpb24uanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBVytCIiwiZmlsZSI6InNlY3Rpb24uanMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QgZnJvbSAncmVhY3QnO1xuaW1wb3J0IHN0eWxlZCBmcm9tICdAZW1vdGlvbi9zdHlsZWQnXG5pbXBvcnQgeyBjc3MgfSBmcm9tIFwiQGVtb3Rpb24vcmVhY3RcIjtcbmltcG9ydCBDaGVja0J1dHRvbiBmcm9tICcuL2NoZWNrQnV0dG9uJztcblxuY29uc3QgU2VjdGlvbkRpdiA9IHN0eWxlZC5kaXZgXG4gIGJvcmRlcjogM3B4IHNvbGlkIGJsYWNrO1xuICBib3JkZXItcmFkaXVzOiA1cHg7XG4gIG1hcmdpbjogNSAwO1xuICBwYWRkaW5nOiA1cHg7XG5gO1xuY29uc3QgU2VjdGlvblRpdGxlID0gc3R5bGVkLmRpdmBcbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB3aWR0aDogMjAwcHg7XG4gIGZvbnQtc2l6ZTogMjBweDtcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XG5gO1xuY29uc3QgQ2hhcmFjdGVyTmFtZSA9IHN0eWxlZC5kaXZgXG4gIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbiAgd2lkdGg6IDIwMHB4O1xuICBvdmVyZmxvdy14OiBjbGlwO1xuICBwYWRkaW5nLWxlZnQ6IDE1cHg7XG5gO1xuLy8gVE9ETyBhbHRlcm5hdGluZyBzdHJpcGVzIG9uIGVhY2ggcm93XG5jb25zdCBCdXR0b25zID0gc3R5bGVkLmRpdmBcbiAgZGlzcGxheTogaW5saW5lLWZsZXg7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICB3aWR0aDogMTAwcHg7XG5gO1xuY29uc3QgVGl0bGUgPSBzdHlsZWQuZGl2YFxuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG4gIHdpZHRoOiAxMDBweDtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBmb250LXNpemU6IDEzcHg7XG4gIGZvbnQtc3R5bGU6IGl0YWxpYztcbiAgb3BhY2l0eTogNTAlO1xuYDtcblxuZnVuY3Rpb24gU2VjdGlvbih7XG4gIGRhdGFLZXksXG4gIHRpdGxlLFxuICBjaGFycyxcbiAgdG9nZ2xlRGFpbHksXG4gIHRvZ2dsZVdlZWtseVxufSkge1xuICByZXR1cm4gKFxuICAgIDxTZWN0aW9uRGl2PlxuICAgICAgPFNlY3Rpb25UaXRsZT57dGl0bGV9PC9TZWN0aW9uVGl0bGU+XG4gICAgICA8VGl0bGU+RGFpbHk8L1RpdGxlPlxuICAgICAgPFRpdGxlPldlZWtseTwvVGl0bGU+XG4gICAgICB7T2JqZWN0LmVudHJpZXMoY2hhcnMpLm1hcCgoW2ssIHZdKSA9PiAoXG4gICAgICAgIDxkaXYga2V5PXtrfT5cbiAgICAgICAgICA8Q2hhcmFjdGVyTmFtZT57a308L0NoYXJhY3Rlck5hbWU+XG4gICAgICAgICAgPEJ1dHRvbnM+XG4gICAgICAgICAgICB7di5kYWlseS5tYXAoKGNoZWNrZWQsIGlkeCkgPT4gKFxuICAgICAgICAgICAgICA8Q2hlY2tCdXR0b25cbiAgICAgICAgICAgICAgICBrZXk9e2lkeH1cbiAgICAgICAgICAgICAgICBkaXNwbGF5VGV4dD17aWR4fVxuICAgICAgICAgICAgICAgIGNoZWNrZWQ9e2NoZWNrZWR9XG4gICAgICAgICAgICAgICAgb25DbGljaz17KCkgPT4gdG9nZ2xlRGFpbHkoZGF0YUtleSwgaywgaWR4KX1cbiAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICkpfVxuICAgICAgICAgIDwvQnV0dG9ucz5cbiAgICAgICAgICA8QnV0dG9ucz5cbiAgICAgICAgICAgIHt2LndlZWtseT8ubWFwKChjaGVja2VkLCBpZHgpID0+IChcbiAgICAgICAgICAgICAgPENoZWNrQnV0dG9uXG4gICAgICAgICAgICAgICAga2V5PXtpZHh9XG4gICAgICAgICAgICAgICAgZGlzcGxheVRleHQ9e2lkeH1cbiAgICAgICAgICAgICAgICBjaGVja2VkPXtjaGVja2VkfVxuICAgICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHRvZ2dsZVdlZWtseShkYXRhS2V5LCBrLCBpZHgpfVxuICAgICAgICAgICAgICAvPlxuICAgICAgICAgICAgKSl9XG4gICAgICAgICAgPC9CdXR0b25zPlxuICAgICAgICA8L2Rpdj5cbiAgICAgICkpfVxuICAgIDwvU2VjdGlvbkRpdj5cbiAgKVxufVxuXG5leHBvcnQgZGVmYXVsdCBTZWN0aW9uO1xuIl19 */",
+    toString: _EMOTION_STRINGIFIED_CSS_ERROR__
+});
+_c1 = SectionTitle;
+const CharacterName = _baseDefault.default("div", {
+    target: "e1yxdmyx2",
+    label: "CharacterName"
+})({
+    name: "vmqa9r",
+    styles: "display:inline-block;box-sizing:border-box;width:200px;overflow-x:clip;padding-left:15px",
+    map: "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNlY3Rpb24uanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBaUJnQyIsImZpbGUiOiJzZWN0aW9uLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0IGZyb20gJ3JlYWN0JztcbmltcG9ydCBzdHlsZWQgZnJvbSAnQGVtb3Rpb24vc3R5bGVkJ1xuaW1wb3J0IHsgY3NzIH0gZnJvbSBcIkBlbW90aW9uL3JlYWN0XCI7XG5pbXBvcnQgQ2hlY2tCdXR0b24gZnJvbSAnLi9jaGVja0J1dHRvbic7XG5cbmNvbnN0IFNlY3Rpb25EaXYgPSBzdHlsZWQuZGl2YFxuICBib3JkZXI6IDNweCBzb2xpZCBibGFjaztcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBtYXJnaW46IDUgMDtcbiAgcGFkZGluZzogNXB4O1xuYDtcbmNvbnN0IFNlY3Rpb25UaXRsZSA9IHN0eWxlZC5kaXZgXG4gIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgd2lkdGg6IDIwMHB4O1xuICBmb250LXNpemU6IDIwcHg7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xuYDtcbmNvbnN0IENoYXJhY3Rlck5hbWUgPSBzdHlsZWQuZGl2YFxuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG4gIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG4gIHdpZHRoOiAyMDBweDtcbiAgb3ZlcmZsb3cteDogY2xpcDtcbiAgcGFkZGluZy1sZWZ0OiAxNXB4O1xuYDtcbi8vIFRPRE8gYWx0ZXJuYXRpbmcgc3RyaXBlcyBvbiBlYWNoIHJvd1xuY29uc3QgQnV0dG9ucyA9IHN0eWxlZC5kaXZgXG4gIGRpc3BsYXk6IGlubGluZS1mbGV4O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgd2lkdGg6IDEwMHB4O1xuYDtcbmNvbnN0IFRpdGxlID0gc3R5bGVkLmRpdmBcbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB3aWR0aDogMTAwcHg7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgZm9udC1zaXplOiAxM3B4O1xuICBmb250LXN0eWxlOiBpdGFsaWM7XG4gIG9wYWNpdHk6IDUwJTtcbmA7XG5cbmZ1bmN0aW9uIFNlY3Rpb24oe1xuICBkYXRhS2V5LFxuICB0aXRsZSxcbiAgY2hhcnMsXG4gIHRvZ2dsZURhaWx5LFxuICB0b2dnbGVXZWVrbHlcbn0pIHtcbiAgcmV0dXJuIChcbiAgICA8U2VjdGlvbkRpdj5cbiAgICAgIDxTZWN0aW9uVGl0bGU+e3RpdGxlfTwvU2VjdGlvblRpdGxlPlxuICAgICAgPFRpdGxlPkRhaWx5PC9UaXRsZT5cbiAgICAgIDxUaXRsZT5XZWVrbHk8L1RpdGxlPlxuICAgICAge09iamVjdC5lbnRyaWVzKGNoYXJzKS5tYXAoKFtrLCB2XSkgPT4gKFxuICAgICAgICA8ZGl2IGtleT17a30+XG4gICAgICAgICAgPENoYXJhY3Rlck5hbWU+e2t9PC9DaGFyYWN0ZXJOYW1lPlxuICAgICAgICAgIDxCdXR0b25zPlxuICAgICAgICAgICAge3YuZGFpbHkubWFwKChjaGVja2VkLCBpZHgpID0+IChcbiAgICAgICAgICAgICAgPENoZWNrQnV0dG9uXG4gICAgICAgICAgICAgICAga2V5PXtpZHh9XG4gICAgICAgICAgICAgICAgZGlzcGxheVRleHQ9e2lkeH1cbiAgICAgICAgICAgICAgICBjaGVja2VkPXtjaGVja2VkfVxuICAgICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHRvZ2dsZURhaWx5KGRhdGFLZXksIGssIGlkeCl9XG4gICAgICAgICAgICAgIC8+XG4gICAgICAgICAgICApKX1cbiAgICAgICAgICA8L0J1dHRvbnM+XG4gICAgICAgICAgPEJ1dHRvbnM+XG4gICAgICAgICAgICB7di53ZWVrbHk/Lm1hcCgoY2hlY2tlZCwgaWR4KSA9PiAoXG4gICAgICAgICAgICAgIDxDaGVja0J1dHRvblxuICAgICAgICAgICAgICAgIGtleT17aWR4fVxuICAgICAgICAgICAgICAgIGRpc3BsYXlUZXh0PXtpZHh9XG4gICAgICAgICAgICAgICAgY2hlY2tlZD17Y2hlY2tlZH1cbiAgICAgICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiB0b2dnbGVXZWVrbHkoZGF0YUtleSwgaywgaWR4KX1cbiAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICkpfVxuICAgICAgICAgIDwvQnV0dG9ucz5cbiAgICAgICAgPC9kaXY+XG4gICAgICApKX1cbiAgICA8L1NlY3Rpb25EaXY+XG4gIClcbn1cblxuZXhwb3J0IGRlZmF1bHQgU2VjdGlvbjtcbiJdfQ== */",
+    toString: _EMOTION_STRINGIFIED_CSS_ERROR__
+}); // TODO alternating stripes on each row
+_c2 = CharacterName;
+const Buttons = _baseDefault.default("div", {
+    target: "e1yxdmyx1",
+    label: "Buttons"
+})({
+    name: "1uivnae",
+    styles: "display:inline-flex;justify-content:center;width:100px",
+    map: "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNlY3Rpb24uanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBeUIwQiIsImZpbGUiOiJzZWN0aW9uLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0IGZyb20gJ3JlYWN0JztcbmltcG9ydCBzdHlsZWQgZnJvbSAnQGVtb3Rpb24vc3R5bGVkJ1xuaW1wb3J0IHsgY3NzIH0gZnJvbSBcIkBlbW90aW9uL3JlYWN0XCI7XG5pbXBvcnQgQ2hlY2tCdXR0b24gZnJvbSAnLi9jaGVja0J1dHRvbic7XG5cbmNvbnN0IFNlY3Rpb25EaXYgPSBzdHlsZWQuZGl2YFxuICBib3JkZXI6IDNweCBzb2xpZCBibGFjaztcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBtYXJnaW46IDUgMDtcbiAgcGFkZGluZzogNXB4O1xuYDtcbmNvbnN0IFNlY3Rpb25UaXRsZSA9IHN0eWxlZC5kaXZgXG4gIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgd2lkdGg6IDIwMHB4O1xuICBmb250LXNpemU6IDIwcHg7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xuYDtcbmNvbnN0IENoYXJhY3Rlck5hbWUgPSBzdHlsZWQuZGl2YFxuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG4gIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG4gIHdpZHRoOiAyMDBweDtcbiAgb3ZlcmZsb3cteDogY2xpcDtcbiAgcGFkZGluZy1sZWZ0OiAxNXB4O1xuYDtcbi8vIFRPRE8gYWx0ZXJuYXRpbmcgc3RyaXBlcyBvbiBlYWNoIHJvd1xuY29uc3QgQnV0dG9ucyA9IHN0eWxlZC5kaXZgXG4gIGRpc3BsYXk6IGlubGluZS1mbGV4O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgd2lkdGg6IDEwMHB4O1xuYDtcbmNvbnN0IFRpdGxlID0gc3R5bGVkLmRpdmBcbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB3aWR0aDogMTAwcHg7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgZm9udC1zaXplOiAxM3B4O1xuICBmb250LXN0eWxlOiBpdGFsaWM7XG4gIG9wYWNpdHk6IDUwJTtcbmA7XG5cbmZ1bmN0aW9uIFNlY3Rpb24oe1xuICBkYXRhS2V5LFxuICB0aXRsZSxcbiAgY2hhcnMsXG4gIHRvZ2dsZURhaWx5LFxuICB0b2dnbGVXZWVrbHlcbn0pIHtcbiAgcmV0dXJuIChcbiAgICA8U2VjdGlvbkRpdj5cbiAgICAgIDxTZWN0aW9uVGl0bGU+e3RpdGxlfTwvU2VjdGlvblRpdGxlPlxuICAgICAgPFRpdGxlPkRhaWx5PC9UaXRsZT5cbiAgICAgIDxUaXRsZT5XZWVrbHk8L1RpdGxlPlxuICAgICAge09iamVjdC5lbnRyaWVzKGNoYXJzKS5tYXAoKFtrLCB2XSkgPT4gKFxuICAgICAgICA8ZGl2IGtleT17a30+XG4gICAgICAgICAgPENoYXJhY3Rlck5hbWU+e2t9PC9DaGFyYWN0ZXJOYW1lPlxuICAgICAgICAgIDxCdXR0b25zPlxuICAgICAgICAgICAge3YuZGFpbHkubWFwKChjaGVja2VkLCBpZHgpID0+IChcbiAgICAgICAgICAgICAgPENoZWNrQnV0dG9uXG4gICAgICAgICAgICAgICAga2V5PXtpZHh9XG4gICAgICAgICAgICAgICAgZGlzcGxheVRleHQ9e2lkeH1cbiAgICAgICAgICAgICAgICBjaGVja2VkPXtjaGVja2VkfVxuICAgICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHRvZ2dsZURhaWx5KGRhdGFLZXksIGssIGlkeCl9XG4gICAgICAgICAgICAgIC8+XG4gICAgICAgICAgICApKX1cbiAgICAgICAgICA8L0J1dHRvbnM+XG4gICAgICAgICAgPEJ1dHRvbnM+XG4gICAgICAgICAgICB7di53ZWVrbHk/Lm1hcCgoY2hlY2tlZCwgaWR4KSA9PiAoXG4gICAgICAgICAgICAgIDxDaGVja0J1dHRvblxuICAgICAgICAgICAgICAgIGtleT17aWR4fVxuICAgICAgICAgICAgICAgIGRpc3BsYXlUZXh0PXtpZHh9XG4gICAgICAgICAgICAgICAgY2hlY2tlZD17Y2hlY2tlZH1cbiAgICAgICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiB0b2dnbGVXZWVrbHkoZGF0YUtleSwgaywgaWR4KX1cbiAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICkpfVxuICAgICAgICAgIDwvQnV0dG9ucz5cbiAgICAgICAgPC9kaXY+XG4gICAgICApKX1cbiAgICA8L1NlY3Rpb25EaXY+XG4gIClcbn1cblxuZXhwb3J0IGRlZmF1bHQgU2VjdGlvbjtcbiJdfQ== */",
+    toString: _EMOTION_STRINGIFIED_CSS_ERROR__
+});
+_c3 = Buttons;
+const Title = _baseDefault.default("div", {
+    target: "e1yxdmyx0",
+    label: "Title"
+})({
+    name: "1wy0m4q",
+    styles: "display:inline-block;width:100px;text-align:center;font-size:13px;font-style:italic;opacity:50%",
+    map: "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNlY3Rpb24uanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBOEJ3QiIsImZpbGUiOiJzZWN0aW9uLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0IGZyb20gJ3JlYWN0JztcbmltcG9ydCBzdHlsZWQgZnJvbSAnQGVtb3Rpb24vc3R5bGVkJ1xuaW1wb3J0IHsgY3NzIH0gZnJvbSBcIkBlbW90aW9uL3JlYWN0XCI7XG5pbXBvcnQgQ2hlY2tCdXR0b24gZnJvbSAnLi9jaGVja0J1dHRvbic7XG5cbmNvbnN0IFNlY3Rpb25EaXYgPSBzdHlsZWQuZGl2YFxuICBib3JkZXI6IDNweCBzb2xpZCBibGFjaztcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBtYXJnaW46IDUgMDtcbiAgcGFkZGluZzogNXB4O1xuYDtcbmNvbnN0IFNlY3Rpb25UaXRsZSA9IHN0eWxlZC5kaXZgXG4gIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgd2lkdGg6IDIwMHB4O1xuICBmb250LXNpemU6IDIwcHg7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xuYDtcbmNvbnN0IENoYXJhY3Rlck5hbWUgPSBzdHlsZWQuZGl2YFxuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG4gIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG4gIHdpZHRoOiAyMDBweDtcbiAgb3ZlcmZsb3cteDogY2xpcDtcbiAgcGFkZGluZy1sZWZ0OiAxNXB4O1xuYDtcbi8vIFRPRE8gYWx0ZXJuYXRpbmcgc3RyaXBlcyBvbiBlYWNoIHJvd1xuY29uc3QgQnV0dG9ucyA9IHN0eWxlZC5kaXZgXG4gIGRpc3BsYXk6IGlubGluZS1mbGV4O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgd2lkdGg6IDEwMHB4O1xuYDtcbmNvbnN0IFRpdGxlID0gc3R5bGVkLmRpdmBcbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB3aWR0aDogMTAwcHg7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgZm9udC1zaXplOiAxM3B4O1xuICBmb250LXN0eWxlOiBpdGFsaWM7XG4gIG9wYWNpdHk6IDUwJTtcbmA7XG5cbmZ1bmN0aW9uIFNlY3Rpb24oe1xuICBkYXRhS2V5LFxuICB0aXRsZSxcbiAgY2hhcnMsXG4gIHRvZ2dsZURhaWx5LFxuICB0b2dnbGVXZWVrbHlcbn0pIHtcbiAgcmV0dXJuIChcbiAgICA8U2VjdGlvbkRpdj5cbiAgICAgIDxTZWN0aW9uVGl0bGU+e3RpdGxlfTwvU2VjdGlvblRpdGxlPlxuICAgICAgPFRpdGxlPkRhaWx5PC9UaXRsZT5cbiAgICAgIDxUaXRsZT5XZWVrbHk8L1RpdGxlPlxuICAgICAge09iamVjdC5lbnRyaWVzKGNoYXJzKS5tYXAoKFtrLCB2XSkgPT4gKFxuICAgICAgICA8ZGl2IGtleT17a30+XG4gICAgICAgICAgPENoYXJhY3Rlck5hbWU+e2t9PC9DaGFyYWN0ZXJOYW1lPlxuICAgICAgICAgIDxCdXR0b25zPlxuICAgICAgICAgICAge3YuZGFpbHkubWFwKChjaGVja2VkLCBpZHgpID0+IChcbiAgICAgICAgICAgICAgPENoZWNrQnV0dG9uXG4gICAgICAgICAgICAgICAga2V5PXtpZHh9XG4gICAgICAgICAgICAgICAgZGlzcGxheVRleHQ9e2lkeH1cbiAgICAgICAgICAgICAgICBjaGVja2VkPXtjaGVja2VkfVxuICAgICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHRvZ2dsZURhaWx5KGRhdGFLZXksIGssIGlkeCl9XG4gICAgICAgICAgICAgIC8+XG4gICAgICAgICAgICApKX1cbiAgICAgICAgICA8L0J1dHRvbnM+XG4gICAgICAgICAgPEJ1dHRvbnM+XG4gICAgICAgICAgICB7di53ZWVrbHk/Lm1hcCgoY2hlY2tlZCwgaWR4KSA9PiAoXG4gICAgICAgICAgICAgIDxDaGVja0J1dHRvblxuICAgICAgICAgICAgICAgIGtleT17aWR4fVxuICAgICAgICAgICAgICAgIGRpc3BsYXlUZXh0PXtpZHh9XG4gICAgICAgICAgICAgICAgY2hlY2tlZD17Y2hlY2tlZH1cbiAgICAgICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiB0b2dnbGVXZWVrbHkoZGF0YUtleSwgaywgaWR4KX1cbiAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICkpfVxuICAgICAgICAgIDwvQnV0dG9ucz5cbiAgICAgICAgPC9kaXY+XG4gICAgICApKX1cbiAgICA8L1NlY3Rpb25EaXY+XG4gIClcbn1cblxuZXhwb3J0IGRlZmF1bHQgU2VjdGlvbjtcbiJdfQ== */",
+    toString: _EMOTION_STRINGIFIED_CSS_ERROR__
+});
+_c4 = Title;
+function Section({ dataKey , title , chars , toggleDaily , toggleWeekly  }) {
+    return /*#__PURE__*/ _jsxDevRuntime.jsxDEV(SectionDiv, {
+        children: [
+            /*#__PURE__*/ _jsxDevRuntime.jsxDEV(SectionTitle, {
+                children: title
+            }, void 0, false, {
+                fileName: "src-js/ark/section.js",
+                lineNumber: 93,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDevRuntime.jsxDEV(Title, {
+                children: "Daily"
+            }, void 0, false, {
+                fileName: "src-js/ark/section.js",
+                lineNumber: 94,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDevRuntime.jsxDEV(Title, {
+                children: "Weekly"
+            }, void 0, false, {
+                fileName: "src-js/ark/section.js",
+                lineNumber: 95,
+                columnNumber: 7
+            }, this),
+            Object.entries(chars).map(([k, v])=>/*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
+                    children: [
+                        /*#__PURE__*/ _jsxDevRuntime.jsxDEV(CharacterName, {
+                            children: k
+                        }, void 0, false, {
+                            fileName: "src-js/ark/section.js",
+                            lineNumber: 97,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDevRuntime.jsxDEV(Buttons, {
+                            children: v.daily.map((checked, idx)=>/*#__PURE__*/ _jsxDevRuntime.jsxDEV(_checkButtonDefault.default, {
+                                    displayText: idx,
+                                    checked: checked,
+                                    onClick: ()=>toggleDaily(dataKey, k, idx)
+                                }, idx, false, {
+                                    fileName: "src-js/ark/section.js",
+                                    lineNumber: 99,
+                                    columnNumber: 44
+                                }, this)
+                            )
+                        }, void 0, false, {
+                            fileName: "src-js/ark/section.js",
+                            lineNumber: 98,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDevRuntime.jsxDEV(Buttons, {
+                            children: v.weekly?.map((checked, idx)=>/*#__PURE__*/ _jsxDevRuntime.jsxDEV(_checkButtonDefault.default, {
+                                    displayText: idx,
+                                    checked: checked,
+                                    onClick: ()=>toggleWeekly(dataKey, k, idx)
+                                }, idx, false, {
+                                    fileName: "src-js/ark/section.js",
+                                    lineNumber: 102,
+                                    columnNumber: 46
+                                }, this)
+                            )
+                        }, void 0, false, {
+                            fileName: "src-js/ark/section.js",
+                            lineNumber: 101,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, k, true, {
+                    fileName: "src-js/ark/section.js",
+                    lineNumber: 96,
+                    columnNumber: 46
+                }, this)
+            )
+        ]
+    }, void 0, true, {
+        fileName: "src-js/ark/section.js",
+        lineNumber: 92,
+        columnNumber: 10
+    }, this);
+}
+_c5 = Section;
+exports.default = Section;
+var _c, _c1, _c2, _c3, _c4, _c5;
+$RefreshReg$(_c, "SectionDiv");
+$RefreshReg$(_c1, "SectionTitle");
+$RefreshReg$(_c2, "CharacterName");
+$RefreshReg$(_c3, "Buttons");
+$RefreshReg$(_c4, "Title");
+$RefreshReg$(_c5, "Section");
+
+  $parcel$ReactRefreshHelpers$c2ae.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"@emotion/react/jsx-dev-runtime":"99Ler","react":"21dqq","@emotion/react":"9qiaY","./checkButton":"gYPsZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","@emotion/styled/base":"aUeJ5"}],"gYPsZ":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$0412 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$0412.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("@emotion/react/jsx-dev-runtime");
+var _base = require("@emotion/styled/base");
+var _baseDefault = parcelHelpers.interopDefault(_base);
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+const StyledDiv = _baseDefault.default("div", {
+    target: "e1ii1n580",
+    label: "StyledDiv"
+})((props)=>`
+  display: inline-block;
+  margin: 0 1;
+
+  width: 20px;
+  height: 20px;
+  font-size: 14;
+  text-align: center;
+
+  cursor: pointer;
+  background: ${props.checked ? 'green' : 'white'};
+  color: ${props.checked ? 'white' : 'black'};
+
+  border-radius: 4px;
+  border: 1px solid transparent;
+  box-sizing: border-box;  
+  &:hover {
+    border: 1px solid black;
+  }
+`
+, "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNoZWNrQnV0dG9uLmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUdrQiIsImZpbGUiOiJjaGVja0J1dHRvbi5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCBmcm9tICdyZWFjdCc7XG5pbXBvcnQgc3R5bGVkIGZyb20gJ0BlbW90aW9uL3N0eWxlZCdcblxuY29uc3QgU3R5bGVkRGl2ID0gc3R5bGVkLmRpdihwcm9wcyA9PiBgXG4gIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgbWFyZ2luOiAwIDE7XG5cbiAgd2lkdGg6IDIwcHg7XG4gIGhlaWdodDogMjBweDtcbiAgZm9udC1zaXplOiAxNDtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuXG4gIGN1cnNvcjogcG9pbnRlcjtcbiAgYmFja2dyb3VuZDogJHtwcm9wcy5jaGVja2VkID8gJ2dyZWVuJyA6ICd3aGl0ZSd9O1xuICBjb2xvcjogJHtwcm9wcy5jaGVja2VkID8gJ3doaXRlJyA6ICdibGFjayd9O1xuXG4gIGJvcmRlci1yYWRpdXM6IDRweDtcbiAgYm9yZGVyOiAxcHggc29saWQgdHJhbnNwYXJlbnQ7XG4gIGJveC1zaXppbmc6IGJvcmRlci1ib3g7ICBcbiAgJjpob3ZlciB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgYmxhY2s7XG4gIH1cbmApXG5cbmZ1bmN0aW9uIENoZWNrQnV0dG9uKHtcbiAgZGlzcGxheVRleHQsXG4gIGNoZWNrZWQsXG4gIG9uQ2xpY2tcbn0pIHtcbiAgcmV0dXJuIChcbiAgICA8U3R5bGVkRGl2XG4gICAgICBjaGVja2VkPXtjaGVja2VkfVxuICAgICAgb25DbGljaz17b25DbGlja31cbiAgICA+XG4gICAgICB7ZGlzcGxheVRleHR9XG4gICAgPC9TdHlsZWREaXY+XG4gIClcbn1cblxuZXhwb3J0IGRlZmF1bHQgQ2hlY2tCdXR0b247XG4iXX0= */");
+_c = StyledDiv;
+function CheckButton({ displayText , checked , onClick  }) {
+    return /*#__PURE__*/ _jsxDevRuntime.jsxDEV(StyledDiv, {
+        checked: checked,
+        onClick: onClick,
+        children: displayText
+    }, void 0, false, {
+        fileName: "src-js/ark/checkButton.js",
+        lineNumber: 35,
+        columnNumber: 10
+    }, this);
+}
+_c1 = CheckButton;
+exports.default = CheckButton;
+var _c, _c1;
+$RefreshReg$(_c, "StyledDiv");
+$RefreshReg$(_c1, "CheckButton");
+
+  $parcel$ReactRefreshHelpers$0412.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"@emotion/react/jsx-dev-runtime":"99Ler","@emotion/styled/base":"aUeJ5","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"aUeJ5":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _extends = require("@babel/runtime/helpers/esm/extends");
+var _extendsDefault = parcelHelpers.interopDefault(_extends);
+var _react = require("react");
+var _isPropValid = require("@emotion/is-prop-valid");
+var _isPropValidDefault = parcelHelpers.interopDefault(_isPropValid);
+var _react1 = require("@emotion/react");
+var _utils = require("@emotion/utils");
+var _serialize = require("@emotion/serialize");
+var testOmitPropsOnStringTag = _isPropValidDefault.default;
+var testOmitPropsOnComponent = function testOmitPropsOnComponent(key) {
+    return key !== 'theme';
+};
+var getDefaultShouldForwardProp = function getDefaultShouldForwardProp(tag) {
+    return typeof tag === 'string' && // for "a" so this is checking that
+    // it's a lowercase character
+    tag.charCodeAt(0) > 96 ? testOmitPropsOnStringTag : testOmitPropsOnComponent;
+};
+var composeShouldForwardProps = function composeShouldForwardProps(tag, options, isReal) {
+    var shouldForwardProp;
+    if (options) {
+        var optionsShouldForwardProp = options.shouldForwardProp;
+        shouldForwardProp = tag.__emotion_forwardProp && optionsShouldForwardProp ? function(propName) {
+            return tag.__emotion_forwardProp(propName) && optionsShouldForwardProp(propName);
+        } : optionsShouldForwardProp;
+    }
+    if (typeof shouldForwardProp !== 'function' && isReal) shouldForwardProp = tag.__emotion_forwardProp;
+    return shouldForwardProp;
+};
+var useInsertionEffect = _react["useInsertionEffect"] ? _react["useInsertionEffect"] : function useInsertionEffect(create) {
+    create();
+};
+function useInsertionEffectMaybe(create) {
+    useInsertionEffect(create);
+}
+var ILLEGAL_ESCAPE_SEQUENCE_ERROR = "You have illegal escape sequence in your template literal, most likely inside content's property value.\nBecause you write your CSS inside a JavaScript string you actually have to do double escaping, so for example \"content: '\\00d7';\" should become \"content: '\\\\00d7';\".\nYou can read more about this here:\nhttps://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#ES2018_revision_of_illegal_escape_sequences";
+var Insertion = function Insertion(_ref) {
+    var cache = _ref.cache, serialized = _ref.serialized, isStringTag = _ref.isStringTag;
+    _utils.registerStyles(cache, serialized, isStringTag);
+    var rules = useInsertionEffectMaybe(function() {
+        return _utils.insertStyles(cache, serialized, isStringTag);
+    });
+    return null;
+};
+var createStyled = function createStyled1(tag, options) {
+    if (tag === undefined) throw new Error('You are trying to create a styled element with an undefined component.\nYou may have forgotten to import it.');
+    var isReal = tag.__emotion_real === tag;
+    var baseTag = isReal && tag.__emotion_base || tag;
+    var identifierName;
+    var targetClassName;
+    if (options !== undefined) {
+        identifierName = options.label;
+        targetClassName = options.target;
+    }
+    var shouldForwardProp = composeShouldForwardProps(tag, options, isReal);
+    var defaultShouldForwardProp = shouldForwardProp || getDefaultShouldForwardProp(baseTag);
+    var shouldUseAs = !defaultShouldForwardProp('as');
+    return function() {
+        var args = arguments;
+        var styles = isReal && tag.__emotion_styles !== undefined ? tag.__emotion_styles.slice(0) : [];
+        if (identifierName !== undefined) styles.push("label:" + identifierName + ";");
+        if (args[0] == null || args[0].raw === undefined) styles.push.apply(styles, args);
+        else {
+            if (args[0][0] === undefined) console.error(ILLEGAL_ESCAPE_SEQUENCE_ERROR);
+            styles.push(args[0][0]);
+            var len = args.length;
+            var i = 1;
+            for(; i < len; i++){
+                if (args[0][i] === undefined) console.error(ILLEGAL_ESCAPE_SEQUENCE_ERROR);
+                styles.push(args[i], args[0][i]);
+            }
+        } // $FlowFixMe: we need to cast StatelessFunctionalComponent to our PrivateStyledComponent class
+        var Styled = _react1.withEmotionCache(function(props, cache, ref) {
+            var FinalTag = shouldUseAs && props.as || baseTag;
+            var className = '';
+            var classInterpolations = [];
+            var mergedProps = props;
+            if (props.theme == null) {
+                mergedProps = {};
+                for(var key in props)mergedProps[key] = props[key];
+                mergedProps.theme = _react.useContext(_react1.ThemeContext);
+            }
+            if (typeof props.className === 'string') className = _utils.getRegisteredStyles(cache.registered, classInterpolations, props.className);
+            else if (props.className != null) className = props.className + " ";
+            var serialized = _serialize.serializeStyles(styles.concat(classInterpolations), cache.registered, mergedProps);
+            className += cache.key + "-" + serialized.name;
+            if (targetClassName !== undefined) className += " " + targetClassName;
+            var finalShouldForwardProp = shouldUseAs && shouldForwardProp === undefined ? getDefaultShouldForwardProp(FinalTag) : defaultShouldForwardProp;
+            var newProps = {};
+            for(var _key in props){
+                if (shouldUseAs && _key === 'as') continue;
+                if (finalShouldForwardProp(_key)) newProps[_key] = props[_key];
+            }
+            newProps.className = className;
+            newProps.ref = ref;
+            return /*#__PURE__*/ _react.createElement(_react.Fragment, null, /*#__PURE__*/ _react.createElement(Insertion, {
+                cache: cache,
+                serialized: serialized,
+                isStringTag: typeof FinalTag === 'string'
+            }), /*#__PURE__*/ _react.createElement(FinalTag, newProps));
+        });
+        Styled.displayName = identifierName !== undefined ? identifierName : "Styled(" + (typeof baseTag === 'string' ? baseTag : baseTag.displayName || baseTag.name || 'Component') + ")";
+        Styled.defaultProps = tag.defaultProps;
+        Styled.__emotion_real = Styled;
+        Styled.__emotion_base = baseTag;
+        Styled.__emotion_styles = styles;
+        Styled.__emotion_forwardProp = shouldForwardProp;
+        Object.defineProperty(Styled, 'toString', {
+            value: function value() {
+                if (targetClassName === undefined && true) return 'NO_COMPONENT_SELECTOR';
+                 // $FlowFixMe: coerce undefined to string
+                return "." + targetClassName;
+            }
+        });
+        Styled.withComponent = function(nextTag, nextOptions) {
+            return createStyled1(nextTag, _extendsDefault.default({}, options, nextOptions, {
+                shouldForwardProp: composeShouldForwardProps(Styled, nextOptions, true)
+            })).apply(void 0, styles);
+        };
+        return Styled;
+    };
+};
+exports.default = createStyled;
+
+},{"@babel/runtime/helpers/esm/extends":"fTBFS","react":"21dqq","@emotion/is-prop-valid":"6uRZg","@emotion/react":"9qiaY","@emotion/utils":"6UI8e","@emotion/serialize":"kS2E2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6uRZg":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _memoize = require("@emotion/memoize");
+var _memoizeDefault = parcelHelpers.interopDefault(_memoize);
+var reactPropsRegex = /^((children|dangerouslySetInnerHTML|key|ref|autoFocus|defaultValue|defaultChecked|innerHTML|suppressContentEditableWarning|suppressHydrationWarning|valueLink|abbr|accept|acceptCharset|accessKey|action|allow|allowUserMedia|allowPaymentRequest|allowFullScreen|allowTransparency|alt|async|autoComplete|autoPlay|capture|cellPadding|cellSpacing|challenge|charSet|checked|cite|classID|className|cols|colSpan|content|contentEditable|contextMenu|controls|controlsList|coords|crossOrigin|data|dateTime|decoding|default|defer|dir|disabled|disablePictureInPicture|download|draggable|encType|enterKeyHint|form|formAction|formEncType|formMethod|formNoValidate|formTarget|frameBorder|headers|height|hidden|high|href|hrefLang|htmlFor|httpEquiv|id|inputMode|integrity|is|keyParams|keyType|kind|label|lang|list|loading|loop|low|marginHeight|marginWidth|max|maxLength|media|mediaGroup|method|min|minLength|multiple|muted|name|nonce|noValidate|open|optimum|pattern|placeholder|playsInline|poster|preload|profile|radioGroup|readOnly|referrerPolicy|rel|required|reversed|role|rows|rowSpan|sandbox|scope|scoped|scrolling|seamless|selected|shape|size|sizes|slot|span|spellCheck|src|srcDoc|srcLang|srcSet|start|step|style|summary|tabIndex|target|title|translate|type|useMap|value|width|wmode|wrap|about|datatype|inlist|prefix|property|resource|typeof|vocab|autoCapitalize|autoCorrect|autoSave|color|incremental|fallback|inert|itemProp|itemScope|itemType|itemID|itemRef|on|option|results|security|unselectable|accentHeight|accumulate|additive|alignmentBaseline|allowReorder|alphabetic|amplitude|arabicForm|ascent|attributeName|attributeType|autoReverse|azimuth|baseFrequency|baselineShift|baseProfile|bbox|begin|bias|by|calcMode|capHeight|clip|clipPathUnits|clipPath|clipRule|colorInterpolation|colorInterpolationFilters|colorProfile|colorRendering|contentScriptType|contentStyleType|cursor|cx|cy|d|decelerate|descent|diffuseConstant|direction|display|divisor|dominantBaseline|dur|dx|dy|edgeMode|elevation|enableBackground|end|exponent|externalResourcesRequired|fill|fillOpacity|fillRule|filter|filterRes|filterUnits|floodColor|floodOpacity|focusable|fontFamily|fontSize|fontSizeAdjust|fontStretch|fontStyle|fontVariant|fontWeight|format|from|fr|fx|fy|g1|g2|glyphName|glyphOrientationHorizontal|glyphOrientationVertical|glyphRef|gradientTransform|gradientUnits|hanging|horizAdvX|horizOriginX|ideographic|imageRendering|in|in2|intercept|k|k1|k2|k3|k4|kernelMatrix|kernelUnitLength|kerning|keyPoints|keySplines|keyTimes|lengthAdjust|letterSpacing|lightingColor|limitingConeAngle|local|markerEnd|markerMid|markerStart|markerHeight|markerUnits|markerWidth|mask|maskContentUnits|maskUnits|mathematical|mode|numOctaves|offset|opacity|operator|order|orient|orientation|origin|overflow|overlinePosition|overlineThickness|panose1|paintOrder|pathLength|patternContentUnits|patternTransform|patternUnits|pointerEvents|points|pointsAtX|pointsAtY|pointsAtZ|preserveAlpha|preserveAspectRatio|primitiveUnits|r|radius|refX|refY|renderingIntent|repeatCount|repeatDur|requiredExtensions|requiredFeatures|restart|result|rotate|rx|ry|scale|seed|shapeRendering|slope|spacing|specularConstant|specularExponent|speed|spreadMethod|startOffset|stdDeviation|stemh|stemv|stitchTiles|stopColor|stopOpacity|strikethroughPosition|strikethroughThickness|string|stroke|strokeDasharray|strokeDashoffset|strokeLinecap|strokeLinejoin|strokeMiterlimit|strokeOpacity|strokeWidth|surfaceScale|systemLanguage|tableValues|targetX|targetY|textAnchor|textDecoration|textRendering|textLength|to|transform|u1|u2|underlinePosition|underlineThickness|unicode|unicodeBidi|unicodeRange|unitsPerEm|vAlphabetic|vHanging|vIdeographic|vMathematical|values|vectorEffect|version|vertAdvY|vertOriginX|vertOriginY|viewBox|viewTarget|visibility|widths|wordSpacing|writingMode|x|xHeight|x1|x2|xChannelSelector|xlinkActuate|xlinkArcrole|xlinkHref|xlinkRole|xlinkShow|xlinkTitle|xlinkType|xmlBase|xmlns|xmlnsXlink|xmlLang|xmlSpace|y|y1|y2|yChannelSelector|z|zoomAndPan|for|class|autofocus)|(([Dd][Aa][Tt][Aa]|[Aa][Rr][Ii][Aa]|x)-.*))$/; // https://esbench.com/bench/5bfee68a4cd7e6009ef61d23
+var isPropValid = /* #__PURE__ */ _memoizeDefault.default(function(prop) {
+    return reactPropsRegex.test(prop) || prop.charCodeAt(0) === 111 && prop.charCodeAt(1) === 110 && prop.charCodeAt(2) < 91;
+});
+exports.default = isPropValid;
+
+},{"@emotion/memoize":"WW7h8","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ge2Lg":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$27bc = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$27bc.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("@emotion/react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _react1 = require("@emotion/react");
+var _s = $RefreshSig$();
+function _EMOTION_STRINGIFIED_CSS_ERROR__() {
+    return "You have tried to stringify object returned from `css` function. It isn't supposed to be used directly (e.g. as value of the `className` prop), but rather handed to emotion so it can handle it (e.g. as value of `css` prop).";
+}
+var _ref = {
+    name: "q5dsy5-TextInput",
+    styles: "position:absolute;right:0;bottom:0;padding:5 10;border:1px solid black;border-radius:4px;label:TextInput;",
+    map: "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInRleHRJbnB1dC5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFxQmMiLCJmaWxlIjoidGV4dElucHV0LmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlIH0gZnJvbSAncmVhY3QnO1xuaW1wb3J0IHsgY3NzIH0gZnJvbSBcIkBlbW90aW9uL3JlYWN0XCI7XG5cbmZ1bmN0aW9uIFRleHRJbnB1dCh7XG4gIG9uU3VibWl0LFxuICAuLi5yZXN0XG59KSB7XG4gIGNvbnN0IFtpbnB1dCwgc2V0SW5wdXRdID0gdXNlU3RhdGUoXCJcIik7XG5cbiAgY29uc3Qgb25LZXlQcmVzcyA9IGV2ZW50ID0+IHtcbiAgICBpZiAoZXZlbnQua2V5ID09PSAnRW50ZXInKSB7XG4gICAgICBldmVudC5wcmV2ZW50RGVmYXVsdCgpO1xuICAgICAgbGV0IHYgPSBpbnB1dDtcbiAgICAgIHNldElucHV0KFwiXCIpO1xuICAgICAgb25TdWJtaXQodik7XG4gICAgfVxuICB9O1xuXG4gIHJldHVybiAoXG4gICAgPGlucHV0XG4gICAgICB7Li4ucmVzdH1cbiAgICAgIGNzcz17Y3NzYFxuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgcmlnaHQ6IDA7XG4gICAgICBib3R0b206IDA7XG4gICAgICBwYWRkaW5nOiA1IDEwO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgYmxhY2s7XG4gICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgYH1cbiAgICAgIHR5cGU9XCJ0ZXh0XCJcbiAgICAgIHZhbHVlPXtpbnB1dH1cbiAgICAgIG9uQ2hhbmdlPXtldmVudCA9PiBzZXRJbnB1dChldmVudC50YXJnZXQudmFsdWUpfVxuICAgICAgb25LZXlQcmVzcz17b25LZXlQcmVzc31cbiAgICAvPlxuICApXG59XG5cbmV4cG9ydCBkZWZhdWx0IFRleHRJbnB1dDtcbiJdfQ== */",
+    toString: _EMOTION_STRINGIFIED_CSS_ERROR__
+};
+function TextInput({ onSubmit , ...rest }) {
+    _s();
+    const [input, setInput] = _react.useState("");
+    const onKeyPress = (event)=>{
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            let v = input;
+            setInput("");
+            onSubmit(v);
+        }
+    };
+    return /*#__PURE__*/ _jsxDevRuntime.jsxDEV("input", {
+        ...rest,
+        css: _ref,
+        type: "text",
+        value: input,
+        onChange: (event)=>setInput(event.target.value)
+        ,
+        onKeyPress: onKeyPress
+    }, void 0, false, {
+        fileName: "src-js/ark/textInput.js",
+        lineNumber: 31,
+        columnNumber: 10
+    }, this);
+}
+_s(TextInput, "RL+Zbs2TIka0YpcBOJptmHqCgYA=");
+_c = TextInput;
+exports.default = TextInput;
+var _c;
+$RefreshReg$(_c, "TextInput");
+
+  $parcel$ReactRefreshHelpers$27bc.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"@emotion/react/jsx-dev-runtime":"99Ler","react":"21dqq","@emotion/react":"9qiaY","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"7r9mT":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$6335 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$6335.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("@emotion/react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _react1 = require("@emotion/react"); // TODO actually countdown
+function _EMOTION_STRINGIFIED_CSS_ERROR__() {
+    return "You have tried to stringify object returned from `css` function. It isn't supposed to be used directly (e.g. as value of the `className` prop), but rather handed to emotion so it can handle it (e.g. as value of `css` prop).";
+}
+// Daily reset is 10am UTC
+// Weekly reset is 10am UTC Thursdays
+var _ref = {
+    name: "96mykp-Countdown",
+    styles: "display:inline-block;width:100px;label:Countdown;",
+    map: "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNvdW50ZG93bi5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFtQmdCIiwiZmlsZSI6ImNvdW50ZG93bi5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCwgeyB1c2VTdGF0ZSB9IGZyb20gJ3JlYWN0JztcbmltcG9ydCB7IGNzcyB9IGZyb20gXCJAZW1vdGlvbi9yZWFjdFwiO1xuLy8gVE9ETyBhY3R1YWxseSBjb3VudGRvd25cbi8vIERhaWx5IHJlc2V0IGlzIDEwYW0gVVRDXG4vLyBXZWVrbHkgcmVzZXQgaXMgMTBhbSBVVEMgVGh1cnNkYXlzXG5mdW5jdGlvbiBDb3VudGRvd24oe1xuICBsYWJlbFxufSkge1xuICByZXR1cm4gKFxuICAgIDxkaXY+XG4gICAgICA8ZGl2XG4gICAgICAgIGNzcz17Y3NzYFxuICAgICAgICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgICAgICAgICB3aWR0aDogNzVweDtcbiAgICAgICAgYH1cbiAgICAgID5cbiAgICAgICAge2xhYmVsfVxuICAgICAgPC9kaXY+XG4gICAgICA8ZGl2XG4gICAgICAgIGNzcz17Y3NzYFxuICAgICAgICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgICAgICAgICB3aWR0aDogMTAwcHg7XG4gICAgICAgIGB9XG4gICAgICA+XG4gICAgICAgIC0xMDowMDowMFxuICAgICAgPC9kaXY+XG4gICAgPC9kaXY+XG4gIClcbn1cblxuZXhwb3J0IGRlZmF1bHQgQ291bnRkb3duO1xuIl19 */",
+    toString: _EMOTION_STRINGIFIED_CSS_ERROR__
+};
+var _ref2 = {
+    name: "5a9x12-Countdown",
+    styles: "display:inline-block;width:75px;label:Countdown;",
+    map: "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNvdW50ZG93bi5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFXZ0IiLCJmaWxlIjoiY291bnRkb3duLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlIH0gZnJvbSAncmVhY3QnO1xuaW1wb3J0IHsgY3NzIH0gZnJvbSBcIkBlbW90aW9uL3JlYWN0XCI7XG4vLyBUT0RPIGFjdHVhbGx5IGNvdW50ZG93blxuLy8gRGFpbHkgcmVzZXQgaXMgMTBhbSBVVENcbi8vIFdlZWtseSByZXNldCBpcyAxMGFtIFVUQyBUaHVyc2RheXNcbmZ1bmN0aW9uIENvdW50ZG93bih7XG4gIGxhYmVsXG59KSB7XG4gIHJldHVybiAoXG4gICAgPGRpdj5cbiAgICAgIDxkaXZcbiAgICAgICAgY3NzPXtjc3NgXG4gICAgICAgICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICAgICAgICAgIHdpZHRoOiA3NXB4O1xuICAgICAgICBgfVxuICAgICAgPlxuICAgICAgICB7bGFiZWx9XG4gICAgICA8L2Rpdj5cbiAgICAgIDxkaXZcbiAgICAgICAgY3NzPXtjc3NgXG4gICAgICAgICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICAgICAgICAgIHdpZHRoOiAxMDBweDtcbiAgICAgICAgYH1cbiAgICAgID5cbiAgICAgICAgLTEwOjAwOjAwXG4gICAgICA8L2Rpdj5cbiAgICA8L2Rpdj5cbiAgKVxufVxuXG5leHBvcnQgZGVmYXVsdCBDb3VudGRvd247XG4iXX0= */",
+    toString: _EMOTION_STRINGIFIED_CSS_ERROR__
+};
+function Countdown({ label  }) {
+    return /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
+        children: [
+            /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
+                css: _ref2,
+                children: label
+            }, void 0, false, {
+                fileName: "src-js/ark/countdown.js",
+                lineNumber: 32,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
+                css: _ref,
+                children: "-10:00:00"
+            }, void 0, false, {
+                fileName: "src-js/ark/countdown.js",
+                lineNumber: 35,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "src-js/ark/countdown.js",
+        lineNumber: 31,
+        columnNumber: 10
+    }, this);
+}
+_c = Countdown;
+exports.default = Countdown;
+var _c;
+$RefreshReg$(_c, "Countdown");
+
+  $parcel$ReactRefreshHelpers$6335.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react":"21dqq","@emotion/react":"9qiaY","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","@emotion/react/jsx-dev-runtime":"99Ler"}],"fhlYX":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Model", ()=>Model
+);
+parcelHelpers.export(exports, "Character", ()=>Character
+);
+parcelHelpers.export(exports, "KEYS", ()=>KEYS
+);
+parcelHelpers.export(exports, "TITLES", ()=>TITLES
+);
+const KEYS = {
+    CHAOS_DG: "chaosDungeon",
+    ABYSS_DG: "abyssDungeon",
+    GUARD_RD: "guardinRaid",
+    UNA_TASK: "unaTasks"
+};
+const TITLES = {
+    [KEYS.CHAOS_DG]: "Chaos Dungeon",
+    [KEYS.ABYSS_DG]: "Abyss Dungeon",
+    [KEYS.GUARD_RD]: "Guardian Raid",
+    [KEYS.UNA_TASK]: "Una Tasks"
+};
+function Character(key) {
+    switch(key){
+        case KEYS.ABYSS_DG:
+            return {
+                daily: [
+                    false
+                ],
+                weekly: []
+            };
+        case KEYS.UNA_TASK:
+            return {
+                daily: [
+                    false,
+                    false,
+                    false
+                ],
+                weekly: [
+                    false,
+                    false
+                ]
+            };
+        default:
+            return {
+                daily: [
+                    false,
+                    false
+                ],
+                weekly: []
+            };
+    }
+}
+_c = Character;
+function Model() {
+    return {
+        sections: [
+            {
+                key: KEYS.CHAOS_DG,
+                order: 1
+            },
+            {
+                key: KEYS.ABYSS_DG,
+                order: 2
+            },
+            {
+                key: KEYS.GUARD_RD,
+                order: 3
+            },
+            {
+                key: KEYS.UNA_TASK,
+                order: 4
+            }
+        ],
+        [KEYS.CHAOS_DG]: Character(KEYS.CHAOS_DG),
+        [KEYS.ABYSS_DG]: Character(KEYS.ABYSS_DG),
+        [KEYS.GUARD_RD]: Character(KEYS.GUARD_RD),
+        [KEYS.UNA_TASK]: Character(KEYS.UNA_TASK)
+    };
+}
+_c1 = Model;
+var _c, _c1;
+$RefreshReg$(_c, "Character");
+$RefreshReg$(_c1, "Model");
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["kn9T2","cGhgd","bMoXb"], "bMoXb", "parcelRequire94c2")
 
 //# sourceMappingURL=ark.js.map
