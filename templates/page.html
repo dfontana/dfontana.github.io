@@ -14,7 +14,7 @@
         {% set show_date = page.extra | get(key="show_date", default="true") %}
         {% if show_date %}
         <p>
-          {{ page.date }}&nbsp;{{tag_macros::tags()}}
+          {% if page.date %}{{ page.date }}{% else %}<em>Evergreen</em>{% endif %}&nbsp;{{tag_macros::tags()}}
         </p>
         {% endif %}
         <hr>
@@ -23,6 +23,18 @@
       {{ page.content | safe }}
     </div>
   </article>
+  {% set show_comments = page.extra | get(key="show_comments", default="true") %}
+  {% if show_comments %}
+  <script 
+    src="https://utteranc.es/client.js"
+    repo="dfontana/dfontana.github.io"
+    issue-term="pathname"
+    label="comments"
+    theme="github-light"
+    crossorigin="anonymous"
+    async
+  ></script>
+  {% endif %}
 
   {% if config.extra.footer %}
     {{ footer_macros::footer(foot=config.extra.footer) }}
