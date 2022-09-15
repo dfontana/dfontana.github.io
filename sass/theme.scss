@@ -16,14 +16,18 @@ body {
       padding-left: 10px; 
     }
   }
+  
+  header {
+      h1,h2,h3,h4,h5,h6 { 
+      padding-left: unset; 
+    }
+  }
 
   max-width: 650px;
   margin: 0 auto;
   @include md {
     margin: 0 15px;
   }
-  
-
 }
 
 em {
