@@ -23,7 +23,7 @@ Lynx is a full web browser baked into your terminal. It's strictly a text based 
 
 ## And finally, putting it altogether into your `.bashrc` or `.zshrc` (etc).
 
-```shell
+```bash
 export md = pandoc $1 | lynx -stdin
 
 md testing.md

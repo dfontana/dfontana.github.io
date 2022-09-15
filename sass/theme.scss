@@ -9,12 +9,26 @@
 @import "pager";
 @import "navigation";
 @import "emote";
+@import "admonition";
+@import "tabbed";
 
 body {
-  max-width: 750px;
+  h1,h2,h3,h4,h5,h6 { 
+     @at-root a#{&} {
+      padding-left: 10px; 
+    }
+  }
+  
+  header {
+      h1,h2,h3,h4,h5,h6 { 
+      padding-left: unset; 
+    }
+  }
+
+  max-width: 650px;
   margin: 0 auto;
   @include md {
-    margin: 0 7%;
+    margin: 0 15px;
   }
 }
 
@@ -39,7 +53,7 @@ li.tag {
 }
 
 div.articlebody h2 {
-  border-bottom: 2px dotted #28666E;
+  border-bottom: 2px dotted $color-primaryText;
 }
 
 footer {

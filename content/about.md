@@ -1,21 +1,29 @@
 +++
 title = "About"
 weight = 4
-[taxonomies]
-tags = ["fluff"]
+date = "2017-01-01"
+[extra]
+hidden = true
+show_date = false
+show_comments = false
 +++
 
 It's simple: I _love_ what I do. And that's what makes me, well, me. I enjoy learning, reading, and exploring - there's a sea of knowledge out there and not enough time to comprehend it all. It's that _passion_ that pushes me to do better; help others understand more; and deliver meaning from the meaningless.
 
-I've explored a lot, gaining a medley of side-knowledge from the 9-to-5. Here's just a random smattering of some:
-
-- Data Science concepts & some fun in NLP
+When it's not the 9-to-5, I enjoy exploring. Random things I've done in the past:
+- Some fun in NLP & newspapers
 - Data-Visualization with D3
-- Distributed Multi-perceptron training & inference (Powered via Spark2 & Distributed Tensorflow, Tensorboard)
-- "Simpler" techniques: Recommender systems, decision trees (& their cousin, the forest)
-- AI concepts: Alpha-Beta, Search (A\*).
-- Web Dev (PHP, NodeJs, ReactJS, Jest, Polymer)
-- Linux (Which flavor? Who knows. Arch, Ubuntu (& it's ugly life in WSL), RedHat, Manjaro)
-- etc
+- Distributed Neural Nets (Powered via Spark2 & Distributed Tensorflow, Tensorboard)
+- Web Dev-y (PHP, Node, React, Jest, Polymer)
+- Desktop Apps with Tauri
+- Discord Bots with Serenity-rs
+- Rust is fun. Java is safe.
+- Linux (Various flavors, Who knows currently. Arch, Ubuntu (& it's ugly life in WSL), Manjaro, Pop, Fedora...)
+- ...And more I've likely forgotten to list
 
-Now-a-days, though, I live the life of a Full Stack Developer exploring Redux, GraphQL, InfluxDB, and keeping up with realtime serving. I'm always exploring new frontiers -- _never ready to settle_.
+That 9-to-5 life, though, tends to be a "mixed stack" Developer. Boring is better. No one likes being paged.
+- High volume, low latency APIs (Java / Springboot, NoSQL)
+- Data Pipelines mixing Airflow, Kafka, Flink, Spark, Dataproc, BigQuery.
+- Various "admin" web interfaces (React, Java/PHP, SQL)
+
+I'm always exploring new frontiers -- _never ready to settle_.

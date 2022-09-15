@@ -26,9 +26,11 @@
 
       <main>
         {% for page in paginator.pages %}
-            {{ index_macros::page_in_list(page=page) }}
+          {% set is_hidden = page.extra | get(key="hidden", default=false) %}
+          {% if not is_hidden %}
+            {{ index_macros::page_preview(page=page) }}
+          {% endif %}
         {% endfor %}
-
         <nav>
           <p>
             {% if paginator.previous %}

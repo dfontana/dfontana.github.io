@@ -8,7 +8,7 @@ taxonomies = [
 
 [markdown]
 highlight_code = true
-highlight_theme = "zenburn"
+highlight_theme = "gruvbox-dark"
 render_emoji = true
 external_links_no_follow = true
 
