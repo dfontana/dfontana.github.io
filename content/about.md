@@ -1,8 +1,10 @@
 +++
 title = "About"
 weight = 4
-[taxonomies]
-tags = ["fluff"]
+date = "2022-01-01"
+[extra]
+hidden = true
+show_date = false
 +++
 
 It's simple: I _love_ what I do. And that's what makes me, well, me. I enjoy learning, reading, and exploring - there's a sea of knowledge out there and not enough time to comprehend it all. It's that _passion_ that pushes me to do better; help others understand more; and deliver meaning from the meaningless.

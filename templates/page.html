@@ -11,9 +11,12 @@
   <article itemscope itemtype="http://schema.org/BlogPosting">
     <header>
         <h1 itemprop="headline">{{ page.title }}</h1>
+        {% set show_date = page.extra | get(key="show_date", default="true") %}
+        {% if show_date %}
         <p>
-          {% if page.date %}{{ page.date }}{% else %}<em>Evergreen</em>{% endif %}&nbsp;{{tag_macros::tags()}}
+          {{ page.date }}&nbsp;{{tag_macros::tags()}}
         </p>
+        {% endif %}
         <hr>
     </header>
     <div class="articlebody" itemprop="articleBody">

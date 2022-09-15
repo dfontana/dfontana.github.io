@@ -15,9 +15,15 @@ pre {
 
 code {
   border-radius: 3px;
-  padding: 2px 4px;
+  padding: 2px 4px 0px 4px;;
   font-size: 0.75em;
   &:after, &:before {
     content: unset;
+  }
+}
+
+li > code {
+  @include md {
+    margin-left: 15px;
   }
 }

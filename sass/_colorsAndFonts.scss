@@ -1,17 +1,22 @@
-$color-primary: #B68800;
-$color-accent: #CA054D;
-$color-accent--secondary: #06D6A0;
-$color-primaryText: #033F63;
-$color-secondaryText: #28666E;
-$color-bg--light: #E0E0E0;
+$color-primary: #a6823f;
+$color-accent: #AC3B61;
+$color-primaryText: #123C69;
+$color-bg--light: #FEFFFF;
 
 @mixin primaryText { color: $color-primaryText; } // Base00
-@mixin secondaryText { color: $color-secondaryText; } // Base 1
 @mixin primaryBg { background-color: $color-bg--light } // base 3
 
 @mixin titleFont { font-family: 'Lora'; }
-@mixin bodyFont { font-family: 'Lora'; font-size: 18px; }
-@mixin codeFont { font-family: Menlo, "Consolas", Courier, monospace; font-size: 1em;}
+@mixin bodyFont { 
+  font-family: 'Lora'; 
+  font-size: 1.1rem; 
+  line-height: 1.5;
+  @include md {
+    font-size: 18px;
+    line-height: unset;
+  }
+}
+@mixin codeFont { font-family: "Isoevka", monospace; font-size: 0.8rem;}
 @mixin codeInline {background-color: #393939; color: #d68686}
 
 // Hyper links
@@ -24,7 +29,7 @@ a {
   transition-duration: 400ms;
 }
 a:hover:not(.zola-anchor) {
-  background-color: $color-secondaryText;
+  background-color: $color-primaryText;
   color: $color-bg--light !important;
 }
 a[itemprop="url"] {
@@ -32,7 +37,7 @@ a[itemprop="url"] {
 }
 :target {
   color: $color-bg--light;
-  background-color: $color-accent--secondary;
+  background-image: linear-gradient(127deg, $color-primaryText, #00000000);
 }
 
 body {
@@ -56,10 +61,10 @@ body {
     overflow-x: auto;
   }
   p code, li code {
-    font-size: 0.75em;
+    font-size: 0.8rem;
   }
   pre code { 
-    font-size: 1em;
+    font-size: 0.8rem;
   }
   strong, em {
     color: $color-accent;
@@ -71,13 +76,7 @@ body {
 }
 
 tbody tr:nth-child(2n+1) {
-  background-color: rgba($color-accent, .4);
-}
-
-.muted {
-  @include secondaryText;
-  @include bodyFont;
-  font-weight: 400;
+  background-color: rgba($color-primaryText, .1);
 }
 
 section.author {

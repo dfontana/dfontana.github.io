@@ -30,7 +30,7 @@ Sadly in order to {{em(id="shrug-dog")}} we first need an instance to run. In sh
 
 Recall, [I don't like manually changing values and neither should you!](@/nodejs_profiling.md) I want to quickly run something locally - futz with it - and have zero impact on the production running instance. For this, it means defining _two_ bots in the [Discord Application Portal](https://discord.com/developers/applications) - aptly named `disbot` and `disbot-dev`. I can then configure two `.env` files containing the following:
 
-```.env
+```ini
 API_KEY=<Your Bot Token Here>
 EMOTE_NAME=<your-emote-to-react-with || shrug_dog>
 EMOTE_USERS=<csv-of-users-to-target-when-mentioned || User1,User2,User3>
@@ -40,57 +40,58 @@ Ideally we now set ourselves up to pass the desired env as a CLI arg, eg `cargo 
 
 - An `Environment` Enum, to vary app behavior such as debug logging
 
-	```rust
-	#[derive(Clone, Debug, PartialEq)]
-	pub enum Environment {
-		PROD,
-		DEV,
-	}
+```rust
+#[derive(Clone, Debug, PartialEq)]
+pub enum Environment {
+  PROD,
+  DEV,
+}
 
-	impl FromStr for Environment {
-		type Err = String;
-		fn from_str(s: &str) -> Result<Self, Self::Err> {
-			match s {
-				"prod" => Ok(Environment::PROD),
-				"dev" => Ok(Environment::DEV),
-				_ => Err("Unknown Environment Given".to_string()),
-			}
-		}
-	}
+impl FromStr for Environment {
+  type Err = String;
+  fn from_str(s: &str) -> Result<Self, Self::Err> {
+    match s {
+      "prod" => Ok(Environment::PROD),
+      "dev" => Ok(Environment::DEV),
+      _ => Err("Unknown Environment Given".to_string()),
+    }
+  }
+}
 
-	impl Default for Environment {
-		fn default() -> Self {
-			// Living on the edge with code like this, perhaps Dev is the smarter way ;)
-			Environment::PROD
-		}
-	}
-	```
+impl Default for Environment {
+  fn default() -> Self {
+    // Living on the edge with code like this, perhaps Dev 
+    // is the smarter way ;)
+    Environment::PROD
+  }
+}
+```
 
 - A `Config` Struct, to store all these key-values
 
-	```rust
-	#[derive(Debug, Clone)]
-	pub struct Config {
-		api_key: String,
-		emote_name: String,
-		emote_users: Vec<String>,
-		env: Environment,
-	}
+```rust
+#[derive(Debug, Clone)]
+pub struct Config {
+  api_key: String,
+  emote_name: String,
+  emote_users: Vec<String>,
+  env: Environment,
+}
 
-	impl Config {
-		pub fn new(env: Environment) -> Result<Config, VarError> {
-			Ok(Config {
-				api_key: env::var("API_KEY")?,
-				emote_name: env::var("EMOTE_NAME")?,
-				emote_users: env::var("EMOTE_USERS")?
-					.split(",")
-					.map(|x| x.to_string())
-					.collect(),
-				env,
-			})
-		}
-	}
-	```
+impl Config {
+  pub fn new(env: Environment) -> Result<Config, VarError> {
+    Ok(Config {
+      api_key: env::var("API_KEY")?,
+      emote_name: env::var("EMOTE_NAME")?,
+      emote_users: env::var("EMOTE_USERS")?
+        .split(",")
+        .map(|x| x.to_string())
+        .collect(),
+      env,
+    })
+  }
+}
+```
 
 Which can then be read from our main function - alas we are one step closer to {{em(id="shrug-dog")}} __shrugging__ {{em(id="shrug-dog")}}
 
@@ -99,7 +100,7 @@ fn main() {
   let env = std::env::args().nth(1).map_or(Environment::default(), |v| {
     Environment::from_str(&v).unwrap()
   });
-	dotenv::from_filename(env.as_file()).ok();
+  dotenv::from_filename(env.as_file()).ok();
   let config = Config::new(env).expect("Err parsing environment");
 }
 ```
@@ -244,9 +245,9 @@ With the above, we can now setup the `EmojiLookup` once on application start and
 mod emoji;
 
 async fn main() {
-	// ... config and env parsing
+  // ... config and env parsing
   emoji::configure(&config).expect("Failed to setup emoji lookup");
-	// ... client setup
+  // ... client setup
 }
 ```
 
@@ -254,7 +255,7 @@ When it comes to actually finding the emoji itself, we'll just do a simple searc
 
 ```rust
 impl EmojiLookup {
-	pub async fn get(&self, guild_id: GuildId, cache: &Cache) -> Result<Emoji, String> {
+  pub async fn get(&self, guild_id: GuildId, cache: &Cache) -> Result<Emoji, String> {
     // Pull the emoji from the guild attached to the message
     let maybe_emoji = cache
       .guild_field(guild_id, |guild| guild.emojis.clone())
@@ -290,12 +291,12 @@ As another unit of logic, I broke this into a `Handler` struct inside `handler.r
 
 ```rust
 pub struct Handler {
-	config: Config
+  config: Config
 }
 
 #[async_trait]
 impl EventHandler for Handler {
-	async fn message(&self, ctx: Context, msg: Message) {
+  async fn message(&self, ctx: Context, msg: Message) {
     // TODO Enact your shrugging vengeance
   }
 }
@@ -303,55 +304,55 @@ impl EventHandler for Handler {
 
 The general flow looks like this:
 
-1. Don't react if the message comes from yourself (otherwise we get all kinds of odd infinite loop-y behavior)
+- Don't react if the message comes from yourself (otherwise we get all kinds of odd infinite loop-y behavior)
 
-	```rust
-	if msg.is_own(&ctx.cache).await {      
-		return;
-	}
-	```
+```rust
+if msg.is_own(&ctx.cache).await {      
+  return;
+}
+```
 
-1. See if the message has any mentions of a configured user
+- See if the message has any mentions of a configured user
 
-	```rust
-	let mentions_user = msg.mentions.iter().find(|user| {
-		self
-			.config
-			.get_emote_users()
-			.iter()
-			.any(|cname| *cname.to_lowercase() == user.name.to_lowercase())
-	});
-	if mentions_user.is_none() {
-		return;
-	}
-	```
+```rust
+let mentions_user = msg.mentions.iter().find(|user| {
+  self
+    .config
+    .get_emote_users()
+    .iter()
+    .any(|cname| *cname.to_lowercase() == user.name.to_lowercase())
+});
+if mentions_user.is_none() {
+  return;
+}
+```
 
-1. Fetch the emoji from our `EmojiLookup`
+- Fetch the emoji from our `EmojiLookup`
 
-	```rust
-	let guild_id = match msg.guild_id {
-		Some(id) => id,
-		None => return,
-	};
-	let emoji = EmojiLookup::inst().get(guild_id, &ctx.cache).await;
-	```
+```rust
+let guild_id = match msg.guild_id {
+  Some(id) => id,
+  None => return,
+};
+let emoji = EmojiLookup::inst().get(guild_id, &ctx.cache).await;
+```
 
-1. React to the message & Reply with your distaste {{em(id="shrug-dog")}}
+- React to the message & Reply with your distaste {{em(id="shrug-dog")}}
 
-	```rust
-	let react = msg.react(
-		&ctx.http,
-		ReactionType::Custom {
-			animated: emoji.animated,
-			id: emoji.id,
-			name: Some(emoji.name.to_string()),
-		},
-	);
-	let message = msg.channel_id.say(&ctx.http, format!("{}", emoji));
-	tokio::try_join!(react, message)
-		.map(|_| ())
-		.map_err(|_| "Failed to react/Send".to_string())
-	```
+```rust
+let react = msg.react(
+  &ctx.http,
+  ReactionType::Custom {
+    animated: emoji.animated,
+    id: emoji.id,
+    name: Some(emoji.name.to_string()),
+  },
+);
+let message = msg.channel_id.say(&ctx.http, format!("{}", emoji));
+tokio::try_join!(react, message)
+  .map(|_| ())
+  .map_err(|_| "Failed to react/Send".to_string())
+```
 
 Which in sum is [captured here](https://github.com/dfontana/disbot/blob/master/src/cmd/shrug.rs) (structured slightly differently, but you'll get the point).
 
