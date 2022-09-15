@@ -16,7 +16,7 @@ jobs:
         env:
           BUILD_DIR: .
           BUILD_ONLY: true
-          TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
   build_deploy:
     runs-on: ubuntu-latest
     name: Deploy to Prod
@@ -29,4 +29,4 @@ jobs:
         env:
           BUILD_DIR: .
           PAGES_BRANCH: gh-pages
-          TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
