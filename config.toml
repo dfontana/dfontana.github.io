@@ -1,6 +1,5 @@
 base_url = "https://dfontana.github.io"
-title = "Frontiers"
-description = "Thoughts, ideas, and works."
+title = "Dylan Fontana"
 compile_sass = true
 taxonomies = [
     {name = "tags", rss = true},
@@ -14,12 +13,22 @@ external_links_no_follow = true
 
 [extra]
 menu = [
-    {url = "$BASE_URL/about", name = "About"},
+    {url = "$BASE_URL/posts", name = "Frontiers"},
     {url = "$BASE_URL/tags", name = "Tags"},
+    {url = "$BASE_URL/about", name = "About"},
 ]
 
-    [extra.footer]
+    [extra.bio]
     author = "Dylan Fontana"
     profile = "/img/profile.png"
-    bio = "Explore, learn, and pursue - three of my favorite things."
+    avatar = "/img/icon-bronze.png"
+    bio = "Explore, Learn, Pursue."
     location = "America/Boston"
+
+    [[extra.bio.socials]]
+    faicon = "github"
+    link = "https://github.com/dfontana"
+
+    [[extra.bio.socials]]
+    faicon = "linkedin"
+    link = "https://linkedin.com/in/dylan-fontana"

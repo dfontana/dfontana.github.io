@@ -5,7 +5,7 @@ date = 2021-03-26
 tags = ["rust", "discord", "bot", "project"]
 +++
 
-Quarantine has lead to some _oddities_ to pass the time, and this post is no different. I created a Discord Bot in Rust, hosted on my [Raspberry Pi](@/raspberry_pi.md). It's purpose? To __shrug__. This is the way {{em(id="shrug-dog")}}<!-- more -->
+Quarantine has lead to some _oddities_ to pass the time, and this post is no different. I created a Discord Bot in Rust, hosted on my [Raspberry Pi](@/frontier/raspberry_pi.md). It's purpose? To __shrug__. This is the way {{em(id="shrug-dog")}}<!-- more -->
 
 {{em(id="shrug-dog")}}{{em(id="shrug-dog")}} Warning - _this post is gonna get silly_ {{em(id="shrug-dog")}}{{em(id="shrug-dog")}}
 
@@ -28,7 +28,7 @@ Sadly in order to {{em(id="shrug-dog")}} we first need an instance to run. In sh
 
 ### 1. Defining our Environments
 
-Recall, [I don't like manually changing values and neither should you!](@/nodejs_profiling.md) I want to quickly run something locally - futz with it - and have zero impact on the production running instance. For this, it means defining _two_ bots in the [Discord Application Portal](https://discord.com/developers/applications) - aptly named `disbot` and `disbot-dev`. I can then configure two `.env` files containing the following:
+Recall, [I don't like manually changing values and neither should you!](@/frontier/nodejs_profiling.md) I want to quickly run something locally - futz with it - and have zero impact on the production running instance. For this, it means defining _two_ bots in the [Discord Application Portal](https://discord.com/developers/applications) - aptly named `disbot` and `disbot-dev`. I can then configure two `.env` files containing the following:
 
 ```ini
 API_KEY=<Your Bot Token Here>

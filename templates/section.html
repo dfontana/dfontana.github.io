@@ -1,0 +1,45 @@
+{% import "macros/index.html" as index_macros %}
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+    <link rel="stylesheet" href="{{ get_url(path="section_and_pages.css", trailing_slash=false) | safe }}">
+  </head>
+  <body>
+    {% block content %}
+      {% block header %}
+        {% if config.extra.menu %}
+        <header>
+          <nav class="navbox" itemscope itemtype="http://schema.org/SiteNavigationElement">
+            <a class="nav-title" href="{{config.base_url}}"><div class="nav-image-box"><div class="nav-image" style="background: url({{config.extra.bio.avatar}})"></div></div>{{config.title}}</a>&nbsp;
+            {% for item in config.extra.menu %}
+            <a itemprop="url"
+                class="{% if item.url | replace(from="$BASE_URL", to=config.base_url) == current_url %}active{% endif %}"
+                href="{{ item.url | safe | replace(from="$BASE_URL", to=config.base_url) }}">
+                <span itemprop="name">{{ item.name }}</span></a>&nbsp;&nbsp;
+            {% endfor %}
+          </nav>
+          <hr/>
+        </header>
+        {% endif %}
+      {% endblock header %}
+
+      <main>
+        {% for page in paginator.pages %}
+          {{ index_macros::page_preview(page=page) }}
+        {% endfor %}
+        <nav>
+          <p>
+            {% if paginator.previous %}
+              <a href="{{ paginator.previous }}">&laquo; Previous</a> |
+            {% endif %}
+            <span>Page {{ paginator.current_index }} of {{ paginator.number_pagers }}</span>
+            {% if paginator.next %}
+              | <a href="{{ paginator.next }}">Next &raquo;</a>
+            {% endif %}
+          </p>
+        </nav>
+      </main>
+    {% endblock content %}
+  </body>
+</html>

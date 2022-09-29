@@ -1,4 +1,4 @@
-{% extends "index.html" %}
+{% extends "section.html" %}
 {% import "macros/footer.html" as footer_macros %}
 {% import "macros/page-tags.html" as tag_macros %}
 {% import "macros/index.html" as index_macros %}
@@ -36,7 +36,7 @@
   ></script>
   {% endif %}
 
-  {% if config.extra.footer %}
-    {{ footer_macros::footer(foot=config.extra.footer) }}
+  {% if config.extra.bio %}
+    {{ footer_macros::footer(foot=config.extra.bio) }}
   {% endif %}
 {% endblock content %}

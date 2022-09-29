@@ -19,7 +19,10 @@ $color-bg--light: #FEFFFF;
   font-weight: 700;
 }
 
-@mixin titleFont { font-family: 'Lora'; }
+@mixin titleFont { 
+  font-family: 'Lora'; 
+  font-weight: normal;
+}
 @mixin bodyFont { 
   font-family: 'Lora'; 
   font-size: 1.1rem; 

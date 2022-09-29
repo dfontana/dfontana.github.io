@@ -1,48 +1,36 @@
-{% import "macros/index.html" as index_macros %}
 <html lang="en">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
     <title>{% block title %}{{ config.title }}{% endblock title %}</title>
-    <link rel="stylesheet" href="{{ get_url(path="theme.css", trailing_slash=false) | safe }}">
+    <link rel="stylesheet" href="{{ get_url(path="home.css", trailing_slash=false) | safe }}">
   </head>
   <body>
-    {% block content %}
-      {% block header %}
-        {% if config.extra.menu %}
-        <header>
-          <nav class="navbox" itemscope itemtype="http://schema.org/SiteNavigationElement">
-            <a class="nav-title" href="{{config.base_url}}"><div class="nav-image-box"><div class="nav-image" style="background: url(/img/icon-bronze.png)"></div></div>{{config.title}}</a>&nbsp;
-            {% for item in config.extra.menu %}
-            <a itemprop="url"
-                class="{% if item.url | replace(from="$BASE_URL", to=config.base_url) == current_url %}active{% endif %}"
-                href="{{ item.url | safe | replace(from="$BASE_URL", to=config.base_url) }}">
-                <span itemprop="name">{{ item.name }}</span></a>&nbsp;&nbsp;
-            {% endfor %}
-          </nav>
-          <hr/>
-        </header>
-        {% endif %}
-      {% endblock header %}
-
-      <main>
-        {% for page in paginator.pages %}
-          {% set is_hidden = page.extra | get(key="hidden", default=false) %}
-          {% if not is_hidden %}
-            {{ index_macros::page_preview(page=page) }}
-          {% endif %}
+    <!-- 
+      Something like https://github.com/fncnt/vncnt-hugo
+      But offset more to the left. 
+      And with Nav to posts & about in the top right corner
+    -->
+    <div class="nav">
+      <!-- Navigation here, in top right (Pages, About) -->
+    </div>
+    <div class="home-container">
+      <div class="home-bio-container">
+        <div class="home-icon-container">
+          <img class="home-icon" src="{{config.extra.bio.profile}}">
+          <img class="home-icon-sub" src="{{config.extra.bio.avatar}}">
+        </div>
+        <div class="home-biodetail-container">
+          <h2 class="home-biodetail-author">{{config.extra.bio.author}}</h2>
+          <h3 class="home-biodetail-bio">{{config.extra.bio.bio}}</h3> 
+        </div>
+      </div>
+      <div class="home-social-container">
+        {% for social in config.extra.bio.socials %}
+        <i class="fab fa-fw fa-{{social.faicon}}"></i>
+        <a class="home-social-link" href="{{social.link}}"></a>
         {% endfor %}
-        <nav>
-          <p>
-            {% if paginator.previous %}
-              <a href="{{ paginator.previous }}">&laquo; Previous</a> |
-            {% endif %}
-            <span>Page {{ paginator.current_index }} of {{ paginator.number_pagers }}</span>
-            {% if paginator.next %}
-              | <a href="{{ paginator.next }}">Next &raquo;</a>
-            {% endif %}
-          </p>
-        </nav>
-      </main>
-    {% endblock content %}
+        <span><i class="fa fa-fw fa-map-marker"></i> {{config.extra.bio.location}}</span>
+      </div>
+    </div> 
   </body>
 </html>
