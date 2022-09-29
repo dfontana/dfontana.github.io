@@ -1,8 +1,9 @@
 +++
-title = "Posts"
-sort_by = "date"
-weight = 0
-paginate_by = 10
-paginate_path = "p"
-insert_anchor_links = "right"
+title = "Home"
 +++
+
+_Dylan_ architects and _operates_ systems
+
+Exploring _ai_ while building at Datadog
+
+{{ socials() }}

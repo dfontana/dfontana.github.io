@@ -1,0 +1,55 @@
+@import "theme";
+@import "author";
+@import "code";
+@import "emote";
+@import "admonition"; // TODO see plans/admonition.md
+@import "tabbed";
+
+.articlebody {
+  h1, h2, h3, h4, h5, h6 {
+    padding-left: 10px;
+  }
+}
+
+main, article {
+  max-width: 750px;
+  margin: 0 auto;
+  @include md {
+    margin: 0 15px;
+  }
+}
+
+header {
+  h1 {
+    margin-bottom: 0;
+  }
+  p {
+    margin-top: 0;
+  }
+}
+
+li.tag {
+  padding: 2px;
+}
+
+footer {
+  max-width: 750px;
+  margin: 0 auto 15px;
+  @include md {
+    margin: 0 15px 15px;
+  }
+}
+
+article {
+  .pagetitle {
+    margin-bottom: 5px;
+  }
+
+  .pagesummary {
+    margin-top: 5px;
+  }
+}
+
+tbody tr:nth-child(2n+1) {
+  background-color: light-dark(rgba($color-text, .1), rgba($color-text-dk, .1));
+}

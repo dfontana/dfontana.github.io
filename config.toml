@@ -7,19 +7,35 @@ taxonomies = [
 ]
 
 [markdown]
-highlight_code = true
-highlight_theme = "gruvbox-dark"
 render_emoji = true
 external_links_no_follow = true
 
-[extra]
-menu = [
-    {url = "$BASE_URL/about", name = "About"},
-    {url = "$BASE_URL/tags", name = "Tags"},
+[markdown.highlighting]
+enabled = true
+theme = "rose-pine-dawn"
+
+[link_checker]
+skip_anchor_prefixes = [
+    "https://github.com/",
 ]
 
-    [extra.footer]
+[extra]
+menu = [
+    {url = "$BASE_URL/frontier", name = "Frontiers"},
+    {url = "$BASE_URL/about", name = "About"},
+]
+
+    [extra.bio]
     author = "Dylan Fontana"
     profile = "/img/profile.png"
-    bio = "Explore, learn, and pursue - three of my favorite things."
-    location = "America/Boston"
+    avatar = "/img/icon-bronze.png"
+    bio = "Explore, Learn, Pursue."
+    display_location = "Boston"
+
+    [[extra.bio.socials]]
+    faicon = "github"
+    link = "https://github.com/dfontana"
+
+    [[extra.bio.socials]]
+    faicon = "linkedin"
+    link = "https://linkedin.com/in/dylan-fontana"

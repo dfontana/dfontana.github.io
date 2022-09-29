@@ -1,0 +1,13 @@
+{% import "macros/icons.html" as icon_macros %}
+<div class="home-socials">
+  {% for social in config.extra.bio.socials %}
+  <a class="home-social-link" href="{{ social.link | safe }}">
+    {{ icon_macros::icon(name=social.faicon) }}
+  </a>
+  {% endfor %}
+  {% if config.extra.bio.display_location %}
+  <span class="home-location">
+    {{ icon_macros::icon(name="map-marker") }} <span class="home-location-text">{{ config.extra.bio.display_location }}</span>
+  </span>
+  {% endif %}
+</div>

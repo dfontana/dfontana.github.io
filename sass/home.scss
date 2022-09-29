@@ -1,0 +1,76 @@
+@import "theme";
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.home-main {
+  flex: 1;
+  position: relative;
+  padding: 2rem;
+  padding-top: 30vh;
+}
+
+.home-hero {
+  text-align: left;
+
+  > p:first-child {
+    @include heroFont;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: 0.25rem;
+    color: light-dark($color-title, $color-title-dk);
+
+    strong, em {
+      font-family: inherit;
+      font-size: inherit;
+    }
+  }
+
+  > p:not(:first-child) {
+    @include subHeroFont;
+    font-size: 1.2rem;
+    opacity: 0.8;
+    margin: 0.25rem 0 0;
+  }
+
+  .home-socials {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+
+    .home-social-link {
+      font-size: 2rem;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      &:hover {
+        background-color: unset;
+        color: light-dark($color-accent-em, $color-accent-em-dk) !important;
+        border-radius: unset;
+      }
+    }
+
+    .home-location {
+      @include subHeroFont;
+      font-size: 1.5rem;
+      color: light-dark($color-accent, $color-accent-dk);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+
+      .home-location-text {
+        position: relative;
+        top: 2px;
+      }
+    }
+  }
+}

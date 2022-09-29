@@ -1,13 +1,11 @@
-{% extends "index.html" %}
+{% extends "section.html" %}
 {% import "macros/footer.html" as footer_macros %}
 {% import "macros/page-tags.html" as tag_macros %}
 {% import "macros/index.html" as index_macros %}
 
-{% block content %}
-  {% block header %}
-    {{ super() }}
-  {% endblock header %}
+{% block title %}{{ page.title }} — {{ config.title }}{% endblock title %}
 
+{% block content %}
   <article itemscope itemtype="https://schema.org/BlogPosting">
     <header>
         <h1 itemprop="headline">{{ page.title }}</h1>
@@ -24,7 +22,7 @@
   </article>
   {% set show_comments = page.extra | get(key="show_comments", default="true") %}
   {% if show_comments %}
-  <script 
+  <script
     src="https://utteranc.es/client.js"
     repo="dfontana/dfontana.github.io"
     issue-term="pathname"
@@ -35,7 +33,7 @@
   ></script>
   {% endif %}
 
-  {% if config.extra.footer %}
-    {{ footer_macros::footer(foot=config.extra.footer) }}
+  {% if config.extra.bio %}
+    {{ footer_macros::footer(foot=config.extra.bio) }}
   {% endif %}
 {% endblock content %}

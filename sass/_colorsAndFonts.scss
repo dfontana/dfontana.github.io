@@ -32,10 +32,12 @@ $code-text-dk: #D68686;
 @font-face {
   font-family: "Isoevka";
   src: url("fonts/isoevka-custom-extendedbold.ttf") format("truetype");
-  font-style: bold;
+  font-style: normal;
   font-weight: 700;
 }
 
+@mixin heroFont { font-family: 'Jacquard 12', system-ui; font-weight: 400; }
+@mixin subHeroFont { font-family: 'Cinzel Decorative', serif; }
 @mixin titleFont { font-family: 'Lora'; }
 @mixin bodyFont { 
   font-family: 'Lora'; 
@@ -141,10 +143,6 @@ body {
     font-size: 0.75em;
     opacity: 50%;
   }
-}
-
-tbody tr:nth-child(2n+1) {
-  background-color: light-dark(rgba($color-text, .1), rgba($color-text-dk, .1));
 }
 
 section.author {

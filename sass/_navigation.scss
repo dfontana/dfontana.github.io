@@ -1,3 +1,7 @@
+body > header {
+  padding: 0 2rem;
+}
+
 header > hr {
   margin-top: 0;
 }
@@ -19,7 +23,7 @@ header > hr {
 }
 
 .nav-image {
-  background-size: cover !important;
+  background-size: cover;
   border-radius: 15%;
   width: 20px;
   height: 20px;
@@ -52,4 +56,3 @@ header > hr {
     left: 0;
   }
 }
-
