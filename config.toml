@@ -1,5 +1,5 @@
-base_url = "https://dfontana.github.io"
-title = "Frontiers"
+base_url = "https://nill.ink"
+title = "nill.ink"
 description = "Thoughts, ideas, and works."
 compile_sass = true
 taxonomies = [

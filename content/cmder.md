@@ -45,7 +45,7 @@ That's it for cygwin, you can close the terminal. Unless you are adding more pac
 ### 2. CMDER Setup:
 1. Download and install some or all of the [powerline fonts](https://github.com/powerline/fonts). I only use Hack in this guide, so feel free to stick to this. Powerline fonts, for the uneducated, are patched fonts that include some fancy symbols related to git and such. You don't **need** this, but it's a plus!
   - "There's a install.ps1 in the folder. Set execution policy and run it." (Thanks @yiufung)
-2. [Download cmder](http://cmder.net/) to get started (the full version!). This is a conemu derivative to run shells inside of. It's flexible and highly customizable, which tends to make it desireable. Features a quake-style drop down shell if you're that kind of person, but more importantly plays really nice with keyboard interactions.
+2. [Download cmder](https://cmder.app/) to get started (the full version!). This is a conemu derivative to run shells inside of. It's flexible and highly customizable, which tends to make it desireable. Features a quake-style drop down shell if you're that kind of person, but more importantly plays really nice with keyboard interactions.
 3. Unpack cmder to a desired location, this is where you'll be keeping cmder permanently, so pick a cozy spot. Run cmder.exe.
 4. Right click the tab bar of cmder to open the settings. We're going to tweak a few things. Tweak as you like of course.
     1. Under *Main* (Check `General > Fonts` if missing - Thanks @SturmB!) we're going to set the font for non-mintty terminals, just for consistency: Hack, Size 16, Uncheck the option for an alternative font.

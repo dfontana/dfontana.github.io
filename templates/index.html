@@ -10,7 +10,7 @@
       {% block header %}
         {% if config.extra.menu %}
         <header>
-          <nav class="navbox" itemscope itemtype="http://schema.org/SiteNavigationElement">
+          <nav class="navbox" itemscope itemtype="https://schema.org/SiteNavigationElement">
             <a class="nav-title" href="{{config.base_url}}"><div class="nav-image-box"><div class="nav-image" style="background: url(/img/icon-bronze.png)"></div></div>{{config.title}}</a>&nbsp;
             {% for item in config.extra.menu %}
             <a itemprop="url"
