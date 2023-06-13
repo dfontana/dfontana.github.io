@@ -8,7 +8,7 @@
     {{ super() }}
   {% endblock header %}
 
-  <article itemscope itemtype="http://schema.org/BlogPosting">
+  <article itemscope itemtype="https://schema.org/BlogPosting">
     <header>
         <h1 itemprop="headline">{{ page.title }}</h1>
         {% set show_date = page.extra | get(key="show_date", default="true") %}

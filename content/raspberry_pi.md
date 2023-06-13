@@ -75,5 +75,5 @@ Keeping the default account around is a bit of a risk. Let's make it yours.
 4.  Setup Fail2Ban to push off bots.
     1. Sudo apt install fail2ban
     2. Configure inside /etc/fail2ban/jail.local
-    3. Set some of the configuration [found here](http://felipeferreira.net/index.php/2008/10/securing-your-ssh-with-fail2ban/)
+    3. Set some of the configuration [found here](https://felipeferreira.net/index.php/2008/10/securing-your-ssh-with-fail2ban/)
     4. Restart the service: /etc/init.d/fail2ban restart
