@@ -1,0 +1,190 @@
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>nill.ink</title>
+    <link rel="stylesheet" href="https://nill.ink/theme.css">
+  </head>
+  <body>
+    
+  
+    
+        
+        <header>
+          <nav class="navbox" itemscope itemtype="https://schema.org/SiteNavigationElement">
+            <a class="nav-title" href="https:&#x2F;&#x2F;nill.ink"><div class="nav-image-box"><div class="nav-image" style="background: url(/img/icon-bronze.png)"></div></div>nill<span class="title-ink">&#46;ink</span><span class="title-social" hidden>oss</span></a>&nbsp;
+            
+            <span class="navbox-spacer" />
+            <a itemprop="url"
+                class=""
+                href="https:&#x2F;&#x2F;nill.ink&#x2F;about">
+                <span itemprop="name">About</span></a>&nbsp;&nbsp;
+            
+            <span class="navbox-spacer" />
+            <a itemprop="url"
+                class=""
+                href="https:&#x2F;&#x2F;nill.ink&#x2F;tags">
+                <span itemprop="name">Tags</span></a>&nbsp;&nbsp;
+            
+          </nav>
+          <hr/>
+        </header>
+        
+      
+  
+
+  <article itemscope itemtype="https://schema.org/BlogPosting">
+    <header>
+        <h1 itemprop="headline">Upgrading to WSL2</h1>
+        
+        
+        <p>
+          2020-03-29&nbsp;
+  
+    |&nbsp;
+    
+      <a href="https://nill.ink/tags/terminal/"># terminal</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/wsl2/"># wsl2</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/configuration/"># configuration</a>
+      
+        
+      
+    
+  
+
+        </p>
+        
+    </header>
+    <div class="articlebody" itemprop="articleBody">
+      <p>WSL2 comes with a performance and feature perks over the old system, including choice of Linux flavor and a different virtualization strategy. If for no other reason, though, it was simply time for an upgrade.<span id="continue-reading"></span> Here's the shortnotes:</p>
+<h2 id="get-wsl2-installed">Get WSL2 Installed <a class="zola-anchor" href="#get-wsl2-installed" aria-label="Anchor link for: get-wsl2-installed"></a>
+</h2>
+<p>Wasn't as straightforward as <a rel="nofollow" href="https://docs.microsoft.com/en-us/windows/wsl/wsl2-install">the MSDocs made it</a>. I had to opt into the insiders program, with my computer having been out of date for almost a year -- the slow ring was enough to get the right version. A few restarts later and I had a latest enough build: <code>19041</code>. Then it was a matter of:</p>
+<ul>
+<li>Enable Virtual Machine Platform ('Turn Windows Features on or off' &gt; 'Virtual Machine Platform' &amp; 'Windows Subsystem for Linux').</li>
+<li>Reboot, and while you're at the BIOS - turn on Intel Virtualization (VT-x). VT-d, if supported on your system, is also a good call - as it allows direct IO by the virtual machines. I had an issue where this was switched off and WSL2 threw a Virtualization error during installation. You might need to comb over some of the 'Advanced' sections of your BIOS to find it.</li>
+</ul>
+<p>Then the system was ready to <em>start</em> installing WSL2.</p>
+<h3 id="distro-picking">Distro Picking <a class="zola-anchor" href="#distro-picking" aria-label="Anchor link for: distro-picking"></a>
+</h3>
+<p>From the MS Store pick out a distro. I stuck with Ubuntu. I had an issue getting the latest Ubuntu to download -- I had apparently tried to install Ubuntu 18.04 before (which is a separate download from Ubuntu latest - simply known as 'Ubuntu' in the store). Uninstalling that version worked fine.</p>
+<p>Before booting the new Ubuntu I decided to copy any files I wanted to keep onto a separate drive -- thinks like dotfiles or projects I didn't want to re-clone. Doing this now made it easier later to just flip the switch, so take a moment if you haven't already.</p>
+<p>Once ready, launch the new 'Ubuntu' app you downloaded and follow the prompt to setup your user. In my quick searches I couldn't find a way to migrate my existing user over easily, so I found it better to just go with the clean install approach. Once done, boot a Powershell and run <code>wsl --set-default-version 2</code> followed by <code>wsl --set-version &lt;Distro&gt; 2</code>. If the commands succeeded your almost there. If they failed (like they did for me), you'll want to circle back to checking your System Updates.</p>
+<h3 id="retire-the-old-system">Retire the Old System <a class="zola-anchor" href="#retire-the-old-system" aria-label="Anchor link for: retire-the-old-system"></a>
+</h3>
+<p><code>wsl -l -v</code> will list all your installed distros and their versions. For me this was Ubuntu on WSL 2 and <code>Ubuntu (Legacy)</code>. WSL V1 might be what you'll find if you came to the party after Legacy. If you'd like to rid yourself of this, you're looking for the <code>unregister</code> command: <code>wsl --unregister &lt;distroName&gt;</code>. Verify with a <code>wsl -l -v</code> again to confirm it's removal.</p>
+<h2 id="system-prep-terminal">System Prep - Terminal <a class="zola-anchor" href="#system-prep-terminal" aria-label="Anchor link for: system-prep-terminal"></a>
+</h2>
+<p>With the new system ready, I like to get my pieces back in place. First was a terminal emulator. I used to use <a rel="nofollow" href="https://gist.github.com/dfontana/3e27ec5ea3a6f935b7322b580d3df318">Cmder</a>, but grew tired of that setup pretty quick. I moved onto <a rel="nofollow" href="https://hyper.is/">Hyper</a> but it too felt clunky after a lot of day-to-day use (little things like copy paste or resizing the window just got a bit too annoying). Recently on my Linux dual-boot I've been using <a rel="nofollow" href="https://sw.kovidgoyal.net/kitty/">Kitty</a> which I've enjoyed, but Windows has no such option.</p>
+<p>I opted for the new <a rel="nofollow" href="https://github.com/microsoft/terminal">'Windows Terminal'</a>:</p>
+<ul>
+<li>
+<p>Download from the MS Store</p>
+</li>
+<li>
+<p>Launch it, Open the Settings</p>
+</li>
+<li>
+<p>Remove any profiles from the list you don't care for and add a new one with the settings you'd like:</p>
+<pre data-lang="json" style="background-color:#282828;color:#fdf4c1aa;" class="language-json "><code class="language-json" data-lang="json"><span>{
+</span><span>  </span><span style="color:#b8bb26;">&quot;hidden&quot;</span><span>: </span><span style="color:#d3869b;">false</span><span>,
+</span><span>  </span><span style="color:#b8bb26;">&quot;name&quot;</span><span>: </span><span style="color:#b8bb26;">&quot;Ubuntu&quot;</span><span>,
+</span><span>  </span><span style="color:#b8bb26;">&quot;source&quot;</span><span>: </span><span style="color:#b8bb26;">&quot;Windows.Terminal.Wsl&quot;</span><span>,
+</span><span>  </span><span style="color:#b8bb26;">&quot;startingDirectory&quot;</span><span>: </span><span style="color:#b8bb26;">&quot;\\\\wsl$\\Ubuntu\\home\\&quot;
+</span><span>}
+</span></code></pre>
+</li>
+<li>
+<p>If there are some defaults you want to apply to all windows, you can tweak those as well in the <code>&quot;defaults&quot;</code> key. Here's mine:</p>
+<pre data-lang="json" style="background-color:#282828;color:#fdf4c1aa;" class="language-json "><code class="language-json" data-lang="json"><span>{
+</span><span>  </span><span style="color:#b8bb26;">&quot;colorScheme&quot;</span><span>: </span><span style="color:#b8bb26;">&quot;Solarized Light&quot;</span><span>,
+</span><span>  </span><span style="color:#b8bb26;">&quot;startingDirectory&quot;</span><span>: </span><span style="color:#b8bb26;">&quot;~&quot;</span><span>,
+</span><span>  </span><span style="color:#b8bb26;">&quot;cursorColor&quot;</span><span>: </span><span style="color:#b8bb26;">&quot;#002b36&quot;</span><span>,
+</span><span>  </span><span style="color:#b8bb26;">&quot;fontFace&quot;</span><span>: </span><span style="color:#b8bb26;">&quot;Fira Code&quot;</span><span>,
+</span><span>  </span><span style="color:#b8bb26;">&quot;fontSize&quot;</span><span>: </span><span style="color:#d3869b;">11
+</span><span>}
+</span></code></pre>
+</li>
+<li>
+<p>And to wrap up that Solarized scheme, you might want to install the <a rel="nofollow" href="https://github.com/seebi/dircolors-solarized">Solarized Dir Colors</a>:</p>
+<ul>
+<li>Download the file you'd like to <code>~/.dir_colors</code>.</li>
+<li>In your bash/zshrc add <code>eval dircolors ~/.dir_colors</code></li>
+</ul>
+</li>
+<li>
+<p>If you're interested in a non-emoji version of Fira Code (which instead uses special patched symbols are requires a compatible prompt), you can download one from <a rel="nofollow" href="https://www.nerdfonts.com/">NerdFonts</a></p>
+</li>
+<li>
+<p>Speaking of prompts, I used to use <a rel="nofollow" href="https://github.com/denysdovhan/spaceship-prompt">Spaceship</a>, but decided to give a pure-Rust version (inspired by Spaceship) a shot - <a rel="nofollow" href="https://github.com/starship/starship">Starship</a>.</p>
+</li>
+</ul>
+<h2 id="system-prep-environment">System Prep - Environment <a class="zola-anchor" href="#system-prep-environment" aria-label="Anchor link for: system-prep-environment"></a>
+</h2>
+<p>I won't cover everything, but here's a few that you might want:</p>
+<ul>
+<li>Basic system tools: <code>build-essentials</code>, <code>exa</code> (an <code>ls</code> replacement), and <code>bat</code> (a <code>cat</code> replacement).</li>
+<li>Rust, if that's your poison: <code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</code></li>
+<li>Go, if you also dabble there: <a rel="nofollow" href="https://golang.org/dl/">Download the Linux Tar</a>, <code>tar -C /usr/local -xzf &lt;downloaded&gt;</code>, and add to PATH: <code>export PATH=$PATH:/usr/local/go/bin</code></li>
+</ul>
+<p>Otherwise that's about it. If you're interested in ZSH, check out my notes on <a href="../setting_up_zsh">Setting up ZSH</a></p>
+<hr />
+<h3 id="annoyance-can-t-copy-from-vim">Annoyance: Can't Copy from Vim <a class="zola-anchor" href="#annoyance-can-t-copy-from-vim" aria-label="Anchor link for: annoyance-can-t-copy-from-vim"></a>
+</h3>
+<p>Problem: I want to <code>y</code>ank some code from Vim and paste it in anything that's <em>not</em> vim. In Hyper I could simply highlight + right click, in Windows Terminal I can't.</p>
+<p>Fix: Add the following snippet to your <code>~/.vimrc</code>:</p>
+<pre data-lang="vim" style="background-color:#282828;color:#fdf4c1aa;" class="language-vim "><code class="language-vim" data-lang="vim"><span style="font-style:italic;color:#928374;">  &quot; WSL yank support
+</span><span>  </span><span style="color:#fabd2f;">let </span><span style="color:#fdf4c1;">s:clip</span><span> = </span><span style="color:#b8bb26;">&#39;/mnt/c/Windows/System32/clip.exe&#39;  </span><span style="font-style:italic;color:#928374;">&quot; default location
+</span><span>  </span><span style="color:#fa5c4b;">if </span><span style="color:#fabd2f;">executable</span><span>(</span><span style="color:#fdf4c1;">s:clip</span><span>)
+</span><span>      </span><span style="color:#fa5c4b;">augroup</span><span> WSLYank
+</span><span>          </span><span style="color:#fabd2f;">autocmd</span><span>!
+</span><span>          </span><span style="color:#fabd2f;">autocmd</span><span> TextYankPost </span><span style="color:#fa5c4b;">*</span><span> call </span><span style="color:#fabd2f;">system</span><span>(</span><span style="color:#b8bb26;">&#39;echo &#39;</span><span style="color:#fa5c4b;">.</span><span style="color:#fabd2f;">shellescape</span><span>(</span><span style="color:#fabd2f;">join</span><span>(</span><span style="color:#fdf4c1;">v:event</span><span style="color:#fa5c4b;">.</span><span>regcontents, </span><span style="color:#b8bb26;">&quot;\&lt;CR&gt;&quot;</span><span>))</span><span style="color:#fa5c4b;">.</span><span style="color:#b8bb26;">&#39; | &#39;</span><span style="color:#fa5c4b;">.</span><span style="color:#fdf4c1;">s:clip</span><span>)
+</span><span>      </span><span style="color:#fa5c4b;">augroup</span><span> END
+</span><span>  </span><span style="color:#fa5c4b;">end
+</span></code></pre>
+
+    </div>
+  </article>
+  
+  
+  <script 
+    src="https://utteranc.es/client.js"
+    repo="dfontana/dfontana.github.io"
+    issue-term="pathname"
+    label="comments"
+    theme="github-light"
+    crossorigin="anonymous"
+    async
+  ></script>
+  
+
+  
+    
+  <footer>
+    <hr>
+    <hr>
+    <section class="author">
+    <div class="authorimage" style="background: url(&#x2F;img&#x2F;profile.png)"></div>
+    <h4>Dylan Fontana</h4>
+    
+        <p class="bio">Explore, learn, and pursue - three of my favorite things.</p>
+    
+    
+    <p class="meta">
+        <i class="fa fa-fw fa-map-marker"></i> America&#x2F;Boston
+    </p>
+    
+    </section>
+    </footer>
+
+  
+
+  </body>
+</html>

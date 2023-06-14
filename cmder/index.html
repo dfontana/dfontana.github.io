@@ -1,0 +1,247 @@
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>nill.ink</title>
+    <link rel="stylesheet" href="https://nill.ink/theme.css">
+  </head>
+  <body>
+    
+  
+    
+        
+        <header>
+          <nav class="navbox" itemscope itemtype="https://schema.org/SiteNavigationElement">
+            <a class="nav-title" href="https:&#x2F;&#x2F;nill.ink"><div class="nav-image-box"><div class="nav-image" style="background: url(/img/icon-bronze.png)"></div></div>nill<span class="title-ink">&#46;ink</span><span class="title-social" hidden>oss</span></a>&nbsp;
+            
+            <span class="navbox-spacer" />
+            <a itemprop="url"
+                class=""
+                href="https:&#x2F;&#x2F;nill.ink&#x2F;about">
+                <span itemprop="name">About</span></a>&nbsp;&nbsp;
+            
+            <span class="navbox-spacer" />
+            <a itemprop="url"
+                class=""
+                href="https:&#x2F;&#x2F;nill.ink&#x2F;tags">
+                <span itemprop="name">Tags</span></a>&nbsp;&nbsp;
+            
+          </nav>
+          <hr/>
+        </header>
+        
+      
+  
+
+  <article itemscope itemtype="https://schema.org/BlogPosting">
+    <header>
+        <h1 itemprop="headline">Using Cmder, Mintty, &amp; ZSH on Windows</h1>
+        
+        
+        <p>
+          2017-01-23&nbsp;
+  
+    |&nbsp;
+    
+      <a href="https://nill.ink/tags/terminal/"># terminal</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/zsh/"># zsh</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/configuration/"># configuration</a>
+      
+        
+      
+    
+  
+
+        </p>
+        
+    </header>
+    <div class="articlebody" itemprop="articleBody">
+      <p><a rel="nofollow" href="https://gist.github.com/dfontana/3e27ec5ea3a6f935b7322b580d3df318"><em>Originally Shared as a Gist</em></a>. ZSH setup on Windows, minus the input funny business. We'll use mintty emulated by cygwin running on cmder. <span id="continue-reading"></span></p>
+<h3 id="why-is-this-here">Why is this here? <a class="zola-anchor" href="#why-is-this-here" aria-label="Anchor link for: why-is-this-here"></a>
+</h3>
+<p>For the benefit of myself and others. I've already followed these instructions twice. It took me hours to figure all this out, maybe someone else can save a few.</p>
+<h3 id="what-exactly-is-covered">What exactly is covered? <a class="zola-anchor" href="#what-exactly-is-covered" aria-label="Anchor link for: what-exactly-is-covered"></a>
+</h3>
+<ul>
+<li>Installing and setting up cmder</li>
+<li>Installing and setting up cygwin with a package manager</li>
+<li>Configuring Mintty colors, fonts, and a few other settings</li>
+<li>Installing zsh, oh-my-zsh, a nifty plugin, and adding a color theme.</li>
+<li>Configuring the usage of Dir_colors (albeit not in detail), as well as powerline fonts for fancy symbols</li>
+<li>[optional] Generating a fancy promptline using a vim plugin (since I use vim)</li>
+<li>Correcting input issues popular python, nodejs, and other language libraries may face... in a very simple way.</li>
+</ul>
+<h1 id="the-instructions">The Instructions: <a class="zola-anchor" href="#the-instructions" aria-label="Anchor link for: the-instructions"></a>
+</h1>
+<p>While there is a lot of detail here, the ETA to follow these instructions with reasonable pace is ~1hr, especially if you skip a lot of the vim / dir_colors / extra plugin stuff (or save it for another time). I tried to present this in a way that covers the essentials first and cosmetics later.</p>
+<h3 id="1-cygwin-setup">1. Cygwin setup: <a class="zola-anchor" href="#1-cygwin-setup" aria-label="Anchor link for: 1-cygwin-setup"></a>
+</h3>
+<ol>
+<li>This is straight forward and simple. <a rel="nofollow" href="https://cygwin.com/install.html">Download Cygwin</a>.</li>
+<li>Run the installer. When it asks for packages, search for 'wget' and make sure that it is selected for install (it will have a version number displayed when set to). Only download the bin, no need for src.</li>
+<li>Finish installing. Launch the cygwin terminal from the start menu or the batch file from C:\cygwin64</li>
+</ol>
+<p>We're going to setup a package manager for cygwin now. Normally if you wanted more packages you'd have to re-run the installer - which means you have to keep it around for later. I don't like that option, so I found <a rel="nofollow" href="https://github.com/transcode-open/apt-cyg">apt-cyg</a>. Works like it sounds: apt-get for cygwin!</p>
+<ol start="4">
+<li>Run the following to download apt-cyg with wget, install it into the bin of cygwin, and then install a few important commands. Note, you don't need gdb, vim, or dos2unix. I personally use all 3 and will be setting up vim, so I'm grabbing them now. <a rel="nofollow" href="https://cygwin.com/packages/package_list.html">Explore the cygwin packages and grab what you want!</a> <strong>NOTE if you run into any line ending issues from here out, scroll down to &quot;I can't run upgrade oh my zsh&quot; and read</strong></li>
+</ol>
+<pre data-lang="sh" style="background-color:#282828;color:#fdf4c1aa;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#fdf4c1;">wget rawgit.com/transcode-open/apt-cyg/master/apt-cyg
+</span><span style="color:#fdf4c1;">install apt-cyg /bin
+</span><span style="color:#fdf4c1;">apt-cyg install zsh git gdb dos2unix openssh vim </span><span style="color:#fa5c4b;">[</span><span style="color:#fdf4c1;">or your favorite text editor</span><span style="color:#fa5c4b;">]
+</span></code></pre>
+<ol start="5">
+<li>If you want your home folder to be your user's folder, you need to edit /etc/nsswitch.conf. You can do this in the text editor you just downloaded, or type <code>explorer /etc</code> to open the root directory to edit the file in wordpad.</li>
+<li>Add this line to the bottom: <code>db_home: windows</code></li>
+</ol>
+<p>That's it for cygwin, you can close the terminal. Unless you are adding more packages with apt-cyg, you'll probably not be touching cygwin much more. It's mostly the backbone of this little operation. Now onto cmder, which is the terminal emulator of choice for this guide.</p>
+<h3 id="2-cmder-setup">2. CMDER Setup: <a class="zola-anchor" href="#2-cmder-setup" aria-label="Anchor link for: 2-cmder-setup"></a>
+</h3>
+<ol>
+<li>Download and install some or all of the <a rel="nofollow" href="https://github.com/powerline/fonts">powerline fonts</a>. I only use Hack in this guide, so feel free to stick to this. Powerline fonts, for the uneducated, are patched fonts that include some fancy symbols related to git and such. You don't <strong>need</strong> this, but it's a plus!</li>
+</ol>
+<ul>
+<li>&quot;There's a install.ps1 in the folder. Set execution policy and run it.&quot; (Thanks @yiufung)</li>
+</ul>
+<ol start="2">
+<li><a rel="nofollow" href="https://cmder.app/">Download cmder</a> to get started (the full version!). This is a conemu derivative to run shells inside of. It's flexible and highly customizable, which tends to make it desireable. Features a quake-style drop down shell if you're that kind of person, but more importantly plays really nice with keyboard interactions.</li>
+<li>Unpack cmder to a desired location, this is where you'll be keeping cmder permanently, so pick a cozy spot. Run cmder.exe.</li>
+<li>Right click the tab bar of cmder to open the settings. We're going to tweak a few things. Tweak as you like of course.
+<ol>
+<li>Under <em>Main</em> (Check <code>General &gt; Fonts</code> if missing - Thanks @SturmB!) we're going to set the font for non-mintty terminals, just for consistency: Hack, Size 16, Uncheck the option for an alternative font.</li>
+<li>Under <em>Size&amp;Position</em> we're going to tweak the size of the final window. This applies for the quake style drop down too, which I'm going to lead you into setting up. Set width to 95%, height 75% (be sure to type the %!).</li>
+<li>Under <em>Quake</em>, make sure it's turned on!</li>
+<li>Under <em>Confirm</em>, turn off the new console / tab dupping confirms. Personally, I don't like them.</li>
+<li><strong>IMPORTANT</strong> If anything, don't skip this setting: under <em>Tasks</em>, hit the '+' button to create a task that looks like this:</li>
+</ol>
+<pre style="background-color:#282828;color:#fdf4c1aa;"><code><span>Name:             Zsh::cygwin-mintty (or whatever you like)
+</span><span>Task Paramaters:  -icon &quot;C:\cygwin64\Cygwin.ico&quot; (or blank, if you want to leave the icon be)
+</span><span>Commands:         C:\cygwin64\bin\mintty.exe /usr/bin/zsh --login -i -new_console:d:%USERPROFILE%
+</span></code></pre>
+<ol start="6">
+<li>Under <em>Keys and Macros</em>, here are my settings. Tweak as you like:</li>
+</ol>
+<pre style="background-color:#282828;color:#fdf4c1aa;"><code><span>Win+Esc:    minimize/restore for quake
+</span><span>Win+Down:   Create new console
+</span><span>Win+Left:   Switch previous console
+</span><span>Win+Right:  Switch next console
+</span></code></pre>
+<ol start="7">
+<li>Under <em>Keyboard</em> check &quot;Install keyboard hooks&quot; (Might now be called  <code>Support special hotkeys</code> if missing - Thanks @SturmB!)</li>
+<li>Under <em>Paste</em> make sure each mode is in &quot;Multi-line&quot;. This only affects cmd / non-mintty terminals from what I've seen, but is pleasant to have set for when not using mintty.</li>
+</ol>
+</li>
+<li>Save settings and hit Win+Down, run your task. Tada you have a ConEmu running cygwin, running mintty. Wonderful. This is what we'll be using to tweak from here out! If you're prompted to generate configuration files, feel free to. If you keep following, I'll be providing my configuration which you can poke around. We're also about to overwrite the default .zshrc with the oh-my-zsh one, so hold out on tweaking that!</li>
+</ol>
+<h3 id="3-setting-up-oh-my-zsh-and-plugins">3. Setting up oh-my-zsh and plugins <a class="zola-anchor" href="#3-setting-up-oh-my-zsh-and-plugins" aria-label="Anchor link for: 3-setting-up-oh-my-zsh-and-plugins"></a>
+</h3>
+<p>You're already running zsh, but now we're going to add a manager to handle plugins, updating, and themes. Not the most critical stuff, but this is the reason I went through all this trouble - might as well pay it off!</p>
+<ol>
+<li>Install <a rel="nofollow" href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a> the manual way. This is well down the page under Advanced Topics. Here's my summary:</li>
+</ol>
+<pre data-lang="sh" style="background-color:#282828;color:#fdf4c1aa;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#fdf4c1;">git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+</span><span style="color:#fdf4c1;">cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+</span></code></pre>
+<ol start="2">
+<li>Close the current terminal and open a new one to load up oh-my-zsh. If it prompts you to update, do it.</li>
+<li>If you have a theme file and a .zshrc, now is the time to copy that over (~/.zshrc and ~/.oh-my-zsh/themes/). You can find mine <a rel="nofollow" href="https://github.com/dfontana/dotfiles">on my GitHub</a> if you would like a starting point.
+<ul>
+<li>Realize it does a few things like source a <code>dir_colors</code> file, add ssh keys on login, adds the vim generated promptline, and utilize my personal theme (also in that repo). (It's also subject to change!) Be sure to follow step 6 or remove the related lines from the .zshrc if you use mine!</li>
+<li>Alternatively, feel free to also just edit the .zshrc generated by oh-my-zsh and pick a theme from one of the defaults for yourself! Oh-my-zsh provides samples online, google it.</li>
+</ul>
+</li>
+<li>Install any oh-my-zsh plugins now. More information on the repo! My favorite is <a rel="nofollow" href="https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md">zsh-syntax-highlighting</a>. If you would like that plugin, follow the link and install with the oh-my-zsh package manager guide. Quick tip: This plugin <strong>only</strong> works if it is loaded last in your .zshrc's plugins list. Yes, I know, how odd.</li>
+</ol>
+<h3 id="4-mintty-settings">4. Mintty settings <a class="zola-anchor" href="#4-mintty-settings" aria-label="Anchor link for: 4-mintty-settings"></a>
+</h3>
+<p>This one's short, but this is where we configure mintty's cursor, font, and other stuff. Feel free to poke around.</p>
+<ol>
+<li>Right click inside your terminal.</li>
+<li>Hit options.</li>
+<li>Under <em>text</em> change the font to 'Hack' (or your powerline font of choice). Choose your font size (I like 9).</li>
+<li>When you're done poking around the rest of the settings (like cursor), hit Apply and Save.</li>
+</ol>
+<h3 id="5-fixing-input-issues-for-python-node-and-friends">5. Fixing input issues for python, node, and friends. <a class="zola-anchor" href="#5-fixing-input-issues-for-python-node-and-friends" aria-label="Anchor link for: 5-fixing-input-issues-for-python-node-and-friends"></a>
+</h3>
+<p>I had issues using input libraries from NodeJS and such. I was confused how Git Bash was able to function just fine, yet mintty was failing. The trick? Git Bash aliases node, python, and others to use winpty. Follow along to install winpty and setup the aliases. If you want more information, be sure to stop and read the repo!</p>
+<ol>
+<li>Download the release from here: https://github.com/rprichard/winpty
+<ul>
+<li>This means navigating to their <a rel="nofollow" href="https://github.com/rprichard/winpty/releases">releases and downloading the artifact</a> (Cygwin tar, choose the correct binary for your platform i.e. x64)</li>
+</ul>
+</li>
+<li><code>cd &lt;path-to-extracted-files&gt;</code></li>
+<li>Copy the needed files for installing: <code>cp -an ./bin/* /usr/bin/.</code> and <code>cp -an ./lib/* /usr/lib/.</code></li>
+<li>Set permissions for the files with winpty at the start: <code>chmod 755 /usr/bin/winpty*</code> and <code>chmod 755 /usr/lib/winpty*</code></li>
+<li>Ensure you have alias'd in your .zshrc: &quot;node = winpty node.exe&quot;
+<ul>
+<li>Repeat for any other problematic programs like: ipython php php5 psql python2.7</li>
+<li>If you want to see how and what GitBash does it this for, go to your cmder's install directory and open: <code>vendor\git-for-windows\etc\profile.d\aliases.sh</code></li>
+</ul>
+</li>
+</ol>
+<h3 id="6-dir-colors-vim-and-the-fancy-promptline">6. Dir Colors, Vim, and the fancy promptline <a class="zola-anchor" href="#6-dir-colors-vim-and-the-fancy-promptline" aria-label="Anchor link for: 6-dir-colors-vim-and-the-fancy-promptline"></a>
+</h3>
+<p>This section is not very detailed as we're now talking about aesthetic stuff. Look at my github for my configuration files and tweak as you like. Make sure you add in the needed references inside your .zshrc, like using <code>dir_colors</code> and sourcing the prompt line's .sh file. This is what I'm doing with them:</p>
+<ol>
+<li>Copy your minttyrc and <code>dir_colors</code> files into their needed spots (see my github for examples, or google!): <code>~/.minttyrc</code> and <code>~/.dir_colors</code></li>
+<li>Copy your vimrc into <code>~/.vimrc</code> and install vundle: <code>git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim</code></li>
+<li>Launch vim and run <code>:PluginInstall</code> followed by <code>:PromptlineSnapshot ~/.shell_prompt.sh airline</code> to generate the nifty looking powerline prompt script (this needs to be sourced in .zshrc).</li>
+</ol>
+<h2 id="i-can-t-run-upgrade-oh-my-zsh">I can't run <code>upgrade_oh_my_zsh</code> <a class="zola-anchor" href="#i-can-t-run-upgrade-oh-my-zsh" aria-label="Anchor link for: i-can-t-run-upgrade-oh-my-zsh"></a>
+</h2>
+<p>I ran into this once, and it was due to line endings being in dos instead of unix. This may have been because of a gitconfig setting or an issue with the repo -- I'm going to say it was me. If you run into line ending issues for anything, try this:</p>
+<ol>
+<li>Verify this is the issue by checking the file format. For <code>upgrade_oh_my_zsh</code> this means the issue is inside ~/.oh-my-zsh/tools/upgrade.sh.
+<ul>
+<li>I do this by opening the file in vim, where the filetype is displayed on the powerline. If the type is utf-8[dos], you got carriage returns (not desired here).</li>
+</ul>
+</li>
+<li>Install dos2unix <a rel="nofollow" href="https://linux.die.net/man/1/dos2unix">(man page)</a> with <code>apt-cyg install dos2unix</code>. This is a simple utility to convert the line endings of a file.</li>
+<li>To convert a file just run <code>dos2unix &lt;path to file&gt;</code>. In this case, <code>dos2unix ~/.oh-my-zsh/tools/upgrade.sh</code>.</li>
+</ol>
+
+    </div>
+  </article>
+  
+  
+  <script 
+    src="https://utteranc.es/client.js"
+    repo="dfontana/dfontana.github.io"
+    issue-term="pathname"
+    label="comments"
+    theme="github-light"
+    crossorigin="anonymous"
+    async
+  ></script>
+  
+
+  
+    
+  <footer>
+    <hr>
+    <hr>
+    <section class="author">
+    <div class="authorimage" style="background: url(&#x2F;img&#x2F;profile.png)"></div>
+    <h4>Dylan Fontana</h4>
+    
+        <p class="bio">Explore, learn, and pursue - three of my favorite things.</p>
+    
+    
+    <p class="meta">
+        <i class="fa fa-fw fa-map-marker"></i> America&#x2F;Boston
+    </p>
+    
+    </section>
+    </footer>
+
+  
+
+  </body>
+</html>

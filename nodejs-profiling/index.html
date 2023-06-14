@@ -1,0 +1,154 @@
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>nill.ink</title>
+    <link rel="stylesheet" href="https://nill.ink/theme.css">
+  </head>
+  <body>
+    
+  
+    
+        
+        <header>
+          <nav class="navbox" itemscope itemtype="https://schema.org/SiteNavigationElement">
+            <a class="nav-title" href="https:&#x2F;&#x2F;nill.ink"><div class="nav-image-box"><div class="nav-image" style="background: url(/img/icon-bronze.png)"></div></div>nill<span class="title-ink">&#46;ink</span><span class="title-social" hidden>oss</span></a>&nbsp;
+            
+            <span class="navbox-spacer" />
+            <a itemprop="url"
+                class=""
+                href="https:&#x2F;&#x2F;nill.ink&#x2F;about">
+                <span itemprop="name">About</span></a>&nbsp;&nbsp;
+            
+            <span class="navbox-spacer" />
+            <a itemprop="url"
+                class=""
+                href="https:&#x2F;&#x2F;nill.ink&#x2F;tags">
+                <span itemprop="name">Tags</span></a>&nbsp;&nbsp;
+            
+          </nav>
+          <hr/>
+        </header>
+        
+      
+  
+
+  <article itemscope itemtype="https://schema.org/BlogPosting">
+    <header>
+        <h1 itemprop="headline">NodeJS Environment Profiles</h1>
+        
+        
+        <p>
+          2017-10-13&nbsp;
+  
+    |&nbsp;
+    
+      <a href="https://nill.ink/tags/js/"># js</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/configuration/"># configuration</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/environment/"># environment</a>
+      
+        
+      
+    
+  
+
+        </p>
+        
+    </header>
+    <div class="articlebody" itemprop="articleBody">
+      <p>Switching configuration between production and development can be tedious and error prone. Fed up with the constant back and forth, I searched for a better solution.<span id="continue-reading"></span></p>
+<h2 id="reading-environment-variables-in-node">Reading Environment Variables in Node <a class="zola-anchor" href="#reading-environment-variables-in-node" aria-label="Anchor link for: reading-environment-variables-in-node"></a>
+</h2>
+<p>An easy solution would be to simply pass environment variables when launching NodeJS, pulling the configuration from inside our files to the commandline during launch time. We can accomplish this like so:</p>
+<pre data-lang="javascript" style="background-color:#282828;color:#fdf4c1aa;" class="language-javascript "><code class="language-javascript" data-lang="javascript"><span style="color:#fdf4c1;">location</span><span style="color:#fe8019;">=</span><span style="color:#fdf4c1;">Boston node server</span><span>.</span><span style="color:#fdf4c1;">js
+</span></code></pre>
+<p>Once we've set these variables, its a simple matter of reading them inside Node. Thankfully, Node has the <code>process</code> object, which allows us to look at environment variables through <code>env</code>. To access a variable called <code>location</code>, for example, we'd simple do:</p>
+<pre data-lang="javascript" style="background-color:#282828;color:#fdf4c1aa;" class="language-javascript "><code class="language-javascript" data-lang="javascript"><span style="color:#fa5c4b;">var </span><span style="color:#fdf4c1;">location </span><span style="color:#fe8019;">= </span><span style="color:#fabd2f;">process</span><span>.</span><span style="color:#fabd2f;">env</span><span>.</span><span style="color:#fabd2f;">location </span><span style="color:#fe8019;">|| </span><span style="color:#b8bb26;">&#39;New_York&#39;</span><span>;
+</span></code></pre>
+<p>Notice we set a default value with a logical OR. It's important to remember this, to prevent undefined behavior when someone forgets to set the variable or if you have a default value in mind.</p>
+<p>This is still not the ideal scenario, however. Let's harp on the notion of a default configuration. We've successfully pulled out our configuration using environment variables, but if I want to change the default configs then I'm back to my original problem of editing source code! Luckily, we can do one extra tweak to solve just this.</p>
+<h2 id="the-magic-of-environments-and-jsons">The Magic of Environments and JSONs <a class="zola-anchor" href="#the-magic-of-environments-and-jsons" aria-label="Anchor link for: the-magic-of-environments-and-jsons"></a>
+</h2>
+<p>Here's where setting up an environment profile comes in. What if we were to place all our configurations within a file (like a JSON) and load it in at runtime? What if we did one better, and made it a module that can handle comments AND specify all our configurations within itself - rather than specifying our default configuration within our source. Well we can! And we will:</p>
+<pre data-lang="javascript" style="background-color:#282828;color:#fdf4c1aa;" class="language-javascript "><code class="language-javascript" data-lang="javascript"><span style="font-style:italic;color:#928374;">// config.js
+</span><span style="color:#fa5c4b;">let </span><span style="color:#fdf4c1;">env </span><span style="color:#fe8019;">= </span><span style="color:#fabd2f;">process</span><span>.</span><span style="color:#fabd2f;">env</span><span>.</span><span style="color:#fdf4c1;">CONFIG </span><span style="color:#fe8019;">|| </span><span style="color:#b8bb26;">&#39;default&#39;</span><span>;
+</span><span style="color:#fa5c4b;">let </span><span style="color:#fdf4c1;">config </span><span style="color:#fe8019;">= </span><span>{};
+</span><span>
+</span><span style="font-style:italic;color:#928374;">/**
+</span><span style="font-style:italic;color:#928374;"> * config.IP: IP of database.
+</span><span style="font-style:italic;color:#928374;"> * config.PORT: Port number of database.
+</span><span style="font-style:italic;color:#928374;"> * config.LOG_LEVEL: Trace level to print when logging events.
+</span><span style="font-style:italic;color:#928374;"> */
+</span><span style="color:#fa5c4b;">switch</span><span>(</span><span style="color:#fdf4c1;">env</span><span>){
+</span><span>    </span><span style="color:#fa5c4b;">case</span><span>(</span><span style="color:#b8bb26;">&#39;prod&#39;</span><span>):
+</span><span>        </span><span style="color:#fdf4c1;">config</span><span>.</span><span style="color:#fdf4c1;">IP </span><span style="color:#fe8019;">= </span><span style="color:#b8bb26;">&#39;127.127.127.127&#39;</span><span>;
+</span><span>        </span><span style="color:#fdf4c1;">config</span><span>.</span><span style="color:#fdf4c1;">PORT </span><span style="color:#fe8019;">= </span><span style="color:#d3869b;">80</span><span>;
+</span><span>        </span><span style="color:#fdf4c1;">config</span><span>.</span><span style="color:#fdf4c1;">LOG_LEVEL </span><span style="color:#fe8019;">= </span><span style="color:#d3869b;">1</span><span>;
+</span><span>        </span><span style="color:#fa5c4b;">break</span><span>;
+</span><span>    </span><span style="color:#fa5c4b;">default</span><span>:
+</span><span>        </span><span style="color:#fdf4c1;">config</span><span>.</span><span style="color:#fdf4c1;">IP </span><span style="color:#fe8019;">= </span><span style="color:#b8bb26;">&#39;127.0.0.0&#39;</span><span>;
+</span><span>        </span><span style="color:#fdf4c1;">config</span><span>.</span><span style="color:#fdf4c1;">PORT </span><span style="color:#fe8019;">= </span><span style="color:#d3869b;">8080</span><span>;
+</span><span>        </span><span style="color:#fdf4c1;">config</span><span>.</span><span style="color:#fdf4c1;">LOG_LEVEL </span><span style="color:#fe8019;">= </span><span style="color:#d3869b;">2</span><span>;
+</span><span>}
+</span><span>
+</span><span style="color:#fabd2f;">module</span><span>.</span><span style="color:#fabd2f;">exports </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1;">config</span><span>;
+</span></code></pre>
+<p>And then in our server.js, we:</p>
+<pre data-lang="javascript" style="background-color:#282828;color:#fdf4c1aa;" class="language-javascript "><code class="language-javascript" data-lang="javascript"><span style="font-style:italic;color:#928374;">//Import configuration
+</span><span style="color:#fa5c4b;">const </span><span style="color:#fdf4c1;">config </span><span style="color:#fe8019;">= </span><span style="color:#fabd2f;">require</span><span>(</span><span style="color:#b8bb26;">&#39;./config&#39;</span><span>);
+</span><span>
+</span><span style="color:#fe8019;">...
+</span><span>
+</span><span style="font-style:italic;color:#928374;">//Access it&#39;s fields
+</span><span style="color:#8ec07c;">console</span><span style="color:#fdf4c1;">.</span><span style="color:#fabd2f;">log</span><span>(</span><span style="color:#fdf4c1;">config</span><span>.</span><span style="color:#fdf4c1;">IP</span><span>);
+</span></code></pre>
+<p>And we call our server as such:</p>
+<pre data-lang="sh" style="background-color:#282828;color:#fdf4c1aa;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#fdf4c1;">CONFIG</span><span style="color:#fe8019;">=</span><span style="color:#b8bb26;">prod </span><span style="color:#fdf4c1;">node server.js
+</span></code></pre>
+<p>That's it! We've gone from hard coded messes, to flexible, documentable, and &quot;gitignore-able&quot; configurations that can change without modifying the original source.</p>
+
+    </div>
+  </article>
+  
+  
+  <script 
+    src="https://utteranc.es/client.js"
+    repo="dfontana/dfontana.github.io"
+    issue-term="pathname"
+    label="comments"
+    theme="github-light"
+    crossorigin="anonymous"
+    async
+  ></script>
+  
+
+  
+    
+  <footer>
+    <hr>
+    <hr>
+    <section class="author">
+    <div class="authorimage" style="background: url(&#x2F;img&#x2F;profile.png)"></div>
+    <h4>Dylan Fontana</h4>
+    
+        <p class="bio">Explore, learn, and pursue - three of my favorite things.</p>
+    
+    
+    <p class="meta">
+        <i class="fa fa-fw fa-map-marker"></i> America&#x2F;Boston
+    </p>
+    
+    </section>
+    </footer>
+
+  
+
+  </body>
+</html>

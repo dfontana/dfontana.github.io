@@ -1,0 +1,221 @@
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>nill.ink</title>
+    <link rel="stylesheet" href="https://nill.ink/theme.css">
+  </head>
+  <body>
+    
+  
+    
+        
+        <header>
+          <nav class="navbox" itemscope itemtype="https://schema.org/SiteNavigationElement">
+            <a class="nav-title" href="https:&#x2F;&#x2F;nill.ink"><div class="nav-image-box"><div class="nav-image" style="background: url(/img/icon-bronze.png)"></div></div>nill<span class="title-ink">&#46;ink</span><span class="title-social" hidden>oss</span></a>&nbsp;
+            
+            <span class="navbox-spacer" />
+            <a itemprop="url"
+                class=""
+                href="https:&#x2F;&#x2F;nill.ink&#x2F;about">
+                <span itemprop="name">About</span></a>&nbsp;&nbsp;
+            
+            <span class="navbox-spacer" />
+            <a itemprop="url"
+                class=""
+                href="https:&#x2F;&#x2F;nill.ink&#x2F;tags">
+                <span itemprop="name">Tags</span></a>&nbsp;&nbsp;
+            
+          </nav>
+          <hr/>
+        </header>
+        
+      
+  
+
+  <article itemscope itemtype="https://schema.org/BlogPosting">
+    <header>
+        <h1 itemprop="headline">Setting up a Raspberry Pi - Headless</h1>
+        
+        
+        <p>
+          2018-12-17&nbsp;
+  
+    |&nbsp;
+    
+      <a href="https://nill.ink/tags/raspberrypi/"># raspberrypi</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/configuration/"># configuration</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/project/"># project</a>
+      
+        
+      
+    
+  
+
+        </p>
+        
+    </header>
+    <div class="articlebody" itemprop="articleBody">
+      <p>This one is more or less straight to the point. We're going to setup a fresh raspberry pi in a headless state. It's fairly easy if you keep your wits about you.<span id="continue-reading"></span> Unfortunately you'll need either a keyboard/mouse + monitor or an ethernet connection to your device in order to get the wifi step of these instructions done.</p>
+<h2 id="raspbian-lite-wifi-connect">Raspbian Lite &amp; Wifi Connect <a class="zola-anchor" href="#raspbian-lite-wifi-connect" aria-label="Anchor link for: raspbian-lite-wifi-connect"></a>
+</h2>
+<ol>
+<li>
+<p>Download the image from <a rel="nofollow" href="https://www.raspberrypi.org/downloads/raspbian/">raspberrypi</a></p>
+</li>
+<li>
+<p>Burn to the SD card (straight from the ZIP) with the free <a rel="nofollow" href="https://etcher.io/">Etcher</a>.</p>
+</li>
+<li>
+<p>In the boot partition, add an empty &amp; extension-less file named <code>ssh</code> to enable ssh connections to the device.</p>
+</li>
+<li>
+<p>Now connect the pi to a monitor + keyboard/mouse OR connect it via ethernet and use your router's client list to find it's IP. You will be able to SSH into it if you chose the later route. (And yes, that also means you should be turning on the device in this step)</p>
+</li>
+<li>
+<p>Setup wifi by editing the <code>wpa_supplicant.conf</code> to point your device at your wifi network.</p>
+<pre data-lang="sh" style="background-color:#282828;color:#fdf4c1aa;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#fdf4c1;">sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+</span><span>
+</span><span style="font-style:italic;color:#928374;"># Add at the bottom, WITH the quotes.
+</span><span style="color:#fdf4c1;">network</span><span style="color:#fe8019;">=</span><span style="color:#b8bb26;">{
+</span><span style="color:#b8bb26;">  ssid=&quot;YOUR_WIFI_NETWORK_NAME&quot;
+</span><span style="color:#b8bb26;">  psk=&quot;YOUR_WIFI_PASSWORD&quot;
+</span><span style="color:#b8bb26;">}
+</span></code></pre>
+</li>
+<li>
+<p>Run <code>sudo raspi-config</code> to set things up.</p>
+</li>
+</ol>
+<h2 id="removing-the-default-pi-account">Removing the Default Pi Account <a class="zola-anchor" href="#removing-the-default-pi-account" aria-label="Anchor link for: removing-the-default-pi-account"></a>
+</h2>
+<p>Keeping the default account around is a bit of a risk. Let's make it yours.</p>
+<ol>
+<li>Make a new user:
+<ol>
+<li>Enter root: <code>sudo -i</code></li>
+<li>Make user: <code>adduser [username]</code></li>
+<li>Make that user sudo: <code>adduser [username] sudo</code></li>
+</ol>
+</li>
+<li>Enable SSH for the user:
+<ol>
+<li><code>mkdir /home/[username]/.ssh</code></li>
+<li><code>chown [username]:[username] /home/[username]/.ssh</code></li>
+<li>Leave root and close SSH connection</li>
+</ol>
+</li>
+<li>Give local key to Raspberry Pi for SSH:
+<ol>
+<li><code>scp ~/.ssh/id_rsa.pub [username]@[Pi's IP address]:/home/[username]/.ssh/authorized_keys</code></li>
+</ol>
+</li>
+<li>SSH in, delete the Pi account, and make a new root password:
+<ol>
+<li><code>sudo deluser pi</code></li>
+<li><code>sudo passwd root</code></li>
+</ol>
+</li>
+</ol>
+<h2 id="some-extra-random-steps-you-can-take-if-you-d-like">Some extra random steps you can take if you'd like: <a class="zola-anchor" href="#some-extra-random-steps-you-can-take-if-you-d-like" aria-label="Anchor link for: some-extra-random-steps-you-can-take-if-you-d-like"></a>
+</h2>
+<ol>
+<li>
+<p>Regenerate SSH keys stored on the Pi:
+<code>rm /etc/ssh/ssh_host_* &amp;&amp; dpkg-reconfigure openssh-server</code></p>
+</li>
+<li>
+<p>Ensure Protocol 2 is uncommented and enabled in <code>/etc/ssh/sshd_config</code></p>
+</li>
+<li>
+<p>Setup IP Tables:</p>
+<ol>
+<li>
+<p><code>sudo apt install iptables</code></p>
+</li>
+<li>
+<p>Open ports you want open, for example to open 22: <code>sudo iptables -A INPUT -p tcp --dport 22 -m state --state NEW -j ACCEPT</code></p>
+</li>
+<li>
+<p>Allow pinging with: <code>sudo iptables -A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT</code></p>
+</li>
+<li>
+<p>Block inbound traffic that is doesn't follow any of the rules: <code>sudo iptables -P INPUT DROP</code></p>
+</li>
+<li>
+<p>View the rules: <code>sudo iptables -L</code></p>
+</li>
+<li>
+<p>Save the rules: <code>sudo bash -c &quot;iptables-save &gt; /etc/iptables.rules&quot;</code></p>
+</li>
+<li>
+<p>Run the rules on startup:</p>
+<pre data-lang="sh" style="background-color:#282828;color:#fdf4c1aa;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="font-style:italic;color:#928374;"># Edit this file
+</span><span style="color:#fdf4c1;">nano /etc/network/if-pre-up.d/iptables
+</span><span>
+</span><span style="font-style:italic;color:#928374;">#put these lines
+</span><span style="font-style:italic;color:#928374;">#!/bin/bash
+</span><span style="color:#fdf4c1;">/sbin/iptables-restore </span><span style="color:#fe8019;">&lt;</span><span style="color:#fdf4c1;"> /etc/iptables.rules
+</span><span>
+</span><span style="font-style:italic;color:#928374;"># ensure it can execute
+</span><span style="color:#fdf4c1;">chmod +x /etc/network/if-pre-up.d/iptables
+</span></code></pre>
+</li>
+</ol>
+</li>
+<li>
+<p>Setup Fail2Ban to push off bots.</p>
+<ol>
+<li>Sudo apt install fail2ban</li>
+<li>Configure inside /etc/fail2ban/jail.local</li>
+<li>Set some of the configuration <a rel="nofollow" href="https://felipeferreira.net/index.php/2008/10/securing-your-ssh-with-fail2ban/">found here</a></li>
+<li>Restart the service: /etc/init.d/fail2ban restart</li>
+</ol>
+</li>
+</ol>
+
+    </div>
+  </article>
+  
+  
+  <script 
+    src="https://utteranc.es/client.js"
+    repo="dfontana/dfontana.github.io"
+    issue-term="pathname"
+    label="comments"
+    theme="github-light"
+    crossorigin="anonymous"
+    async
+  ></script>
+  
+
+  
+    
+  <footer>
+    <hr>
+    <hr>
+    <section class="author">
+    <div class="authorimage" style="background: url(&#x2F;img&#x2F;profile.png)"></div>
+    <h4>Dylan Fontana</h4>
+    
+        <p class="bio">Explore, learn, and pursue - three of my favorite things.</p>
+    
+    
+    <p class="meta">
+        <i class="fa fa-fw fa-map-marker"></i> America&#x2F;Boston
+    </p>
+    
+    </section>
+    </footer>
+
+  
+
+  </body>
+</html>

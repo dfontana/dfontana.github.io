@@ -1,0 +1,419 @@
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>nill.ink</title>
+    <link rel="stylesheet" href="https://nill.ink/theme.css">
+  </head>
+  <body>
+    
+  
+    
+        
+        <header>
+          <nav class="navbox" itemscope itemtype="https://schema.org/SiteNavigationElement">
+            <a class="nav-title" href="https:&#x2F;&#x2F;nill.ink"><div class="nav-image-box"><div class="nav-image" style="background: url(/img/icon-bronze.png)"></div></div>nill<span class="title-ink">&#46;ink</span><span class="title-social" hidden>oss</span></a>&nbsp;
+            
+            <span class="navbox-spacer" />
+            <a itemprop="url"
+                class=""
+                href="https:&#x2F;&#x2F;nill.ink&#x2F;about">
+                <span itemprop="name">About</span></a>&nbsp;&nbsp;
+            
+            <span class="navbox-spacer" />
+            <a itemprop="url"
+                class=""
+                href="https:&#x2F;&#x2F;nill.ink&#x2F;tags">
+                <span itemprop="name">Tags</span></a>&nbsp;&nbsp;
+            
+          </nav>
+          <hr/>
+        </header>
+        
+      
+  
+
+  <article itemscope itemtype="https://schema.org/BlogPosting">
+    <header>
+        <h1 itemprop="headline">Creating a Discord Bot in Rust</h1>
+        
+        
+        <p>
+          2021-03-26&nbsp;
+  
+    |&nbsp;
+    
+      <a href="https://nill.ink/tags/rust/"># rust</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/discord/"># discord</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/bot/"># bot</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/project/"># project</a>
+      
+        
+      
+    
+  
+
+        </p>
+        
+    </header>
+    <div class="articlebody" itemprop="articleBody">
+      <p>Quarantine has lead to some <em>oddities</em> to pass the time, and this post is no different. I created a Discord Bot in Rust, hosted on my <a href="https://nill.ink/raspberry-pi/">Raspberry Pi</a>. It's purpose? To <strong>shrug</strong>. This is the way <img class="emote" src="/img/shrug-dog.png"/><span id="continue-reading"></span></p>
+<p><img class="emote" src="/img/shrug-dog.png"/><img class="emote" src="/img/shrug-dog.png"/> Warning - <em>this post is gonna get silly</em> <img class="emote" src="/img/shrug-dog.png"/><img class="emote" src="/img/shrug-dog.png"/></p>
+<h2 id="what-are-we-making">What Are We Making? <a class="zola-anchor" href="#what-are-we-making" aria-label="Anchor link for: what-are-we-making"></a>
+</h2>
+<p>A bot with a few different utilities baked into it, some practical and others more so for the fun of it. For this article, we'll talk about my experience using the <a rel="nofollow" href="https://github.com/serenity-rs/serenity">Serenity-rs</a> library to create a bot which will:</p>
+<ul>
+<li>React to a message that mentions a specific user name</li>
+<li>Send a custom emoji in response to the user</li>
+</ul>
+<p>Some of the other dependencies we'll rely on:</p>
+<ul>
+<li><a rel="nofollow" href="https://crates.io/crates/dotenv">dotenv</a> to help us have a test environment versus a production one.</li>
+<li><a rel="nofollow" href="https://crates.io/crates/lazy_static">lazy_static</a> for global singletons</li>
+</ul>
+<h2 id="before-the-code-came-the-build">Before the Code Came the Build <a class="zola-anchor" href="#before-the-code-came-the-build" aria-label="Anchor link for: before-the-code-came-the-build"></a>
+</h2>
+<p>Sadly in order to <img class="emote" src="/img/shrug-dog.png"/> we first need an instance to run. In short: A Raspberry Pi hosting a Docker container of our bot, with a separate env for testing and production. Let's unpack these.</p>
+<h3 id="1-defining-our-environments">1. Defining our Environments <a class="zola-anchor" href="#1-defining-our-environments" aria-label="Anchor link for: 1-defining-our-environments"></a>
+</h3>
+<p>Recall, <a href="https://nill.ink/nodejs-profiling/">I don't like manually changing values and neither should you!</a> I want to quickly run something locally - futz with it - and have zero impact on the production running instance. For this, it means defining <em>two</em> bots in the <a rel="nofollow" href="https://discord.com/developers/applications">Discord Application Portal</a> - aptly named <code>disbot</code> and <code>disbot-dev</code>. I can then configure two <code>.env</code> files containing the following:</p>
+<pre data-lang="ini" style="background-color:#282828;color:#fdf4c1aa;" class="language-ini "><code class="language-ini" data-lang="ini"><span style="color:#fabd2f;">API_KEY</span><span style="color:#fe8019;">=&lt;</span><span>Your Bot Token Here</span><span style="color:#fe8019;">&gt;
+</span><span style="color:#fabd2f;">EMOTE_NAME</span><span style="color:#fe8019;">=&lt;</span><span>your</span><span style="color:#fe8019;">-</span><span>emote</span><span style="color:#fe8019;">-</span><span>to</span><span style="color:#fe8019;">-</span><span>react</span><span style="color:#fe8019;">-</span><span>with </span><span style="color:#fe8019;">||</span><span> shrug_dog</span><span style="color:#fe8019;">&gt;
+</span><span style="color:#fabd2f;">EMOTE_USERS</span><span style="color:#fe8019;">=&lt;</span><span>csv</span><span style="color:#fe8019;">-</span><span>of</span><span style="color:#fe8019;">-</span><span>users</span><span style="color:#fe8019;">-</span><span>to</span><span style="color:#fe8019;">-</span><span>target</span><span style="color:#fe8019;">-</span><span>when</span><span style="color:#fe8019;">-</span><span>mentioned </span><span style="color:#fe8019;">||</span><span> User1</span><span style="color:#fe8019;">,</span><span>User2</span><span style="color:#fe8019;">,</span><span>User3</span><span style="color:#fe8019;">&gt;
+</span></code></pre>
+<p>Ideally we now set ourselves up to pass the desired env as a CLI arg, eg <code>cargo run dev</code> vs <code>cargo run</code>. Thanks to <code>dotenv</code>, this will be a relative breeze using a few helpers <img class="emote" src="/img/shrug-dog.png"/></p>
+<ul>
+<li>An <code>Environment</code> Enum, to vary app behavior such as debug logging</li>
+</ul>
+<pre data-lang="rust" style="background-color:#282828;color:#fdf4c1aa;" class="language-rust "><code class="language-rust" data-lang="rust"><span>#[</span><span style="color:#fdf4c1;">derive</span><span>(Clone, Debug, PartialEq)]
+</span><span style="color:#fa5c4b;">pub enum </span><span style="color:#8ec07c;">Environment </span><span>{
+</span><span>  </span><span style="color:#fdf4c1;">PROD</span><span>,
+</span><span>  </span><span style="color:#fdf4c1;">DEV</span><span>,
+</span><span>}
+</span><span>
+</span><span style="color:#fa5c4b;">impl </span><span>FromStr </span><span style="color:#fa5c4b;">for </span><span style="color:#8ec07c;">Environment </span><span>{
+</span><span>  </span><span style="color:#fa5c4b;">type </span><span style="color:#8ec07c;">Err </span><span style="color:#fe8019;">= </span><span style="color:#fabd2f;">String</span><span>;
+</span><span>  </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">from_str</span><span>(</span><span style="color:#fdf4c1;">s</span><span>: </span><span style="color:#fe8019;">&amp;</span><span style="color:#fa5c4b;">str</span><span>) -&gt; </span><span style="color:#fabd2f;">Result</span><span>&lt;</span><span style="color:#fa5c4b;">Self</span><span>, </span><span style="color:#fa5c4b;">Self::</span><span style="color:#fabd2f;">Err</span><span>&gt; {
+</span><span>    </span><span style="color:#fa5c4b;">match</span><span> s {
+</span><span>      </span><span style="color:#b8bb26;">&quot;prod&quot; </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fabd2f;">Ok</span><span>(Environment::</span><span style="color:#fdf4c1;">PROD</span><span>),
+</span><span>      </span><span style="color:#b8bb26;">&quot;dev&quot; </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fabd2f;">Ok</span><span>(Environment::</span><span style="color:#fdf4c1;">DEV</span><span>),
+</span><span>      </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">Err</span><span>(</span><span style="color:#b8bb26;">&quot;Unknown Environment Given&quot;</span><span>.</span><span style="color:#fabd2f;">to_string</span><span>()),
+</span><span>    }
+</span><span>  }
+</span><span>}
+</span><span>
+</span><span style="color:#fa5c4b;">impl </span><span>Default </span><span style="color:#fa5c4b;">for </span><span style="color:#8ec07c;">Environment </span><span>{
+</span><span>  </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">default</span><span>() -&gt; </span><span style="color:#fa5c4b;">Self </span><span>{
+</span><span>    </span><span style="font-style:italic;color:#928374;">// Living on the edge with code like this, perhaps Dev 
+</span><span>    </span><span style="font-style:italic;color:#928374;">// is the smarter way ;)
+</span><span>    Environment::</span><span style="color:#fdf4c1;">PROD
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<ul>
+<li>A <code>Config</code> Struct, to store all these key-values</li>
+</ul>
+<pre data-lang="rust" style="background-color:#282828;color:#fdf4c1aa;" class="language-rust "><code class="language-rust" data-lang="rust"><span>#[</span><span style="color:#fdf4c1;">derive</span><span>(Debug, Clone)]
+</span><span style="color:#fa5c4b;">pub struct </span><span style="color:#8ec07c;">Config </span><span>{
+</span><span>  </span><span style="color:#fdf4c1;">api_key</span><span>: String,
+</span><span>  </span><span style="color:#fdf4c1;">emote_name</span><span>: String,
+</span><span>  </span><span style="color:#fdf4c1;">emote_users</span><span>: </span><span style="color:#fabd2f;">Vec</span><span>&lt;</span><span style="color:#fabd2f;">String</span><span>&gt;,
+</span><span>  </span><span style="color:#fdf4c1;">env</span><span>: Environment,
+</span><span>}
+</span><span>
+</span><span style="color:#fa5c4b;">impl </span><span style="color:#8ec07c;">Config </span><span>{
+</span><span>  </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">new</span><span>(</span><span style="color:#fdf4c1;">env</span><span>: Environment) -&gt; </span><span style="color:#fabd2f;">Result</span><span>&lt;Config, VarError&gt; {
+</span><span>    </span><span style="color:#fabd2f;">Ok</span><span>(Config {
+</span><span>      api_key: env::var(</span><span style="color:#b8bb26;">&quot;API_KEY&quot;</span><span>)</span><span style="color:#fe8019;">?</span><span>,
+</span><span>      emote_name: env::var(</span><span style="color:#b8bb26;">&quot;EMOTE_NAME&quot;</span><span>)</span><span style="color:#fe8019;">?</span><span>,
+</span><span>      emote_users: env::var(</span><span style="color:#b8bb26;">&quot;EMOTE_USERS&quot;</span><span>)</span><span style="color:#fe8019;">?
+</span><span>        .</span><span style="color:#fabd2f;">split</span><span>(</span><span style="color:#b8bb26;">&quot;,&quot;</span><span>)
+</span><span>        .</span><span style="color:#fabd2f;">map</span><span>(|</span><span style="color:#fdf4c1;">x</span><span>| x.</span><span style="color:#fabd2f;">to_string</span><span>())
+</span><span>        .</span><span style="color:#fabd2f;">collect</span><span>(),
+</span><span>      env,
+</span><span>    })
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>Which can then be read from our main function - alas we are one step closer to <img class="emote" src="/img/shrug-dog.png"/> <strong>shrugging</strong> <img class="emote" src="/img/shrug-dog.png"/></p>
+<pre data-lang="rust" style="background-color:#282828;color:#fdf4c1aa;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">main</span><span>() {
+</span><span>  </span><span style="color:#fa5c4b;">let</span><span> env </span><span style="color:#fe8019;">= </span><span>std::env::args().</span><span style="color:#fabd2f;">nth</span><span>(</span><span style="color:#d3869b;">1</span><span>).</span><span style="color:#fabd2f;">map_or</span><span>(Environment::default(), |</span><span style="color:#fdf4c1;">v</span><span>| {
+</span><span>    Environment::from_str(</span><span style="color:#fe8019;">&amp;</span><span>v).</span><span style="color:#fabd2f;">unwrap</span><span>()
+</span><span>  });
+</span><span>  dotenv::from_filename(env.</span><span style="color:#fabd2f;">as_file</span><span>()).</span><span style="color:#fabd2f;">ok</span><span>();
+</span><span>  </span><span style="color:#fa5c4b;">let</span><span> config </span><span style="color:#fe8019;">= </span><span>Config::new(env).</span><span style="color:#fabd2f;">expect</span><span>(</span><span style="color:#b8bb26;">&quot;Err parsing environment&quot;</span><span>);
+</span><span>}
+</span></code></pre>
+<h3 id="2-the-build-process">2. The Build Process <a class="zola-anchor" href="#2-the-build-process" aria-label="Anchor link for: 2-the-build-process"></a>
+</h3>
+<p>Building won't require any special <code>Cargo.toml</code> options, but it will require the help of the <a rel="nofollow" href="https://github.com/messense/rust-musl-cross">rust-musl-cross</a> base Docker Image for compiling a binary that can run on the ARMv7 Architecture of the Pi. The general approach I take here is:</p>
+<ol>
+<li>Use a Multi-stage build</li>
+<li>Cache dependencies in the first step, so they only re-download on change</li>
+<li>Compile the application in the next step, using whatever build dependencies I need (eg <code>rust-musl-cross</code>, or maybe your fav <code>jdk</code> if that's your poison <img class="emote" src="/img/shrug-dog.png"/>)</li>
+<li>Copy the final artifact into an optimized run container (eg <code>Alpine Linux</code>, or your fav <code>jre</code> if you're <em>still</em> sipping that <img class="emote" src="/img/shrug-dog.png"/>)</li>
+</ol>
+<pre data-lang="Dockerfile" style="background-color:#282828;color:#fdf4c1aa;" class="language-Dockerfile "><code class="language-Dockerfile" data-lang="Dockerfile"><span style="font-style:italic;color:#928374;">####################
+</span><span style="font-style:italic;color:#928374;"># 0. Download dependencies (this step gets skipped on subsequent builds thanks to Caching!)
+</span><span style="font-style:italic;color:#928374;">####################
+</span><span style="color:#fa5c4b;">FROM</span><span> messense/rust-musl-cross:</span><span style="color:#8ec07c;">armv7-musleabihf </span><span style="color:#fa5c4b;">as </span><span style="color:#fdf4c1;">builder
+</span><span style="color:#fa5c4b;">RUN </span><span>USER=root cargo new --bin cache_build
+</span><span style="color:#fa5c4b;">WORKDIR </span><span>./cache_build
+</span><span style="color:#fa5c4b;">COPY</span><span> ./Cargo.toml ./Cargo.toml
+</span><span style="color:#fa5c4b;">COPY</span><span> ./Cargo.lock ./Cargo.lock
+</span><span style="color:#fa5c4b;">RUN </span><span>cargo build --target=armv7-unknown-linux-musleabihf --release
+</span><span style="color:#fa5c4b;">RUN </span><span>rm src/*.rs
+</span><span>
+</span><span style="font-style:italic;color:#928374;">####################
+</span><span style="font-style:italic;color:#928374;"># 1. Build
+</span><span style="font-style:italic;color:#928374;">####################
+</span><span style="color:#fa5c4b;">ADD </span><span>./src ./src
+</span><span style="color:#fa5c4b;">ADD </span><span>*.env ./
+</span><span style="color:#fa5c4b;">RUN </span><span>rm target/armv7-unknown-linux-musleabihf/release/deps/disbot*
+</span><span style="color:#fa5c4b;">RUN </span><span>cargo build ---target=armv7-unknown-linux-musleabihf --release
+</span><span>
+</span><span style="font-style:italic;color:#928374;">###################
+</span><span style="font-style:italic;color:#928374;"># 2. Run
+</span><span style="font-style:italic;color:#928374;">###################
+</span><span style="color:#fa5c4b;">FROM</span><span> alpine:</span><span style="color:#8ec07c;">latest
+</span><span style="color:#fa5c4b;">COPY</span><span> --from=</span><span style="color:#fdf4c1;">builder</span><span> /home/rust/src/cache_build/target/armv7-unknown-linux-musleabihf/release/disbot /app
+</span><span style="color:#fa5c4b;">COPY</span><span> --from=</span><span style="color:#fdf4c1;">builder</span><span> /home/rust/src/cache_build/prod.env /prod.env
+</span><span style="color:#fe8019;">ENTRYPOINT </span><span>[</span><span style="color:#b8bb26;">&quot;/app&quot;</span><span>]
+</span></code></pre>
+<h3 id="3-the-deploy-process">3. The Deploy Process <a class="zola-anchor" href="#3-the-deploy-process" aria-label="Anchor link for: 3-the-deploy-process"></a>
+</h3>
+<p>The Shiba (<img class="emote" src="/img/shrug-dog.png"/>) may not Shruggeth (<img class="emote" src="/img/shrug-dog.png"/>) without a Deployment. <a rel="nofollow" href="https://docs.docker.com/compose/">Docker Compose</a> is relatively straight forward, the only special piece of the puzzle is the restart policy: I wanted the bot to restart should the container crash (for whatever reason <img class="emote" src="/img/shrug-dog.png"/>).</p>
+<pre data-lang="yaml" style="background-color:#282828;color:#fdf4c1aa;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="font-weight:bold;color:#8ec07c;">version</span><span>: </span><span style="color:#b8bb26;">&quot;3.8&quot;
+</span><span style="font-weight:bold;color:#8ec07c;">services</span><span>:
+</span><span>  </span><span style="font-weight:bold;color:#8ec07c;">disbot</span><span>:
+</span><span>    </span><span style="font-weight:bold;color:#8ec07c;">container_name</span><span>: </span><span style="color:#b8bb26;">disbot
+</span><span>    </span><span style="font-weight:bold;color:#8ec07c;">build</span><span>:
+</span><span>      </span><span style="font-weight:bold;color:#8ec07c;">context</span><span>: </span><span style="color:#d3869b;">.
+</span><span>      </span><span style="font-weight:bold;color:#8ec07c;">dockerfile</span><span>: </span><span style="color:#b8bb26;">./docker/disbot/Dockerfile
+</span><span>    </span><span style="font-weight:bold;color:#8ec07c;">image</span><span>: </span><span style="color:#b8bb26;">disbot:latest
+</span><span>    </span><span style="font-weight:bold;color:#8ec07c;">deploy</span><span>:
+</span><span>      </span><span style="font-weight:bold;color:#8ec07c;">restart_policy</span><span>:
+</span><span>        </span><span style="font-weight:bold;color:#8ec07c;">condition</span><span>: </span><span style="color:#b8bb26;">on-failure
+</span></code></pre>
+<p>The only thing left to do is getting the image itself to the Pi. I'm not a fan of developing <em>on the Pi</em>, nor publishing images to some Docker Repository. Instead, I'll just <code>tar</code> the image and throw it onto the Pi manually. The only requirement is ssh access to the Pi locally -- something I've already done in my aforementioned setup <img class="emote" src="/img/shrug-dog.png"/>. Using this, Docker-Compose will upgrade the running instances to new image versions as they get deployed</p>
+<pre data-lang="sh" style="background-color:#282828;color:#fdf4c1aa;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#fdf4c1;">docker-compose build disbot
+</span><span style="color:#fdf4c1;">docker save -o disbot.tar disbot:latest
+</span><span style="color:#fdf4c1;">ssh $USER@raspberrypi </span><span style="color:#b8bb26;">&#39;mkdir -p ~/deploy&#39;
+</span><span style="color:#fdf4c1;">scp disbot.tar $USER@raspberrypi:~/deploy/
+</span><span style="color:#fdf4c1;">scp docker-compose.yaml $USER@raspberrypi:~/deploy/
+</span><span style="color:#fdf4c1;">scp prod.env $USER@raspberrypi:~/deploy/
+</span><span style="color:#fdf4c1;">rm disbot.tar
+</span><span style="color:#fdf4c1;">ssh $USER@raspberrypi </span><span style="color:#b8bb26;">&#39;cd ~/deploy &amp;&amp; docker load -i disbot.tar &amp;&amp; docker-compose up -d &amp;&amp; docker image prune -fa&#39;
+</span></code></pre>
+<p>(To prevent old images cluttering the Pi's disk, <code>docker image prune -fa</code> can help)</p>
+<h2 id="the-entrypoint">The Entrypoint <a class="zola-anchor" href="#the-entrypoint" aria-label="Anchor link for: the-entrypoint"></a>
+</h2>
+<p>Serenity is a pretty slick library, making it easy to register our bot with the right set of intentions. The actual <code>main.rs</code> isn't much longer than what we got a glimpse of earlier. After the config is parsed, we need a <code>Client</code> (stating what we intend to do) and with an <code>event_handler</code> (to actually execute). The most notable addition is registering an Async framework - in this case <a rel="nofollow" href="https://github.com/tokio-rs/tokio">Tokio</a>.</p>
+<pre data-lang="rust" style="background-color:#282828;color:#fdf4c1aa;" class="language-rust "><code class="language-rust" data-lang="rust"><span>#[</span><span style="color:#fdf4c1;">tokio</span><span>::</span><span style="color:#fdf4c1;">main</span><span>]
+</span><span>async </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">main</span><span>() {
+</span><span>  </span><span style="font-style:italic;color:#928374;">// ... Config/Env Parsing
+</span><span>  </span><span style="color:#fa5c4b;">let mut</span><span> client </span><span style="color:#fe8019;">= </span><span>Client::builder(</span><span style="color:#fe8019;">&amp;</span><span>config.</span><span style="color:#fabd2f;">get_api_key</span><span>())
+</span><span>    .</span><span style="color:#fabd2f;">intents</span><span>(
+</span><span>      GatewayIntents::</span><span style="color:#fdf4c1;">GUILDS
+</span><span>        </span><span style="color:#fe8019;">| </span><span>GatewayIntents::</span><span style="color:#fdf4c1;">GUILD_EMOJIS
+</span><span>        </span><span style="color:#fe8019;">| </span><span>GatewayIntents::</span><span style="color:#fdf4c1;">GUILD_MESSAGES
+</span><span>        </span><span style="color:#fe8019;">| </span><span>GatewayIntents::</span><span style="color:#fdf4c1;">GUILD_MESSAGE_REACTIONS</span><span>,
+</span><span>    )
+</span><span>    .</span><span style="color:#fabd2f;">event_handler</span><span>(Handler::new(config.</span><span style="color:#fabd2f;">clone</span><span>()))
+</span><span>    .await
+</span><span>    .</span><span style="color:#fabd2f;">expect</span><span>(</span><span style="color:#b8bb26;">&quot;Err creating client&quot;</span><span>);
+</span><span>
+</span><span>  </span><span style="color:#fa5c4b;">if let </span><span style="color:#fabd2f;">Err</span><span>(why) </span><span style="color:#fe8019;">=</span><span> client.</span><span style="color:#fabd2f;">start</span><span>().await {
+</span><span>    </span><span style="color:#fabd2f;">println!</span><span>(</span><span style="color:#b8bb26;">&quot;Client error: </span><span style="color:#fdf4c1;">{:?}</span><span style="color:#b8bb26;">&quot;</span><span>, why);
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>The <strong>real crux of the problem</strong>, then, lies in two implementation details:</p>
+<ul>
+<li>Pulling the custom emoji we want to react with and caching it (so we don't need an API fetch every time the bot triggers)</li>
+<li>Setting up the event handler to listen for the right time to act.</li>
+</ul>
+<h2 id="creating-an-emoji-cache">Creating an Emoji Cache <a class="zola-anchor" href="#creating-an-emoji-cache" aria-label="Anchor link for: creating-an-emoji-cache"></a>
+</h2>
+<p>Since this is pretty well defined unit of behavior, I decided to break out a module for it: <code>emoji.rs</code> which will house our <code>EmojiLookup</code> struct. In here:</p>
+<ul>
+<li>I want to fetch this cache easily, from anywhere</li>
+<li>I want this cache to be thread-safe</li>
+<li>And I want the cache capable of populating itself</li>
+</ul>
+<p>With these needs in mind, I turned to <code>lazy_static!</code> to help setup that global instance. This little macro makes it simple to create static references, which can be made thread safe using the proper synchronization primitives (eg <code>RwLock</code>, etc). Rather than store an entire <code>EmojiLookup</code> struct, though, I decided to only store the configuration values needed to rebuild the struct. Internally, <code>Serenity-rs</code> handle caching of API calls so we don't actually need to re-cache these values ourselves (how nifty), so I'm dancing around the requirement a little (<em>oh well</em> <img class="emote" src="/img/shrug-dog.png"/>). </p>
+<pre data-lang="rust" style="background-color:#282828;color:#fdf4c1aa;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#fabd2f;">lazy_static! </span><span>{
+</span><span>  </span><span style="color:#fa5c4b;">static ref </span><span style="color:#fdf4c1;">EMOJI_TO_FIND</span><span>: RwLock&lt;</span><span style="color:#fabd2f;">String</span><span>&gt; </span><span style="color:#fe8019;">= </span><span>RwLock::new(</span><span style="color:#b8bb26;">&quot;&quot;</span><span>.</span><span style="color:#fabd2f;">to_string</span><span>());
+</span><span>}
+</span><span>
+</span><span style="color:#fa5c4b;">pub struct </span><span style="color:#8ec07c;">EmojiLookup </span><span>{}
+</span><span>
+</span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">configure</span><span>(</span><span style="color:#fdf4c1;">config</span><span>: </span><span style="color:#fe8019;">&amp;</span><span>Config) -&gt; </span><span style="color:#fabd2f;">Result</span><span>&lt;(), </span><span style="color:#fabd2f;">String</span><span>&gt; {
+</span><span>  </span><span style="color:#fa5c4b;">let mut</span><span> inst </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1;">INSTANCE
+</span><span>    .</span><span style="color:#fabd2f;">try_write</span><span>()
+</span><span>    .</span><span style="color:#fabd2f;">map_err</span><span>(|_| </span><span style="color:#b8bb26;">&quot;Failed to get lock on emoji instance&quot;</span><span>)</span><span style="color:#fe8019;">?</span><span>;
+</span><span>  </span><span style="color:#fe8019;">*</span><span>inst </span><span style="color:#fe8019;">=</span><span> config.</span><span style="color:#fabd2f;">get_emote_name</span><span>().</span><span style="color:#fabd2f;">to_string</span><span>();
+</span><span>  </span><span style="color:#fabd2f;">Ok</span><span>(())
+</span><span>}
+</span><span>
+</span><span style="color:#fa5c4b;">impl </span><span style="color:#8ec07c;">EmojiLookup </span><span>{
+</span><span>  </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">inst</span><span>() -&gt; </span><span style="color:#fa5c4b;">Self </span><span>{
+</span><span>    EmojiLookup {}
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>With the above, we can now setup the <code>EmojiLookup</code> once on application start and obtain a usable handle to it at any point we desire.</p>
+<pre data-lang="rust" style="background-color:#282828;color:#fdf4c1aa;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">mod </span><span style="color:#8ec07c;">emoji</span><span>;
+</span><span>
+</span><span>async </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">main</span><span>() {
+</span><span>  </span><span style="font-style:italic;color:#928374;">// ... config and env parsing
+</span><span>  emoji::configure(</span><span style="color:#fe8019;">&amp;</span><span>config).</span><span style="color:#fabd2f;">expect</span><span>(</span><span style="color:#b8bb26;">&quot;Failed to setup emoji lookup&quot;</span><span>);
+</span><span>  </span><span style="font-style:italic;color:#928374;">// ... client setup
+</span><span>}
+</span></code></pre>
+<p>When it comes to actually finding the emoji itself, we'll just do a simple search over the <code>Guild</code>'s stored emotes (noting that this only works for custom emojis -- baked in emotes you'll just need to use the hardcoded unicode representation of them <img class="emote" src="/img/shrug-dog.png"/>). </p>
+<pre data-lang="rust" style="background-color:#282828;color:#fdf4c1aa;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">impl </span><span style="color:#8ec07c;">EmojiLookup </span><span>{
+</span><span>  </span><span style="color:#fa5c4b;">pub</span><span> async </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">get</span><span>(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1;">self</span><span>, </span><span style="color:#fdf4c1;">guild_id</span><span>: GuildId, </span><span style="color:#fdf4c1;">cache</span><span>: </span><span style="color:#fe8019;">&amp;</span><span>Cache) -&gt; </span><span style="color:#fabd2f;">Result</span><span>&lt;Emoji, </span><span style="color:#fabd2f;">String</span><span>&gt; {
+</span><span>    </span><span style="font-style:italic;color:#928374;">// Pull the emoji from the guild attached to the message
+</span><span>    </span><span style="color:#fa5c4b;">let</span><span> maybe_emoji </span><span style="color:#fe8019;">=</span><span> cache
+</span><span>      .</span><span style="color:#fabd2f;">guild_field</span><span>(guild_id, |</span><span style="color:#fdf4c1;">guild</span><span>| guild.emojis.</span><span style="color:#fabd2f;">clone</span><span>())
+</span><span>      .await
+</span><span>      .</span><span style="color:#fabd2f;">ok_or</span><span>(</span><span style="color:#b8bb26;">&quot;Failed to pull emojis for Guild&quot;</span><span>.</span><span style="color:#fabd2f;">to_string</span><span>())</span><span style="color:#fe8019;">?</span><span>;
+</span><span>
+</span><span>    </span><span style="font-style:italic;color:#928374;">// Obtain a read lock and find the emoji of matching name
+</span><span>    </span><span style="color:#fa5c4b;">let</span><span> emoji </span><span style="color:#fe8019;">= </span><span style="color:#fa5c4b;">match </span><span style="color:#fdf4c1;">INSTANCE</span><span>.</span><span style="color:#fabd2f;">try_read</span><span>() {
+</span><span>      </span><span style="color:#fabd2f;">Ok</span><span>(e) </span><span style="color:#fe8019;">=&gt;</span><span> maybe_emoji
+</span><span>        .</span><span style="color:#fabd2f;">iter</span><span>()
+</span><span>        .</span><span style="color:#fabd2f;">find_map</span><span>(
+</span><span>          |(_, </span><span style="color:#fdf4c1;">emoji</span><span>)| {
+</span><span>            </span><span style="color:#fa5c4b;">if</span><span> emoji.name </span><span style="color:#fe8019;">== *</span><span>e {
+</span><span>              </span><span style="color:#fabd2f;">Some</span><span>(emoji)
+</span><span>            } </span><span style="color:#fa5c4b;">else </span><span>{
+</span><span>              </span><span style="color:#fabd2f;">None
+</span><span>            }
+</span><span>          },
+</span><span>        )
+</span><span>        .</span><span style="color:#fabd2f;">ok_or</span><span>(</span><span style="color:#b8bb26;">&quot;Server does not have expected Emoji&quot;</span><span>.</span><span style="color:#fabd2f;">to_string</span><span>())</span><span style="color:#fe8019;">?</span><span>,
+</span><span>      </span><span style="color:#fabd2f;">Err</span><span>(</span><span style="color:#fe8019;">_</span><span>) </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fa5c4b;">return </span><span style="color:#fabd2f;">Err</span><span>(</span><span style="color:#b8bb26;">&quot;Failed to get read on Emoji&quot;</span><span>.</span><span style="color:#fabd2f;">to_string</span><span>()),
+</span><span>    };
+</span><span>    </span><span style="color:#fabd2f;">Ok</span><span>(emoji.</span><span style="color:#fabd2f;">clone</span><span>())
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>At last, we're finally able to enact the full wrath of the <em>shrug</em>! <img class="emote" src="/img/shrug-dog.png"/><img class="emote jumbo" src="/img/shrug-dog.png"/><img class="emote" src="/img/shrug-dog.png"/></p>
+<h2 id="defining-an-event-handler">Defining an Event Handler <a class="zola-anchor" href="#defining-an-event-handler" aria-label="Anchor link for: defining-an-event-handler"></a>
+</h2>
+<p>As another unit of logic, I broke this into a <code>Handler</code> struct inside <code>handler.rs</code>. For this, the only special piece is needing to satisfy the Trait <code>EventHandler</code>, which has a few &quot;lifecycle&quot; methods the bot can tie into. In this case, we only care to implement the <code>message</code> function, which is invoked when a message is sent in the Guild.</p>
+<pre data-lang="rust" style="background-color:#282828;color:#fdf4c1aa;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">pub struct </span><span style="color:#8ec07c;">Handler </span><span>{
+</span><span>  </span><span style="color:#fdf4c1;">config</span><span>: Config
+</span><span>}
+</span><span>
+</span><span>#[</span><span style="color:#fdf4c1;">async_trait</span><span>]
+</span><span style="color:#fa5c4b;">impl </span><span>EventHandler </span><span style="color:#fa5c4b;">for </span><span style="color:#8ec07c;">Handler </span><span>{
+</span><span>  async </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">message</span><span>(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1;">self</span><span>, </span><span style="color:#fdf4c1;">ctx</span><span>: Context, </span><span style="color:#fdf4c1;">msg</span><span>: Message) {
+</span><span>    </span><span style="font-style:italic;color:#928374;">// TODO Enact your shrugging vengeance
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>The general flow looks like this:</p>
+<ul>
+<li>Don't react if the message comes from yourself (otherwise we get all kinds of odd infinite loop-y behavior)</li>
+</ul>
+<pre data-lang="rust" style="background-color:#282828;color:#fdf4c1aa;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">if</span><span> msg.</span><span style="color:#fabd2f;">is_own</span><span>(</span><span style="color:#fe8019;">&amp;</span><span>ctx.cache).await {      
+</span><span>  </span><span style="color:#fa5c4b;">return</span><span>;
+</span><span>}
+</span></code></pre>
+<ul>
+<li>See if the message has any mentions of a configured user</li>
+</ul>
+<pre data-lang="rust" style="background-color:#282828;color:#fdf4c1aa;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">let</span><span> mentions_user </span><span style="color:#fe8019;">=</span><span> msg.mentions.</span><span style="color:#fabd2f;">iter</span><span>().</span><span style="color:#fabd2f;">find</span><span>(|</span><span style="color:#fdf4c1;">user</span><span>| {
+</span><span>  </span><span style="color:#fdf4c1;">self
+</span><span>    .config
+</span><span>    .</span><span style="color:#fabd2f;">get_emote_users</span><span>()
+</span><span>    .</span><span style="color:#fabd2f;">iter</span><span>()
+</span><span>    .</span><span style="color:#fabd2f;">any</span><span>(|</span><span style="color:#fdf4c1;">cname</span><span>| </span><span style="color:#fe8019;">*</span><span>cname.</span><span style="color:#fabd2f;">to_lowercase</span><span>() </span><span style="color:#fe8019;">==</span><span> user.name.</span><span style="color:#fabd2f;">to_lowercase</span><span>())
+</span><span>});
+</span><span style="color:#fa5c4b;">if</span><span> mentions_user.</span><span style="color:#fabd2f;">is_none</span><span>() {
+</span><span>  </span><span style="color:#fa5c4b;">return</span><span>;
+</span><span>}
+</span></code></pre>
+<ul>
+<li>Fetch the emoji from our <code>EmojiLookup</code></li>
+</ul>
+<pre data-lang="rust" style="background-color:#282828;color:#fdf4c1aa;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">let</span><span> guild_id </span><span style="color:#fe8019;">= </span><span style="color:#fa5c4b;">match</span><span> msg.guild_id {
+</span><span>  </span><span style="color:#fabd2f;">Some</span><span>(id) </span><span style="color:#fe8019;">=&gt;</span><span> id,
+</span><span>  </span><span style="color:#fabd2f;">None </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fa5c4b;">return</span><span>,
+</span><span>};
+</span><span style="color:#fa5c4b;">let</span><span> emoji </span><span style="color:#fe8019;">= </span><span>EmojiLookup::inst().</span><span style="color:#fabd2f;">get</span><span>(guild_id, </span><span style="color:#fe8019;">&amp;</span><span>ctx.cache).await;
+</span></code></pre>
+<ul>
+<li>React to the message &amp; Reply with your distaste <img class="emote" src="/img/shrug-dog.png"/></li>
+</ul>
+<pre data-lang="rust" style="background-color:#282828;color:#fdf4c1aa;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">let</span><span> react </span><span style="color:#fe8019;">=</span><span> msg.</span><span style="color:#fabd2f;">react</span><span>(
+</span><span>  </span><span style="color:#fe8019;">&amp;</span><span>ctx.http,
+</span><span>  ReactionType::Custom {
+</span><span>    animated: emoji.animated,
+</span><span>    id: emoji.id,
+</span><span>    name: </span><span style="color:#fabd2f;">Some</span><span>(emoji.name.</span><span style="color:#fabd2f;">to_string</span><span>()),
+</span><span>  },
+</span><span>);
+</span><span style="color:#fa5c4b;">let</span><span> message </span><span style="color:#fe8019;">=</span><span> msg.channel_id.</span><span style="color:#fabd2f;">say</span><span>(</span><span style="color:#fe8019;">&amp;</span><span>ctx.http, </span><span style="color:#fabd2f;">format!</span><span>(</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span>, emoji));
+</span><span>tokio::try_join</span><span style="color:#fe8019;">!</span><span>(react, message)
+</span><span>  .</span><span style="color:#fabd2f;">map</span><span>(|_| ())
+</span><span>  .</span><span style="color:#fabd2f;">map_err</span><span>(|_| </span><span style="color:#b8bb26;">&quot;Failed to react/Send&quot;</span><span>.</span><span style="color:#fabd2f;">to_string</span><span>())
+</span></code></pre>
+<p>Which in sum is <a rel="nofollow" href="https://github.com/dfontana/disbot/blob/master/src/cmd/shrug.rs">captured here</a> (structured slightly differently, but you'll get the point).</p>
+<h2 id="unleash-the-shiba">Unleash the Shiba <img class="emote" src="/img/shrug-dog.png"/> <a class="zola-anchor" href="#unleash-the-shiba" aria-label="Anchor link for: unleash-the-shiba"></a>
+</h2>
+<p><img src="/img/shiba-has-shrugged.png" alt="Shruggin' Shiba" /></p>
+<p>... Well, it is mostly useless <img class="emote" src="/img/shrug-dog.png"/>. If anything, hopefully this post has laid the groundwork for you to try out your own silly bot!</p>
+
+    </div>
+  </article>
+  
+  
+  <script 
+    src="https://utteranc.es/client.js"
+    repo="dfontana/dfontana.github.io"
+    issue-term="pathname"
+    label="comments"
+    theme="github-light"
+    crossorigin="anonymous"
+    async
+  ></script>
+  
+
+  
+    
+  <footer>
+    <hr>
+    <hr>
+    <section class="author">
+    <div class="authorimage" style="background: url(&#x2F;img&#x2F;profile.png)"></div>
+    <h4>Dylan Fontana</h4>
+    
+        <p class="bio">Explore, learn, and pursue - three of my favorite things.</p>
+    
+    
+    <p class="meta">
+        <i class="fa fa-fw fa-map-marker"></i> America&#x2F;Boston
+    </p>
+    
+    </section>
+    </footer>
+
+  
+
+  </body>
+</html>

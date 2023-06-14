@@ -1,0 +1,106 @@
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>nill.ink</title>
+    <link rel="stylesheet" href="https://nill.ink/theme.css">
+  </head>
+  <body>
+    
+  
+    
+        
+        <header>
+          <nav class="navbox" itemscope itemtype="https://schema.org/SiteNavigationElement">
+            <a class="nav-title" href="https:&#x2F;&#x2F;nill.ink"><div class="nav-image-box"><div class="nav-image" style="background: url(/img/icon-bronze.png)"></div></div>nill<span class="title-ink">&#46;ink</span><span class="title-social" hidden>oss</span></a>&nbsp;
+            
+            <span class="navbox-spacer" />
+            <a itemprop="url"
+                class=""
+                href="https:&#x2F;&#x2F;nill.ink&#x2F;about">
+                <span itemprop="name">About</span></a>&nbsp;&nbsp;
+            
+            <span class="navbox-spacer" />
+            <a itemprop="url"
+                class=""
+                href="https:&#x2F;&#x2F;nill.ink&#x2F;tags">
+                <span itemprop="name">Tags</span></a>&nbsp;&nbsp;
+            
+          </nav>
+          <hr/>
+        </header>
+        
+      
+  
+
+  <article itemscope itemtype="https://schema.org/BlogPosting">
+    <header>
+        <h1 itemprop="headline">Regex&#x27;s: A quick little cheatsheet</h1>
+        
+        
+        <p>
+          2018-12-17&nbsp;
+  
+    |&nbsp;
+    
+      <a href="https://nill.ink/tags/cheatsheet/"># cheatsheet</a>
+      
+    
+  
+
+        </p>
+        
+    </header>
+    <div class="articlebody" itemprop="articleBody">
+      <p>It's not frequent I come across a need for a regex  but when I do, I often find myself forgetting what specific parts may mean. Here's a little cheatsheet<span id="continue-reading"></span> I made myself ~ perhaps there's some value for you.</p>
+<table><thead><tr><th style="text-align: center">Symbol</th><th style="text-align: center">Name</th><th style="text-align: left">Meaning</th></tr></thead><tbody>
+<tr><td style="text-align: center"><code>.</code></td><td style="text-align: center">Wildcard</td><td style="text-align: left">Anything can take this guy's place. You'll need to escape (<code>\.</code>) it for periods.</td></tr>
+<tr><td style="text-align: center"><code>\d</code></td><td style="text-align: center">Digit</td><td style="text-align: left">Will search for any digit. It's sister, <code>\D</code> is for any non-digit. Ex: <code>\d\d\d</code> looks for 3 digits.</td></tr>
+<tr><td style="text-align: center"><code>[ ]</code></td><td style="text-align: center">'Only'</td><td style="text-align: left">Anything inside braces will search through things only containing characters inside. If you were to negate this <code>^</code>, you'll ignore those characters. Ex: <code>[^abc]</code> Looks for 3 characters not starting with a, b, or c</td></tr>
+<tr><td style="text-align: center"><code>{ }</code></td><td style="text-align: center">Repeating</td><td style="text-align: left">Will look for the proceeding group for the number of times inside. <code>[wxy]{3}</code></td></tr>
+<tr><td style="text-align: center"><code>*</code></td><td style="text-align: center">Any Number</td><td style="text-align: left">Looks for any number of the proceeding group</td></tr>
+<tr><td style="text-align: center"><code>+</code></td><td style="text-align: center">At least</td><td style="text-align: left">Looks for at least one of the proceeding group</td></tr>
+<tr><td style="text-align: center"><code>?</code></td><td style="text-align: center">Optional</td><td style="text-align: left">Will treat the prior group as an optional match. <code>ab?c</code> will match <code>abc</code> or <code>ac</code></td></tr>
+<tr><td style="text-align: center"><code>\s</code></td><td style="text-align: center">Whitespace</td><td style="text-align: left">Space, newline, tab, carriage return</td></tr>
+<tr><td style="text-align: center"><code>^ $</code></td><td style="text-align: center">'Block'</td><td style="text-align: left">Using these anchors, we can prevent getting matches encased inside words. ex: <code>^Mission: successful$</code></td></tr>
+<tr><td style="text-align: center"><code>( )</code></td><td style="text-align: center">Capture</td><td style="text-align: left">If you want to extract a specific piece of information about your matches, you'll wrap it with parentheses. You can nest these as much as you'd like, spitting out each group.</td></tr>
+<tr><td style="text-align: center"><code>pipe</code></td><td style="text-align: center">OR</td><td style="text-align: left">yep. Markdown tables are fun. The OR (same representation as bitwise OR) applies.</td></tr>
+</tbody></table>
+
+    </div>
+  </article>
+  
+  
+  <script 
+    src="https://utteranc.es/client.js"
+    repo="dfontana/dfontana.github.io"
+    issue-term="pathname"
+    label="comments"
+    theme="github-light"
+    crossorigin="anonymous"
+    async
+  ></script>
+  
+
+  
+    
+  <footer>
+    <hr>
+    <hr>
+    <section class="author">
+    <div class="authorimage" style="background: url(&#x2F;img&#x2F;profile.png)"></div>
+    <h4>Dylan Fontana</h4>
+    
+        <p class="bio">Explore, learn, and pursue - three of my favorite things.</p>
+    
+    
+    <p class="meta">
+        <i class="fa fa-fw fa-map-marker"></i> America&#x2F;Boston
+    </p>
+    
+    </section>
+    </footer>
+
+  
+
+  </body>
+</html>
