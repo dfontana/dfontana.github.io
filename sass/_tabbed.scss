@@ -31,6 +31,7 @@
 .md-fenced-code-tabs input:checked + label {
 	color: #03a9f4;
 	border-bottom: 2px solid #03a9f4;
+	background: rgba(0,0,0,.1);
 }
 
 .md-fenced-code-tabs .code-tabpanel {

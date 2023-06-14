@@ -11,8 +11,9 @@
         {% if config.extra.menu %}
         <header>
           <nav class="navbox" itemscope itemtype="https://schema.org/SiteNavigationElement">
-            <a class="nav-title" href="{{config.base_url}}"><div class="nav-image-box"><div class="nav-image" style="background: url(/img/icon-bronze.png)"></div></div>nill<span class="title-ink">&#46;ink</span><span class="title-social">oss</span></a>&nbsp;
+            <a class="nav-title" href="{{config.base_url}}"><div class="nav-image-box"><div class="nav-image" style="background: url(/img/icon-bronze.png)"></div></div>nill<span class="title-ink">&#46;ink</span><span class="title-social" hidden>oss</span></a>&nbsp;
             {% for item in config.extra.menu %}
+            <span class="navbox-spacer" />
             <a itemprop="url"
                 class="{% if item.url | replace(from="$BASE_URL", to=config.base_url) == current_url %}active{% endif %}"
                 href="{{ item.url | safe | replace(from="$BASE_URL", to=config.base_url) }}">
