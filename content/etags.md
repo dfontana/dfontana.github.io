@@ -5,7 +5,8 @@ date = 2019-01-01
 tags = ["go", "etag", "http", "project"]
 +++
 
-What if there were no cookies? Be it paranoid users clearing their browsing data, increasingly stringent cookie policies, or lack of cookie persistence (see _WebView_) we could realistically find ourselves here. As a result, we'll need a new way to persist some data, one of which I'd like to demonstrate today: **ETags**.<!-- more -->
+What if there were no cookies? Be it paranoid users clearing their browsing data, increasingly stringent cookie policies, or lack of cookie persistence (see _WebView_) we could realistically find ourselves here. As a result, we'll need a new way to persist some data, one of which I'd like to demonstrate today: **ETags**.
+<!-- more -->
 
 When a server needs to keep some information client side, Cookies typically get leveraged to save that little snippet. Our data gets set in a Cookie, the lifetime of the Cookie is set, and the Cookie is persisted until our next encounter when the server needs it. On that next visit, we'd load up the cookie and continue; "Business As Usual." While this data shouldn't be considered _guaranteed_, developers could treat it as somewhat _reliable_ (present?) since the average user really doesn't touch their cookies. In other words, _"if the user has been to my site before, I probably still have my cookie data"_.
 

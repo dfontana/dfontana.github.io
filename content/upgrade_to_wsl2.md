@@ -5,7 +5,8 @@ date = 2020-03-29
 tags = ["terminal", "wsl2", "configuration"]
 +++
 
-WSL2 comes with a performance and feature perks over the old system, including choice of Linux flavor and a different virtualization strategy. If for no other reason, though, it was simply time for an upgrade.<!-- more --> Here's the shortnotes:
+WSL2 comes with a performance and feature perks over the old system, including choice of Linux flavor and a different virtualization strategy. If for no other reason, though, it was simply time for an upgrade.
+<!-- more --> 
 
 ## Get WSL2 Installed ##
 

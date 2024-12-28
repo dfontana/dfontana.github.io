@@ -5,7 +5,9 @@ date = 2018-12-17
 tags = ["raspberrypi", "configuration", "project"]
 +++
 
-This one is more or less straight to the point. We're going to setup a fresh raspberry pi in a headless state. It's fairly easy if you keep your wits about you.<!-- more --> Unfortunately you'll need either a keyboard/mouse + monitor or an ethernet connection to your device in order to get the wifi step of these instructions done.
+This one is more or less straight to the point. We're going to setup a fresh raspberry pi in a headless state. It's fairly easy if you keep your wits about you.
+<!-- more -->
+Unfortunately you'll need either a keyboard/mouse + monitor or an ethernet connection to your device in order to get the wifi step of these instructions done.
 
 ## Raspbian Lite & Wifi Connect
 

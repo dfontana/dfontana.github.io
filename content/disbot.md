@@ -5,7 +5,8 @@ date = 2021-03-26
 tags = ["rust", "discord", "bot", "project"]
 +++
 
-Quarantine has lead to some _oddities_ to pass the time, and this post is no different. I created a Discord Bot in Rust, hosted on my [Raspberry Pi](@/raspberry_pi.md). It's purpose? To __shrug__. This is the way {{em(id="shrug-dog")}}<!-- more -->
+Quarantine has lead to some _oddities_ to pass the time, and this post is no different. I created a Discord Bot in Rust, hosted on my [Raspberry Pi](@/raspberry_pi.md). It's purpose? To __shrug__. This is the way {{em(id="shrug-dog")}}
+<!-- more -->
 
 {{em(id="shrug-dog")}}{{em(id="shrug-dog")}} Warning - _this post is gonna get silly_ {{em(id="shrug-dog")}}{{em(id="shrug-dog")}}
 

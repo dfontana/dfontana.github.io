@@ -5,7 +5,8 @@ date = 2017-10-13
 tags = ["terminal", "zsh", "configuration"]
 +++
 
-Having not been satisfied with the autocompletion bash provides, and curious what alternative shells had to offer, I found ZSH.<!-- more --> In this guide, I'm going to walk you through how I setup ZSH on my Windows machine (inside WSL) - but the instructions compare similarly for my Mac.
+Having not been satisfied with the autocompletion bash provides, and curious what alternative shells had to offer, I found ZSH. In this guide, I'm going to walk you through how I setup ZSH on my Windows machine (inside WSL) - but the instructions compare similarly for my Mac. 
+<!-- more -->
 
 ## First Step, ZSH
 You'll want to boot up your terminal / WSL terminal and install the ZSH package. This is really simple:

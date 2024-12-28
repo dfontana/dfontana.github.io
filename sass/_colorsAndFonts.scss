@@ -4,9 +4,24 @@ $color-accent: #A6823F;
 $color-accent-em: #AC3B61;
 $color-link: #B7934E;
 $color-bg--light: #FEFFFF;
+$code-bg: #393939;
+$code-text: #D68686; 
 
-@mixin primaryText { color: $color-text; }
-@mixin primaryBg { background-color: $color-bg--light } // base 3
+$color-text-dk: $color-bg--light;
+$color-title-dk: $color-bg--light;
+$color-accent-dk: #C2A17E;
+$color-accent-em-dk: #E07996;
+$color-link-dk: #B7934E;
+$color-bg--dk: $color-title;
+$code-bg-dk: #393939;
+$code-text-dk: #D68686; 
+
+:root {
+  color-scheme: light dark;
+}
+
+@mixin primaryText { color: light-dark($color-text, $color-text-dk); }
+@mixin primaryBg { background-color: light-dark($color-bg--light, $color-bg--dk); }
 
 @font-face {
   font-family: "Isoevka";
@@ -32,13 +47,13 @@ $color-bg--light: #FEFFFF;
   }
 }
 @mixin codeFont { font-family: "Isoevka", monospace; font-size: 0.8rem;}
-@mixin codeInline {background-color: #393939; color: #d68686}
+@mixin codeInline {background-color: light-dark($code-bg, $code-bg-dk); color: light-dark($code-text, $code-text-dk);}
 
 // Hyper links
 a.nav-title {
   @include titleFont;
   font-size: 1.75rem;
-  color: $color-accent;
+  color: light-dark($color-accent, $color-accent-dk);
   overflow: clip;
   font-weight: bold;
   line-height: 1;
@@ -47,7 +62,7 @@ a.nav-title {
     position: relative;
     font-style: italic;
     font-weight: normal;
-    color: $color-bg--light;
+    color: light-dark($color-bg--light, $color-bg--dk);
     &:before {
       content: "";
       position: absolute;
@@ -55,7 +70,7 @@ a.nav-title {
       bottom: 0;
       left: 5px;
       right: -3px;   
-      background-color: $color-accent-em;
+      background-color: light-dark($color-accent-em, $color-accent-em-dk);
       transform: skew(-30deg);
       z-index: -1;
     }
@@ -64,22 +79,32 @@ a.nav-title {
   .title-social {
     font-weight: normal;
     opacity: 75%;
-  }  
+  }
 }
+
+.nav-dark-toggle > svg {
+  fill: light-dark($color-accent, $color-accent-dk);
+  &:hover {
+    fill: light-dark($color-accent-em-dk, $color-accent-em);
+  }
+}
+
 a {
-  color: $color-accent;
+  color: light-dark($color-accent, $color-accent-dk);
   transition-duration: 400ms;
 }
 a:hover:not(.zola-anchor) {
-  background-color: $color-accent-em;
-  color: $color-bg--light !important;
+  background-color: light-dark($color-accent-em, $color-accent-em-dk);
+  color: light-dark($color-bg--light, $color-bg--dk) !important;
+  border-radius: 2px;
 }
 a[itemprop="url"] {
-  color: $color-accent;
+  color: light-dark($color-accent, $color-accent-dk);
 }
 :target {
-  color: $color-bg--light;
-  background-image: linear-gradient(127deg, $color-accent, #00000000);
+  color: light-dark($color-bg--light, $color-bg--dk);
+  background-image: linear-gradient(127deg, light-dark($color-accent, $color-accent-dk) 30%, #00000000 90%);
+  border-radius: 2px;
 }
 
 body {
@@ -88,9 +113,9 @@ body {
   @include primaryBg;
   h1,h2,h3,h4,h5,h6 {
     @include titleFont;
-    color: $color-title;
+    color: light-dark($color-title, $color-title-dk);
     a {
-      color: $color-title;
+      color: light-dark($color-title, $color-title-dk);
     }
   }
   blockquote, em, strong {
@@ -110,7 +135,7 @@ body {
     background-color: unset;
   }
   strong, em {
-    color: $color-accent-em;
+    color: light-dark($color-accent-em, $color-accent-em-dk);
   }
   .pageDate {
     font-size: 0.75em;
@@ -119,7 +144,7 @@ body {
 }
 
 tbody tr:nth-child(2n+1) {
-  background-color: rgba($color-text, .1);
+  background-color: light-dark(rgba($color-text, .1), rgba($color-text-dk, .1));
 }
 
 section.author {
