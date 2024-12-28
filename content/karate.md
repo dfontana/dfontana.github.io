@@ -5,7 +5,8 @@ date = 2022-07-09
 tags = ["rust", "discord", "bot", "project"]
 +++
 
-[Karate](https://github.com/karatelabs/karate) is a framework run integration or contract tests, helping deliver code with confidence holistically.<!-- more -->
+[Karate](https://github.com/karatelabs/karate) is a framework run integration or contract tests, helping deliver code with confidence holistically.
+<!-- more -->
 
 (The code for this post can be found in [dfontana/karate-example](https://github.com/dfontana/karate-example))
 

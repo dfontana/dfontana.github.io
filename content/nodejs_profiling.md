@@ -5,7 +5,8 @@ date = 2017-10-13
 tags = ["js", "configuration", "environment"]
 +++
 
-Switching configuration between production and development can be tedious and error prone. Fed up with the constant back and forth, I searched for a better solution.<!-- more -->
+Switching configuration between production and development can be tedious and error prone. Fed up with the constant back and forth, I searched for a better solution.
+<!-- more -->
 
 ## Reading Environment Variables in Node
 An easy solution would be to simply pass environment variables when launching NodeJS, pulling the configuration from inside our files to the commandline during launch time. We can accomplish this like so:
