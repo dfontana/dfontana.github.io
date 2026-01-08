@@ -1,0 +1,46 @@
+#level-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  background-color: light-dark(rgba($color-text, .05), rgba($color-text-dk, .05));
+  border-radius: 8px;
+}
+
+#level-display {
+  .tilemap {
+    @include codeFont;
+    margin: 0;
+    padding: 1rem;
+    background-color: light-dark($code-bg, $code-bg-dk);
+    border-radius: 4px;
+    color: light-dark(#93C5FD, #60A5FA); // Floor tiles (blue-ish)
+  }
+}
+
+#controls {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem 0;
+
+  #regenerate-btn {
+    @include bodyFont;
+    font-size: 1rem;
+    padding: 0.25rem 0.75rem;
+    background-color: light-dark($color-accent, $color-accent-dk);
+    color: light-dark($color-bg--light, $color-bg--dk);
+    border: 2px solid light-dark($color-accent-dk, $color-accent);
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+
+    &:hover {
+      background-color: light-dark($color-accent-em, $color-accent-em-dk);
+      border-color: light-dark($color-accent-em, $color-accent-em-dk);
+    }
+
+    &:active {
+      box-shadow: 0 2px 4px light-dark(rgba($color-text, .15), rgba(0, 0, 0, .3));
+    }
+  }
+}
