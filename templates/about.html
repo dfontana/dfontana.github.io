@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} — {{ config.title }}{% endblock title %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ get_url(path="about.css", trailing_slash=false) | safe }}">
+{% endblock stylesheet %}
+
+{% block body %}
+<main class="about-main">
+  <h1 class="about-title">{{ page.title }}</h1>
+
+  <div class="about-layout">
+    <div class="about-left">
+      {{ page.content | safe }}
+    </div>
+
+    <div class="about-portrait">
+      <img src="{{ get_url(path="img/portrait.jpg", trailing_slash=false) | safe }}" alt="{{ config.extra.bio.author }}">
+    </div>
+  </div>
+</main>
+{% endblock body %}

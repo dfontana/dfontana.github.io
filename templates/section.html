@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% import "macros/index.html" as index_macros %}
+
+{% block title %}{{ config.title }}{% endblock title %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ get_url(path="section_and_pages.css", trailing_slash=false) | safe }}">
+{% endblock stylesheet %}
+
+{% block body %}
+{% block content %}
+  {% block header %}{% endblock header %}
+  <main>
+    {% for page in paginator.pages %}
+      {{ index_macros::page_preview(page=page) }}
+    {% endfor %}
+    <nav>
+      <p>
+        {% if paginator.previous %}
+          <a href="{{ paginator.previous }}">&laquo; Previous</a> |
+        {% endif %}
+        <span>Page {{ paginator.current_index }} of {{ paginator.number_pagers }}</span>
+        {% if paginator.next %}
+          | <a href="{{ paginator.next }}">Next &raquo;</a>
+        {% endif %}
+      </p>
+    </nav>
+  </main>
+{% endblock content %}
+{% endblock body %}

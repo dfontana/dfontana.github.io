@@ -1,0 +1,15 @@
+// Shared base imported by every page-level stylesheet.
+@import "fonts";
+@import "screenSizes";
+@import "colorsAndFonts";
+@import "anchor";
+@import "navigation";
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}

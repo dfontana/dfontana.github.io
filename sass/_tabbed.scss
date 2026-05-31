@@ -29,9 +29,9 @@
 }
 
 .md-fenced-code-tabs input:checked + label {
-	color: #03a9f4;
-	border-bottom: 2px solid #03a9f4;
-	background: rgba(0,0,0,.1);
+	color: light-dark($color-accent, $color-accent-dk);
+	border-bottom: 2px solid light-dark($color-accent, $color-accent-dk);
+	background: light-dark(rgba($color-accent, 0.1), rgba($color-accent-dk, 0.15));
 }
 
 .md-fenced-code-tabs .code-tabpanel {

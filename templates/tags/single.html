@@ -1,11 +1,13 @@
-{% extends "index.html" %}
+{% extends "section.html" %}
+{% import "macros/index.html" as index_macros %}
+
+{% block title %}{{ term.name }} — Tags — {{ config.title }}{% endblock title %}
 
 {% block content %}
-  {% block header %}
-    {{ super() }}
-  {% endblock header %}
-  <h1>{{ term.name }}</h1>
-  {% for page in term.pages %}
-    {{ index_macros::page_preview(page=page) }}
-  {% endfor %}
+  <main>
+    <h1>{{ term.name }}</h1>
+    {% for page in term.pages %}
+      {{ index_macros::page_preview(page=page) }}
+    {% endfor %}
+  </main>
 {% endblock content %}

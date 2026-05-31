@@ -1,16 +1,17 @@
-{% extends "index.html" %}
+{% extends "section.html" %}
+
+{% block title %}Tags — {{ config.title }}{% endblock title %}
 
 {% block content %}
-  {% block header %}
-    {{ super() }}
-  {% endblock header %}
-  <h1>Tags</h1>
-  {% if terms %}
-    <ul>
-      {% for term in terms %}
-        <li class="tag"><a href="{{ term.permalink | safe }}">{{ term.name }}</a> ({{ term.pages | length }})</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-  <hr>
+  <main>
+    <h1>Tags</h1>
+    {% if terms %}
+      <ul>
+        {% for term in terms %}
+          <li class="tag"><a href="{{ term.permalink | safe }}">{{ term.name }}</a> ({{ term.pages | length }})</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <hr>
+  </main>
 {% endblock content %}

@@ -1,0 +1,109 @@
+@import "theme";
+
+.about-main {
+  padding: 0 2rem 4rem;
+  @include md {
+    padding: 0 1rem 3rem;
+  }
+}
+
+.about-title {
+  margin-bottom: 2rem;
+}
+
+.about-layout {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+
+  @include md {
+    flex-direction: column;
+  }
+}
+
+.about-left {
+  flex: 1;
+  min-width: 0;
+
+  > :first-child { margin-top: 0; }
+
+  h2 {
+    margin-bottom: 1.5rem;
+    margin-top: 3rem;
+  }
+}
+
+.about-portrait {
+  flex: 0 0 clamp(300px, 38%, 515px);
+  position: sticky;
+  top: 2rem;
+
+  img {
+    width: 100%;
+    border-radius: 6px;
+    display: block;
+  }
+
+  @include md {
+    position: static;
+    flex: unset;
+    width: 85%;
+    align-self: center;
+    margin-top: 2rem;
+  }
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  column-gap: 1.5rem;
+
+  @include md {
+    grid-template-columns: 1fr;
+  }
+}
+
+.timeline-date {
+  color: light-dark($color-accent, $color-accent-dk);
+  font-size: 0.85rem;
+  text-align: right;
+  padding-top: 0.15rem;
+  line-height: 1.4;
+
+  @include md {
+    text-align: left;
+    font-weight: bold;
+    margin-bottom: 0.15rem;
+  }
+}
+
+.timeline-entry {
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px dotted light-dark(rgba($color-text, 0.2), rgba($color-text-dk, 0.2));
+
+  .timeline-row:last-child & {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
+.timeline-title {
+  font-family: 'Lora', serif;
+  font-weight: bold;
+  color: light-dark($color-title, $color-title-dk);
+  margin-bottom: 0.3rem;
+}
+
+.timeline-desc {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+  p { margin: 0; }
+}
