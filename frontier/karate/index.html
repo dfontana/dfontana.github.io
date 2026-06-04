@@ -1,0 +1,744 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>Integration Tests with Karate — nill.ink</title>
+    
+<link rel="stylesheet" href="https://nill.ink/section_and_pages.css">
+
+    <script>
+function get_opposite(current) {
+  switch (current) {
+    case 'light': return 'dark'
+    case 'dark': return 'light'
+    default:
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) { return 'light' } else { return 'dark'}
+  }
+}
+function toggle_dark() {
+  const root = document.documentElement;
+  let current = getComputedStyle(root).getPropertyValue('color-scheme').trim()
+  const next = get_opposite(current);
+  root.style.setProperty('color-scheme', next);
+  localStorage.setItem('color-scheme', next);
+}
+(function() {
+  const saved = localStorage.getItem('color-scheme');
+  if (saved) { document.documentElement.style.setProperty('color-scheme', saved); }
+})();
+</script>
+
+  </head>
+  <body>
+    <header>
+  <nav class="navbox" itemscope itemtype="http://schema.org/SiteNavigationElement">
+    <a class="nav-title" href="https:&#x2F;&#x2F;nill.ink"><div class="nav-image-box"><div class="nav-image" style="background-image: url(&#x2F;img&#x2F;icon-bronze.png)"></div></div>nill<span class="title-ink">&#46;ink</span><span class="title-social" hidden>oss</span></a>&nbsp;
+    <span class="navbox-spacer"></span>
+    
+    <a itemprop="url"
+        class=""
+        href="https:&#x2F;&#x2F;nill.ink&#x2F;frontier">
+        <span itemprop="name">Frontiers</span></a>&nbsp;&nbsp;
+    
+    <a itemprop="url"
+        class=""
+        href="https:&#x2F;&#x2F;nill.ink&#x2F;about">
+        <span itemprop="name">About</span></a>&nbsp;&nbsp;
+    
+    <button class="nav-dark-toggle" onclick="toggle_dark()"><svg viewBox="145 145 220 220" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"><path d="M248.082 263.932c-31.52-31.542-39.978-77.104-26.02-116.542-15.25 5.394-29.668 13.834-41.854 26.02-43.75 43.75-43.75 114.668 0 158.396 43.728 43.73 114.626 43.752 158.374 0 12.228-12.186 20.646-26.604 26.022-41.854-39.414 13.958-84.998 5.5-116.522-26.018"/></svg></button>
+  </nav>
+</header>
+
+    
+
+  <article itemscope itemtype="https://schema.org/BlogPosting">
+    <header>
+        <h1 itemprop="headline">Integration Tests with Karate</h1>
+        
+        
+        <p>
+          2022-07-09&nbsp;
+  
+    |&nbsp;
+    
+      <a href="https://nill.ink/tags/rust/"># rust</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/discord/"># discord</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/bot/"># bot</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/project/"># project</a>
+      
+        
+      
+    
+  
+
+        </p>
+        
+    </header>
+    <div class="articlebody" itemprop="articleBody">
+      <p><a rel="nofollow external" href="https://github.com/karatelabs/karate">Karate</a> is a framework run integration or contract tests, helping deliver code with confidence holistically.</p>
+<span id="continue-reading"></span>
+<p>(The code for this post can be found in <a rel="nofollow external" href="https://github.com/dfontana/karate-example">dfontana/karate-example</a>)</p>
+<h2 id="on-integration-tests">On Integration Tests <a class="zola-anchor" href="#on-integration-tests" aria-label="Anchor link for: on-integration-tests"></a>
+</h2>
+<p>In my experience, "integration" varies meaning based on context. For some it's about testing multiple systems against one another; others it's a single system from a black-box perspective; and to more it's something happening at CI time. For this post, we're testing a REST API without knowing it's implementation; something closer to Contract testing. We can spin up it's dependencies (and itself) in Docker, leveraging Karate to run contract tests against the API.</p>
+<p>Worth Noting: Alternatives exist, like <a rel="nofollow external" href="https://docs.pact.io/">Pact</a>, <a rel="nofollow external" href="https://github.com/nock/nock">Nock</a>, or <a rel="nofollow external" href="https://www.testcontainers.org/">TestContainers</a>. Frameworks like <a rel="nofollow external" href="https://docs.spring.io/spring-framework/docs/4.2.x/spring-framework-reference/html/integration-testing.html">Springboot</a> even have this built in.</p>
+<h2 id="the-problem">The Problem <a class="zola-anchor" href="#the-problem" aria-label="Anchor link for: the-problem"></a>
+</h2>
+<p>We have a REST API we want to verify a given input produces a given output. We have a couple dependencies: Another REST service, and a Cache.</p>
+<p>Unit tests will help a bit, but our service is simple so they don't say much. What we really want is confidence a given input to the REST Service produces an expected output, reguardless of how the implementation is done - should we change it in the future. These tests should be runnable "anywhere" without much care of the environment (eg local, in a CI runner, etc) so we can validate at different stages of the dev cycle.</p>
+<h2 id="a-solution">A Solution <a class="zola-anchor" href="#a-solution" aria-label="Anchor link for: a-solution"></a>
+</h2>
+<p>Docker + Karate.</p>
+<p>Docker provides us with a consistent runner across environments. Since our API is likely in a container, or easily containerizable, it's a good candidate for running both the service itself and it's dependencies. <a rel="nofollow external" href="https://docs.docker.com/compose/">Docker Compose</a> can describe our service and it's dependencies. A little helper script, <a rel="nofollow external" href="https://github.com/vishnubob/wait-for-it">wait-for-it.sh</a>, helps coordinate when to start running tests. Ephemeral docker containers will migrate our database with test data should we want to test a read-only API or prepare complex states.</p>
+<p><a rel="nofollow external" href="https://github.com/karatelabs/karate">Karate</a> is a <a rel="nofollow external" href="https://en.wikipedia.org/wiki/Herbie:_Fully_Loaded">herbie-fully-loaded</a> testing framework with no specific language or tool dependencies. While there's a lot we can actually do, we're only here for a few of it's features:</p>
+<ul>
+<li><a rel="nofollow external" href="https://github.com/karatelabs/karate/tree/v1.5.2.RC2/karate-netty">Karate-Netty</a> can mock HTTP dependencies from a specification file.</li>
+<li>It's can be ran from a standalone jar, no java project required</li>
+<li><a rel="nofollow external" href="https://github.com/karatelabs/karate/blob/v1.5.2.RC2/README.md#schema-validation">Schema Validation</a> to Contract test; while <a rel="nofollow external" href="https://github.com/karatelabs/karate/blob/v1.5.2.RC2/README.md#payload-assertions">Assertions</a>, <a rel="nofollow external" href="https://github.com/karatelabs/karate/blob/v1.5.2.RC2/README.md#data-driven-features">Data-Driven Features</a>, and <a rel="nofollow external" href="https://github.com/karatelabs/karate/blob/v1.5.2.RC2/README.md#data-driven-tests">Data-Driven Tests</a> will be very useful.</li>
+</ul>
+<h2 id="how">How <a class="zola-anchor" href="#how" aria-label="Anchor link for: how"></a>
+</h2>
+<p>Let's work through an example. This will be contrived, but detailed enough to get the key points across. We need to:</p>
+<ol>
+<li>Create a service, which use another API to "authorize" cache access</li>
+<li>Create a containerized test double for this API dependency</li>
+<li>Create a containerized cache instance</li>
+<li><em>Migrate</em> the cache instance, for any seed data needed</li>
+<li>Create a Karate test to verify the shape of our response</li>
+<li>Create an test-runner service, to start all dependencies and run our tests</li>
+</ol>
+<h3 id="the-service">The Service <a class="zola-anchor" href="#the-service" aria-label="Anchor link for: the-service"></a>
+</h3>
+<p>Will be a Rust HTTP service using <a rel="nofollow external" href="https://github.com/tokio-rs/axum">Axum</a>. We'll connect this to a Redis cache to pull some key out of, only after getting approval from some hypothetical dependency HTTP API. Like most services, we'll keep our configuration as something supplied to the service rather than hardcoded (in this case Environment Variables, but files, command like arguments, etc could also work).</p>
+<p>First, let's prep the project:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #D7827E;">cargo</span><span style="color: #EA9D34;"> init</span><span style="color: #286983;"> --bin</span><span style="color: #EA9D34;"> karate-example</span></span></code></pre>
+<p>Next we will setup the following files:</p>
+<div class="md-fenced-code-tabs" id="tab-tab-group-1"><input
+	name="tab-group-1"
+	type="radio"
+	id="tab-group-1-0_Cargo.toml"
+	checked="checked"
+	class="code-tab"
+	data-lang="Cargo.toml"
+	aria-controls="tab-group-1-0_Cargo.toml-panel"
+	aria-hidden="true"
+	role="tab"
+>
+<label
+	for="tab-group-1-0_Cargo.toml"
+	class="code-tab-label"
+	data-lang="Cargo.toml"
+	id="tab-group-1-0_Cargo.toml-label"
+>Cargo.toml</label>
+<div
+	class="code-tabpanel"
+	role="tabpanel"
+	data-lang="Cargo.toml"
+	id="tab-group-1-0_Cargo.toml-panel"
+	aria-labelledby="tab-group-1-0_Cargo.toml-label"
+> <pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="toml"><span class="giallo-l"><span style="color: #797593;">[</span><span style="color: #56949F;">dependencies</span><span style="color: #797593;">]</span></span>
+<span class="giallo-l"><span style="font-style: italic;">axum</span><span style="color: #797593;"> =</span><span style="color: #EA9D34;"> &quot;0.5.15&quot;</span></span>
+<span class="giallo-l"><span style="font-style: italic;">redis</span><span style="color: #797593;"> =</span><span style="color: #EA9D34;"> &quot;0.21.6&quot;</span></span>
+<span class="giallo-l"><span style="font-style: italic;">reqwest</span><span style="color: #797593;"> = {</span><span style="font-style: italic;"> version</span><span style="color: #797593;"> =</span><span style="color: #EA9D34;"> &quot;0.11&quot;</span><span style="color: #797593;">,</span><span style="font-style: italic;"> features</span><span style="color: #797593;"> = [</span><span style="color: #EA9D34;">&quot;json&quot;</span><span style="color: #797593;">] }</span></span>
+<span class="giallo-l"><span style="font-style: italic;">serde</span><span style="color: #797593;"> = {</span><span style="font-style: italic;"> version</span><span style="color: #797593;"> =</span><span style="color: #EA9D34;"> &quot;1.0&quot;</span><span style="color: #797593;">,</span><span style="font-style: italic;"> features</span><span style="color: #797593;"> = [</span><span style="color: #EA9D34;">&quot;derive&quot;</span><span style="color: #797593;">] }</span></span>
+<span class="giallo-l"><span style="font-style: italic;">serde_json</span><span style="color: #797593;"> =</span><span style="color: #EA9D34;"> &quot;1.0.68&quot;</span></span>
+<span class="giallo-l"><span style="font-style: italic;">tokio</span><span style="color: #797593;"> = {</span><span style="font-style: italic;"> version</span><span style="color: #797593;"> =</span><span style="color: #EA9D34;"> &quot;1.0&quot;</span><span style="color: #797593;">,</span><span style="font-style: italic;"> features</span><span style="color: #797593;"> = [</span><span style="color: #EA9D34;">&quot;full&quot;</span><span style="color: #797593;">] }</span></span>
+<span class="giallo-l"><span style="font-style: italic;">tracing</span><span style="color: #797593;"> =</span><span style="color: #EA9D34;"> &quot;0.1&quot;</span></span>
+<span class="giallo-l"><span style="font-style: italic;">tracing-subscriber</span><span style="color: #797593;"> = {</span><span style="font-style: italic;"> version</span><span style="color: #797593;"> =</span><span style="color: #EA9D34;"> &quot;0.3&quot;</span><span style="color: #797593;">,</span><span style="font-style: italic;"> features</span><span style="color: #797593;"> = [</span><span style="color: #EA9D34;">&quot;env-filter&quot;</span><span style="color: #797593;">] }</span></span></code></pre>
+ </div><input
+	name="tab-group-1"
+	type="radio"
+	id="tab-group-1-1_src/main.rs"
+	class="code-tab"
+	data-lang="src/main.rs"
+	aria-controls="tab-group-1-1_src/main.rs-panel"
+	aria-hidden="true"
+	role="tab"
+>
+<label
+	for="tab-group-1-1_src/main.rs"
+	class="code-tab-label"
+	data-lang="src/main.rs"
+	id="tab-group-1-1_src/main.rs-label"
+>src/main.rs</label>
+<div
+	class="code-tabpanel"
+	role="tabpanel"
+	data-lang="src/main.rs"
+	id="tab-group-1-1_src/main.rs-panel"
+	aria-labelledby="tab-group-1-1_src/main.rs-label"
+> 
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="rust"><span class="giallo-l"><span style="color: #286983;">use</span><span style="color: #56949F;"> axum</span><span style="color: #286983;">::</span><span style="color: #797593;">{</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    extract</span><span style="color: #286983;">::</span><span style="color: #56949F;">Path</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    http</span><span style="color: #286983;">::</span><span style="color: #797593;">{</span><span>header</span><span style="color: #797593;">,</span><span style="color: #56949F;"> StatusCode</span><span style="color: #797593;">},</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    response</span><span style="color: #286983;">::</span><span style="color: #56949F;">IntoResponse</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    routing</span><span style="color: #286983;">::</span><span>get</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    Extension</span><span style="color: #797593;">,</span><span style="color: #56949F;"> Router</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #797593;">};</span></span>
+<span class="giallo-l"><span style="color: #286983;">use</span><span style="color: #56949F;"> redis</span><span style="color: #286983;">::</span><span style="color: #56949F;">Commands</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"><span style="color: #286983;">use</span><span style="color: #56949F;"> serde</span><span style="color: #286983;">::</span><span style="color: #56949F;">Deserialize</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"><span style="color: #286983;">use</span><span style="color: #56949F;"> std</span><span style="color: #286983;">::</span><span style="color: #797593;">{</span><span>env</span><span style="color: #797593;">,</span><span style="color: #56949F;"> net</span><span style="color: #286983;">::</span><span style="color: #56949F;">SocketAddr</span><span style="color: #797593;">,</span><span style="color: #56949F;"> sync</span><span style="color: #286983;">::</span><span style="color: #56949F;">Arc</span><span style="color: #797593;">};</span></span>
+<span class="giallo-l"><span style="color: #286983;">use</span><span style="color: #56949F;"> tracing_subscriber</span><span style="color: #286983;">::</span><span style="color: #797593;">{</span><span style="color: #56949F;">layer</span><span style="color: #286983;">::</span><span style="color: #56949F;">SubscriberExt</span><span style="color: #797593;">,</span><span style="color: #56949F;"> util</span><span style="color: #286983;">::</span><span style="color: #56949F;">SubscriberInitExt</span><span style="color: #797593;">};</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">struct</span><span style="color: #56949F;"> AppState</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    cache</span><span style="color: #286983;">:</span><span style="color: #56949F;"> redis</span><span style="color: #286983;">::</span><span style="color: #56949F;">Client</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    http</span><span style="color: #286983;">:</span><span style="color: #56949F;"> reqwest</span><span style="color: #286983;">::</span><span style="color: #56949F;">Client</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    http_host</span><span style="color: #286983;">:</span><span style="color: #56949F;"> String</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;">#[</span><span>tokio</span><span style="color: #286983;">::</span><span>main</span><span style="color: #797593;">]</span></span>
+<span class="giallo-l"><span style="color: #286983;">async fn</span><span style="color: #D7827E;"> main</span><span style="color: #797593;">() {</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">    //</span><span style="color: #9893A5;font-style: italic;"> Tracing</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    tracing_subscriber</span><span style="color: #286983;">::</span><span style="color: #D7827E;">registry</span><span style="color: #797593;">()</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">with</span><span style="color: #797593;">(</span><span style="color: #56949F;">tracing_subscriber</span><span style="color: #286983;">::</span><span style="color: #56949F;">EnvFilter</span><span style="color: #286983;">::</span><span style="color: #D7827E;">new</span><span style="color: #797593;">(</span></span>
+<span class="giallo-l"><span style="color: #56949F;">            std</span><span style="color: #286983;">::</span><span style="color: #56949F;">env</span><span style="color: #286983;">::</span><span style="color: #D7827E;">var</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;RUST_LOG&quot;</span><span style="color: #797593;">)</span><span style="color: #286983;">.</span><span style="color: #D7827E;">expect</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;Must set RUST_LOG&quot;</span><span style="color: #797593;">),</span></span>
+<span class="giallo-l"><span style="color: #797593;">        ))</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">with</span><span style="color: #797593;">(</span><span style="color: #56949F;">tracing_subscriber</span><span style="color: #286983;">::</span><span style="color: #56949F;">fmt</span><span style="color: #286983;">::</span><span style="color: #D7827E;">layer</span><span style="color: #797593;">())</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">init</span><span style="color: #797593;">();</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">    //</span><span style="color: #9893A5;font-style: italic;"> Cache setup</span></span>
+<span class="giallo-l"><span style="color: #286983;">    let</span><span style="font-style: italic;"> cache_host</span><span style="color: #286983;"> =</span><span style="color: #56949F;"> env</span><span style="color: #286983;">::</span><span style="color: #D7827E;">var</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;CACHE_HOST&quot;</span><span style="color: #797593;">)</span><span style="color: #286983;">.</span><span style="color: #D7827E;">expect</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;Must set CACHE_HOST&quot;</span><span style="color: #797593;">);</span></span>
+<span class="giallo-l"><span style="color: #286983;">    let</span><span style="font-style: italic;"> cache</span><span style="color: #286983;"> =</span></span>
+<span class="giallo-l"><span style="color: #56949F;">        redis</span><span style="color: #286983;">::</span><span style="color: #56949F;">Client</span><span style="color: #286983;">::</span><span style="color: #D7827E;">open</span><span style="color: #797593;">(</span><span style="color: #D7827E;">format!</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;redis://</span><span style="color: #797593;">{}</span><span style="color: #EA9D34;">&quot;</span><span style="color: #797593;">,</span><span style="font-style: italic;"> cache_host</span><span style="color: #797593;">))</span><span style="color: #286983;">.</span><span style="color: #D7827E;">expect</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;Failed to connect to Cache&quot;</span><span style="color: #797593;">);</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">    //</span><span style="color: #9893A5;font-style: italic;"> HTTP depdency client setup</span></span>
+<span class="giallo-l"><span style="color: #286983;">    let</span><span style="font-style: italic;"> http</span><span style="color: #286983;"> =</span><span style="color: #56949F;"> reqwest</span><span style="color: #286983;">::</span><span style="color: #56949F;">Client</span><span style="color: #286983;">::</span><span style="color: #D7827E;">new</span><span style="color: #797593;">();</span></span>
+<span class="giallo-l"><span style="color: #286983;">    let</span><span style="font-style: italic;"> http_host</span><span style="color: #286983;"> =</span><span style="color: #56949F;"> env</span><span style="color: #286983;">::</span><span style="color: #D7827E;">var</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;HTTP_HOST&quot;</span><span style="color: #797593;">)</span><span style="color: #286983;">.</span><span style="color: #D7827E;">expect</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;Must set HTTP_HOST&quot;</span><span style="color: #797593;">);</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">    //</span><span style="color: #9893A5;font-style: italic;"> State object to share between routes</span></span>
+<span class="giallo-l"><span style="color: #286983;">    let</span><span style="font-style: italic;"> shared_state</span><span style="color: #286983;"> =</span><span style="color: #56949F;"> Arc</span><span style="color: #286983;">::</span><span style="color: #D7827E;">new</span><span style="color: #797593;">(</span><span style="color: #56949F;">AppState</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="font-style: italic;">        cache</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">        http</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">        http_host</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #797593;">    });</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">    //</span><span style="color: #9893A5;font-style: italic;"> Axum setup</span></span>
+<span class="giallo-l"><span style="color: #286983;">    let</span><span style="font-style: italic;"> app</span><span style="color: #286983;"> =</span><span style="color: #56949F;"> Router</span><span style="color: #286983;">::</span><span style="color: #D7827E;">new</span><span style="color: #797593;">()</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">route</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;/:key&quot;</span><span style="color: #797593;">,</span><span style="color: #D7827E;"> get</span><span style="color: #797593;">(</span><span style="font-style: italic;">root</span><span style="color: #797593;">))</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">layer</span><span style="color: #797593;">(</span><span style="color: #D7827E;">Extension</span><span style="color: #797593;">(</span><span style="font-style: italic;">shared_state</span><span style="color: #797593;">));</span></span>
+<span class="giallo-l"><span style="color: #286983;">    let</span><span style="font-style: italic;"> addr</span><span style="color: #286983;"> =</span><span style="color: #56949F;"> SocketAddr</span><span style="color: #286983;">::</span><span style="color: #D7827E;">from</span><span style="color: #797593;">(([</span><span style="color: #D7827E;">0</span><span style="color: #797593;">,</span><span style="color: #D7827E;"> 0</span><span style="color: #797593;">,</span><span style="color: #D7827E;"> 0</span><span style="color: #797593;">,</span><span style="color: #D7827E;"> 0</span><span style="color: #797593;">],</span><span style="color: #D7827E;"> 8080</span><span style="color: #797593;">));</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    tracing</span><span style="color: #286983;">::</span><span style="color: #D7827E;">info!</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;listening on </span><span style="color: #797593;">{}</span><span style="color: #EA9D34;">&quot;</span><span style="color: #797593;">,</span><span style="font-style: italic;"> addr</span><span style="color: #797593;">);</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    axum</span><span style="color: #286983;">::</span><span style="color: #56949F;">Server</span><span style="color: #286983;">::</span><span style="color: #D7827E;">bind</span><span style="color: #797593;">(</span><span style="color: #286983;">&amp;</span><span style="font-style: italic;">addr</span><span style="color: #797593;">)</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">serve</span><span style="color: #797593;">(</span><span style="font-style: italic;">app</span><span style="color: #286983;">.</span><span style="color: #D7827E;">into_make_service</span><span style="color: #797593;">())</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .await</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">expect</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;Failed to start HTTP Server&quot;</span><span style="color: #797593;">);</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;">#[</span><span>derive</span><span style="color: #797593;">(</span><span style="color: #56949F;">Deserialize</span><span style="color: #797593;">)]</span></span>
+<span class="giallo-l"><span style="color: #286983;">struct</span><span style="color: #56949F;"> CanDoResponse</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    can_do</span><span style="color: #286983;">:</span><span style="color: #56949F;"> bool</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">async fn</span><span style="color: #D7827E;"> root</span><span style="color: #797593;">(</span><span style="font-style: italic;">state</span><span style="color: #286983;">:</span><span style="color: #56949F;"> Extension</span><span style="color: #797593;">&lt;</span><span style="color: #56949F;">Arc</span><span style="color: #797593;">&lt;</span><span style="color: #56949F;">AppState</span><span style="color: #797593;">&gt;&gt;,</span><span style="color: #D7827E;"> Path</span><span style="color: #797593;">(</span><span style="font-style: italic;">key</span><span style="color: #797593;">)</span><span style="color: #286983;">:</span><span style="color: #56949F;"> Path</span><span style="color: #797593;">&lt;</span><span style="color: #56949F;">String</span><span style="color: #797593;">&gt;)</span><span style="color: #286983;"> -&gt; impl</span><span style="color: #56949F;"> IntoResponse</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">    //</span><span style="color: #9893A5;font-style: italic;">Hit HTTP dependency to determine if we can continue</span></span>
+<span class="giallo-l"><span style="color: #286983;">    let</span><span style="font-style: italic;"> res</span><span style="color: #286983;"> =</span><span style="font-style: italic;"> state</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span>http</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">get</span><span style="color: #797593;">(</span><span style="color: #D7827E;">format!</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;http://</span><span style="color: #797593;">{}</span><span style="color: #EA9D34;">/can-do/</span><span style="color: #797593;">{}</span><span style="color: #EA9D34;">&quot;</span><span style="color: #797593;">,</span><span style="font-style: italic;"> state</span><span style="color: #286983;">.</span><span>http_host</span><span style="color: #797593;">,</span><span style="font-style: italic;"> key</span><span style="color: #797593;">))</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">send</span><span style="color: #797593;">()</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .await</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"><span style="color: #286983;">    let</span><span style="font-style: italic;"> can_do</span><span style="color: #286983;"> = match</span><span style="font-style: italic;"> res</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #56949F;">        Err</span><span style="color: #797593;">(</span><span style="font-style: italic;">e</span><span style="color: #797593;">)</span><span style="color: #286983;"> =&gt; return</span><span style="color: #56949F;"> Err</span><span style="color: #797593;">((</span><span style="color: #56949F;">StatusCode</span><span style="color: #286983;">::INTERNAL_SERVER_ERROR</span><span style="color: #797593;">,</span><span style="color: #D7827E;"> format!</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;</span><span style="color: #797593;">{</span><span style="color: #EA9D34;">:?</span><span style="color: #797593;">}</span><span style="color: #EA9D34;">&quot;</span><span style="color: #797593;">,</span><span style="font-style: italic;"> e</span><span style="color: #797593;">))),</span></span>
+<span class="giallo-l"><span style="color: #56949F;">        Ok</span><span style="color: #797593;">(</span><span style="font-style: italic;">v</span><span style="color: #797593;">)</span><span style="color: #286983;"> =&gt;</span><span style="font-style: italic;"> v</span><span style="color: #286983;">.</span><span style="color: #D7827E;">json</span><span style="color: #286983;">::</span><span style="color: #797593;">&lt;</span><span style="color: #56949F;">CanDoResponse</span><span style="color: #797593;">&gt;()</span><span style="color: #286983;">.await.</span><span style="color: #D7827E;">unwrap</span><span style="color: #797593;">()</span><span style="color: #286983;">.</span><span>can_do</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #797593;">    };</span></span>
+<span class="giallo-l"><span style="color: #286983;">    if !</span><span style="font-style: italic;">can_do</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #286983;">        return</span><span style="color: #56949F;"> Err</span><span style="color: #797593;">((</span><span style="color: #56949F;">StatusCode</span><span style="color: #286983;">::UNAUTHORIZED</span><span style="color: #797593;">,</span><span style="color: #EA9D34;"> &quot;Unauthorized for Resource&quot;</span><span style="color: #286983;">.</span><span style="color: #D7827E;">into</span><span style="color: #797593;">()));</span></span>
+<span class="giallo-l"><span style="color: #797593;">    }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">    //</span><span style="color: #9893A5;font-style: italic;"> Assuming we can, hit the cache dependency</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    state</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span>cache</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">get_connection</span><span style="color: #797593;">()</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">and_then</span><span style="color: #797593;">(</span><span style="color: #286983;">|mut</span><span style="font-style: italic;"> c</span><span style="color: #286983;">|</span><span style="font-style: italic;"> c</span><span style="color: #286983;">.</span><span style="color: #D7827E;">get</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;myTest&quot;</span><span style="color: #797593;">))</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">map</span><span style="color: #797593;">(</span><span style="color: #286983;">|</span><span style="font-style: italic;">v</span><span style="color: #286983;">:</span><span style="color: #56949F;"> i64</span><span style="color: #286983;">|</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #797593;">            (</span></span>
+<span class="giallo-l"><span style="color: #56949F;">                StatusCode</span><span style="color: #286983;">::OK</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #797593;">                [(</span><span style="color: #56949F;">header</span><span style="color: #286983;">::CONTENT_TYPE</span><span style="color: #797593;">,</span><span style="color: #EA9D34;"> &quot;application/json&quot;</span><span style="color: #797593;">)],</span></span>
+<span class="giallo-l"><span style="color: #D7827E;">                format!</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;</span><span style="color: #797593;">{}</span><span style="color: #EA9D34;">&quot;</span><span style="color: #797593;">,</span><span style="font-style: italic;"> v</span><span style="color: #797593;">),</span></span>
+<span class="giallo-l"><span style="color: #797593;">            )</span></span>
+<span class="giallo-l"><span style="color: #797593;">        })</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">map_err</span><span style="color: #797593;">(</span><span style="color: #286983;">|</span><span style="font-style: italic;">e</span><span style="color: #286983;">|</span><span style="color: #797593;"> (</span><span style="color: #56949F;">StatusCode</span><span style="color: #286983;">::INTERNAL_SERVER_ERROR</span><span style="color: #797593;">,</span><span style="color: #D7827E;"> format!</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;</span><span style="color: #797593;">{</span><span style="color: #EA9D34;">:?</span><span style="color: #797593;">}</span><span style="color: #EA9D34;">&quot;</span><span style="color: #797593;">,</span><span style="font-style: italic;"> e</span><span style="color: #797593;">)))</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span></code></pre>
+ </div><input
+	name="tab-group-1"
+	type="radio"
+	id="tab-group-1-2_docker/service/Dockerfile"
+	class="code-tab"
+	data-lang="docker/service/Dockerfile"
+	aria-controls="tab-group-1-2_docker/service/Dockerfile-panel"
+	aria-hidden="true"
+	role="tab"
+>
+<label
+	for="tab-group-1-2_docker/service/Dockerfile"
+	class="code-tab-label"
+	data-lang="docker/service/Dockerfile"
+	id="tab-group-1-2_docker/service/Dockerfile-label"
+>docker/service/Dockerfile</label>
+<div
+	class="code-tabpanel"
+	role="tabpanel"
+	data-lang="docker/service/Dockerfile"
+	id="tab-group-1-2_docker/service/Dockerfile-panel"
+	aria-labelledby="tab-group-1-2_docker/service/Dockerfile-label"
+> 
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="docker"><span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;">## Dependecy Cache Image ###</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;">############################</span></span>
+<span class="giallo-l"><span style="color: #286983;">FROM</span><span> rust:latest </span><span style="color: #286983;">AS</span><span> cache</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> update-ca-certificates</span></span>
+<span class="giallo-l"><span style="color: #286983;">WORKDIR</span><span> /</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> USER=root cargo new --bin karate-example</span></span>
+<span class="giallo-l"><span style="color: #286983;">WORKDIR</span><span> /karate-example</span></span>
+<span class="giallo-l"><span style="color: #286983;">COPY</span><span> ./Cargo.* .</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> cargo build --release</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;">## Build Image ###</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;">##################</span></span>
+<span class="giallo-l"><span style="color: #286983;">FROM</span><span> cache </span><span style="color: #286983;">AS</span><span> builder</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">ENV</span><span> USER=karate</span></span>
+<span class="giallo-l"><span style="color: #286983;">ENV</span><span> UID=10001</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> adduser \</span></span>
+<span class="giallo-l"><span>    --disabled-password \</span></span>
+<span class="giallo-l"><span>    --gecos </span><span style="color: #EA9D34;">&quot;&quot;</span><span> \</span></span>
+<span class="giallo-l"><span>    --home </span><span style="color: #EA9D34;">&quot;/nonexistent&quot;</span><span> \</span></span>
+<span class="giallo-l"><span>    --shell </span><span style="color: #EA9D34;">&quot;/sbin/nologin&quot;</span><span> \</span></span>
+<span class="giallo-l"><span>    --no-create-home \</span></span>
+<span class="giallo-l"><span>    --uid </span><span style="color: #EA9D34;">&quot;${UID}&quot;</span><span> \</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">    &quot;${USER}&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">WORKDIR</span><span> /karate-example</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> rm src/*.rs</span></span>
+<span class="giallo-l"><span style="color: #286983;">ADD</span><span> . ./</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> rm ./target/release/deps/karate_example*</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> cargo build --release</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;">## Final Image ###</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;">##################</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">FROM</span><span> gcr.io/distroless/cc</span></span>
+<span class="giallo-l"><span style="color: #286983;">COPY</span><span> --from=builder /etc/passwd /etc/passwd</span></span>
+<span class="giallo-l"><span style="color: #286983;">COPY</span><span> --from=builder /etc/group /etc/group</span></span>
+<span class="giallo-l"><span style="color: #286983;">WORKDIR</span><span> /karate-example</span></span>
+<span class="giallo-l"><span style="color: #286983;">COPY</span><span> --from=builder /karate-example/target/release/karate-example ./</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">USER</span><span> karate:karate</span></span>
+<span class="giallo-l"><span style="color: #286983;">CMD</span><span> [</span><span style="color: #EA9D34;">&quot;/karate-example/karate-example&quot;</span><span>]</span></span></code></pre>
+ </div><input
+	name="tab-group-1"
+	type="radio"
+	id="tab-group-1-3_docker-compose.yml"
+	class="code-tab"
+	data-lang="docker-compose.yml"
+	aria-controls="tab-group-1-3_docker-compose.yml-panel"
+	aria-hidden="true"
+	role="tab"
+>
+<label
+	for="tab-group-1-3_docker-compose.yml"
+	class="code-tab-label"
+	data-lang="docker-compose.yml"
+	id="tab-group-1-3_docker-compose.yml-label"
+>docker-compose.yml</label>
+<div
+	class="code-tabpanel"
+	role="tabpanel"
+	data-lang="docker-compose.yml"
+	id="tab-group-1-3_docker-compose.yml-panel"
+	aria-labelledby="tab-group-1-3_docker-compose.yml-label"
+> 
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="yaml"><span class="giallo-l"><span style="color: #56949F;">version</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> &#39;3.9&#39;</span></span>
+<span class="giallo-l"><span style="color: #56949F;">services</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">  service</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    build</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      context</span><span style="color: #797593;">:</span><span style="color: #D7827E;"> .</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      dockerfile</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> docker/service/Dockerfile</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    environment</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      CACHE_HOST</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> cache:6379</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      HTTP_HOST</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> http-mock:8181</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      RUST_LOG</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> info</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    ports</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #797593;">      -</span><span style="color: #EA9D34;"> &#39;8080:8080&#39;</span></span></code></pre> </div>
+</div>
+  <details  class="note">
+  <summary>Addressing slow docker builds</summary>
+  <p>You may also want to create a <code>.dockerignore</code> to skip over excess files in the docker build, so less items are sent to the docker runtime during build. This can address slowdowns</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="plain"><span class="giallo-l"><span>debug/</span></span>
+<span class="giallo-l"><span>target/</span></span></code></pre>
+</details>
+<p>At this point we have a service that will attempt to start, without a cache service it will fail to boot:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #D7827E;">docker</span><span style="color: #EA9D34;"> compose up service</span></span></code></pre><h3 id="the-cache-instance">The Cache Instance <a class="zola-anchor" href="#the-cache-instance" aria-label="Anchor link for: the-cache-instance"></a>
+</h3>
+<p>Redis provides a docker image we can conveniently use to start up an instance of our cache, like so:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="yaml"><span class="giallo-l"><span style="color: #56949F;">services</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">  #</span><span style="color: #9893A5;font-style: italic;"> ...</span></span>
+<span class="giallo-l"><span style="color: #56949F;">  cache</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    image</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> redis:7.0.4</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    ports</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #797593;">      -</span><span style="color: #EA9D34;"> &#39;6379:6379&#39;</span></span></code></pre>
+<p>If we update our <code>docker-compose.yml</code> to point our Service to this cache instance (via Environment Variables), the service will now boot without a connection failure. But requesting it still emits a <code>500</code> due to the missing HTTP dependency:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #D7827E;">$</span><span style="color: #EA9D34;"> curl localhost:8080/myTest</span></span>
+<span class="giallo-l"><span style="color: #D7827E;">reqwest::Error</span><span style="color: #EA9D34;"> { kind: Request, url: Url { scheme: &quot;http&quot;, cannot_be_a_base:</span><span style="color: #D7827E;"> false</span><span style="color: #EA9D34;">, username: &quot;&quot;, password: None, host: Some</span><span style="color: #797593;">(</span><span style="color: #D7827E;">Domain(&quot;http-mock&quot;</span><span style="color: #797593;">)</span><span>), port: Some(</span><span style="color: #D7827E;">5000</span><span>), path: </span><span style="color: #EA9D34;">&quot;/can-do/myTest&quot;</span><span>, query: None, fragment: None }, source: hyper::Error(</span><span style="color: #D7827E;">Connect,</span><span style="color: #EA9D34;"> ConnectError</span><span style="color: #797593;">(</span><span style="color: #D7827E;">&quot;dns error&quot;,</span><span style="color: #EA9D34;"> Custom { kind: Uncategorized, error: &quot;failed to lookup address information: Name or service not known&quot; }</span><span style="color: #797593;">)</span><span>) }%  </span></span></code></pre><h3 id="the-http-test-double">The HTTP Test Double <a class="zola-anchor" href="#the-http-test-double" aria-label="Anchor link for: the-http-test-double"></a>
+</h3>
+<p>To mock the HTTP dependency, we'll use Karate Netty - albeit alternatives such as <a rel="nofollow external" href="https://github.com/alexliesenfeld/httpmock">httpmock</a> exist. In short, this requires a specification which will match path rules with responses. There's ways to get more complex than that, but we'll keep it simple. This looks very much like a Karate test, living inside a "feature" file - all of which can be bundled into it's own image, making it easy to boot:</p>
+<div class="md-fenced-code-tabs" id="tab-tab-group-2"><input
+	name="tab-group-2"
+	type="radio"
+	id="tab-group-2-0_docker/http/mocks/MockFeature.feature"
+	checked="checked"
+	class="code-tab"
+	data-lang="docker/http/mocks/MockFeature.feature"
+	aria-controls="tab-group-2-0_docker/http/mocks/MockFeature.feature-panel"
+	aria-hidden="true"
+	role="tab"
+>
+<label
+	for="tab-group-2-0_docker/http/mocks/MockFeature.feature"
+	class="code-tab-label"
+	data-lang="docker/http/mocks/MockFeature.feature"
+	id="tab-group-2-0_docker/http/mocks/MockFeature.feature-label"
+>docker/http/mocks/MockFeature.feature</label>
+<div
+	class="code-tabpanel"
+	role="tabpanel"
+	data-lang="docker/http/mocks/MockFeature.feature"
+	id="tab-group-2-0_docker/http/mocks/MockFeature.feature-panel"
+	aria-labelledby="tab-group-2-0_docker/http/mocks/MockFeature.feature-label"
+> <pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="gherkin"><span class="giallo-l"><span style="color: #286983;">Feature</span><span>:</span><span style="color: #EA9D34;"> Dependency Mock</span></span>
+<span class="giallo-l"><span style="color: #286983;">  Background</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #286983;">    * </span><span>def outs = </span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">    &quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">    {</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">      &quot;myTest&quot;: true</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">    }</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">    &quot;&quot;&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">  Scenario</span><span>:</span><span style="color: #EA9D34;"> pathMatches(&#39;/can-do/{id}&#39;) &amp;&amp; methodIs(&#39;get&#39;)</span></span>
+<span class="giallo-l"><span style="color: #286983;">    * </span><span>def responseStatus = 200</span></span>
+<span class="giallo-l"><span style="color: #286983;">    * </span><span>def response = {}</span></span>
+<span class="giallo-l"><span style="color: #286983;">    * </span><span>response.can_do = outs[pathParams.id] || false</span></span></code></pre>
+ </div><input
+	name="tab-group-2"
+	type="radio"
+	id="tab-group-2-1_docker/http/Dockerfile"
+	class="code-tab"
+	data-lang="docker/http/Dockerfile"
+	aria-controls="tab-group-2-1_docker/http/Dockerfile-panel"
+	aria-hidden="true"
+	role="tab"
+>
+<label
+	for="tab-group-2-1_docker/http/Dockerfile"
+	class="code-tab-label"
+	data-lang="docker/http/Dockerfile"
+	id="tab-group-2-1_docker/http/Dockerfile-label"
+>docker/http/Dockerfile</label>
+<div
+	class="code-tabpanel"
+	role="tabpanel"
+	data-lang="docker/http/Dockerfile"
+	id="tab-group-2-1_docker/http/Dockerfile-panel"
+	aria-labelledby="tab-group-2-1_docker/http/Dockerfile-label"
+> 
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="docker"><span class="giallo-l"><span style="color: #286983;">FROM</span><span> debian:buster-slim </span><span style="color: #286983;">as</span><span> builder</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> apt-get update &amp;&amp; apt-get install -y curl</span></span>
+<span class="giallo-l"><span style="color: #286983;">WORKDIR</span><span> /</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> curl -L -H </span><span style="color: #EA9D34;">&quot;Accept: application/zip&quot;</span><span> https://github.com/karatelabs/karate/releases/download/v1.2.1.RC1/karate-1.2.1.RC1.jar -o karate.jar </span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">FROM</span><span> eclipse-temurin:11</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> mkdir /app</span></span>
+<span class="giallo-l"><span style="color: #286983;">COPY</span><span> --from=builder /karate.jar /app</span></span>
+<span class="giallo-l"><span style="color: #286983;">CMD</span><span> [\</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">  &quot;java&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;-jar&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;/app/karate.jar&quot;</span><span>,\</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">  &quot;-p&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;8181&quot;</span><span>,\</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">  &quot;-m&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;/app/mocks/MockFeature.feature&quot;</span><span>\</span></span>
+<span class="giallo-l"><span>]</span></span></code></pre>
+ </div><input
+	name="tab-group-2"
+	type="radio"
+	id="tab-group-2-2_docker-compose.yml"
+	class="code-tab"
+	data-lang="docker-compose.yml"
+	aria-controls="tab-group-2-2_docker-compose.yml-panel"
+	aria-hidden="true"
+	role="tab"
+>
+<label
+	for="tab-group-2-2_docker-compose.yml"
+	class="code-tab-label"
+	data-lang="docker-compose.yml"
+	id="tab-group-2-2_docker-compose.yml-label"
+>docker-compose.yml</label>
+<div
+	class="code-tabpanel"
+	role="tabpanel"
+	data-lang="docker-compose.yml"
+	id="tab-group-2-2_docker-compose.yml-panel"
+	aria-labelledby="tab-group-2-2_docker-compose.yml-label"
+> 
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="yaml"><span class="giallo-l"><span style="color: #56949F;">services</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">  http-mock</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    build</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      context</span><span style="color: #797593;">:</span><span style="color: #D7827E;"> .</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      dockerfile</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> docker/http/Dockerfile</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    ports</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #797593;">      -</span><span style="color: #EA9D34;"> 8181:8181</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    volumes</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #797593;">      -</span><span style="color: #EA9D34;"> ./docker/http/mocks:/app/mocks</span></span></code></pre> </div>
+</div>
+<p>Again updating the Axum Service's Environment variables, we can boot the service and fetch the <code>myTest</code> key once more. We now get past the 500 error and are allowed to hit the cache, but are met with a 404 since our cache is empty.</p>
+<h4 id="creating-test-data">Creating Test Data <a class="zola-anchor" href="#creating-test-data" aria-label="Anchor link for: creating-test-data"></a>
+</h4>
+<p>Ephemeral docker containers are short lived containers meant to perform a task and discard themselves. There's nothing special to them outside of this property. In this case, we want something that will poll Redis until it's ready to accept data, run a bunch of inserts, and then shut itself down. Making our Service dependent on this (and this dependent on Redis) will ensure our cache is hydrated.</p>
+<p>I've opted to use the bulk loading approach to issue commands from a <code>.txt</code> file but you could be more creative and use something like a Python or Lua script connecting to the instance.</p>
+<p>First we can define our <code>.txt</code> file for seeding data:</p>
+<p><code>docker/cache-migrate/migrate.txt</code></p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="sql"><span class="giallo-l"><span style="color: #286983;">SET</span><span> myTest </span><span style="color: #D7827E;">200</span></span></code></pre>
+<p>Then using <a rel="nofollow external" href="https://github.com/vishnubob/wait-for-it">wait-for-it.sh</a> we can wait for Redis in our image's entrypoint, then run the <code>migrate.txt</code>. Notice I'm baking the seed <code>.txt</code> into the image itself rather than relying on a mount; while this does mean the image has to be rebuilt when this <code>.txt</code> changes, it does make it a little easier to pass the seed data between machines (eg a CI server, etc). You could choose to go with a volume mount approach, just remember you'll need to have the seed scripts copied to your test environment!</p>
+<p><code>docker/cache-migrate/Dockerfile</code></p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="docker"><span class="giallo-l"><span style="color: #286983;">FROM</span><span> debian:buster-slim </span><span style="color: #286983;">as</span><span> builder</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> apt-get update &amp;&amp; apt-get install -y git</span></span>
+<span class="giallo-l"><span style="color: #286983;">WORKDIR</span><span> /</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> git clone https://github.com/vishnubob/wait-for-it.git</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">FROM</span><span> redis:7.0.4</span></span>
+<span class="giallo-l"><span style="color: #286983;">COPY</span><span> --from=builder /wait-for-it/wait-for-it.sh /app/wait-for-it.sh</span></span>
+<span class="giallo-l"><span style="color: #286983;">COPY</span><span> /docker/cache-migrate/migrate.txt /etc/migrate.txt</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">ENTRYPOINT</span><span> [\</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">  &quot;/app/wait-for-it.sh&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;cache:6379&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;-s&quot;</span><span>,\</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">  &quot;--&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;sh&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;-c&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;cat /etc/migrate.txt | redis-cli -h cache --pipe&quot;</span><span>\</span></span>
+<span class="giallo-l"><span>]</span></span></code></pre>  <details  class="note">
+  <summary>Waiting for a port won't work</summary>
+  <p>Some databases open their ports before the application is fully ready for connections. In these cases, you'll likely need to copy <code>wait-for-it.sh</code> and modify it (or do something similar to it) such that the script blocks until the dependency is running or times out. Many times this might mean using a native tool your dependency provides, or some other "ready check" style probe.</p>
+</details>
+<p>In our <code>docker-compose.yml</code> we'll then define this like so:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="yaml"><span class="giallo-l"><span style="color: #56949F;">services</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">  #</span><span style="color: #9893A5;font-style: italic;"> ...</span></span>
+<span class="giallo-l"><span style="color: #56949F;">  migrate-cache</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    build</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      context</span><span style="color: #797593;">:</span><span style="color: #D7827E;"> .</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      dockerfile</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> docker/cache-migrate/Dockerfile</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    depends_on</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #797593;">      -</span><span style="color: #EA9D34;"> cache</span></span></code></pre>
+<p>Now if we hit the local service, we find a fully formed response based on our test data:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #D7827E;">$</span><span style="color: #EA9D34;"> curl localhost:8080/myTest</span></span>
+<span class="giallo-l"><span style="color: #D7827E;">200</span></span></code></pre><h3 id="karate-tests">Karate Tests <a class="zola-anchor" href="#karate-tests" aria-label="Anchor link for: karate-tests"></a>
+</h3>
+<p>Karate tests are defined in so called "feature" files, which use a Syntax similar to <a rel="nofollow external" href="https://cucumber.io/">Cucumber</a>. The Karate documentation describes the syntax well - the high level idea to describe an HTTP request and then assert on the response. In this test, we'll verify I can fetch a key I'm authorized for, as well as one I am not:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="gherkin"><span class="giallo-l"><span style="color: #286983;">Feature</span><span>:</span><span style="color: #EA9D34;"> Verify Authorization</span></span>
+<span class="giallo-l"><span style="color: #286983;">  Background</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #286983;">    * </span><span>url baseUrl</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">  Scenario</span><span>:</span><span style="color: #EA9D34;"> Can request myTest</span></span>
+<span class="giallo-l"><span style="color: #286983;">    Given </span><span>path </span><span style="color: #EA9D34;">&#39;myTest&#39;</span></span>
+<span class="giallo-l"><span style="color: #286983;">    When </span><span>method GET</span></span>
+<span class="giallo-l"><span style="color: #286983;">    Then </span><span>status 200</span></span>
+<span class="giallo-l"><span style="color: #286983;">    And </span><span>match response == </span><span style="color: #EA9D34;">&#39;200&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">  Scenario</span><span>:</span><span style="color: #EA9D34;"> Cant request notMyTest</span></span>
+<span class="giallo-l"><span style="color: #286983;">    Given </span><span>path </span><span style="color: #EA9D34;">&#39;notMyTest&#39;</span></span>
+<span class="giallo-l"><span style="color: #286983;">    When </span><span>method GET</span></span>
+<span class="giallo-l"><span style="color: #286983;">    Then </span><span>status 401</span></span></code></pre>
+<p>We can define all our tests in a specific directory(s) and Karate will run all of them recursively, making it simple to add new tests/cases without needing to adjust our test harness.</p>
+<h3 id="making-the-test-runner-service">Making the Test Runner Service <a class="zola-anchor" href="#making-the-test-runner-service" aria-label="Anchor link for: making-the-test-runner-service"></a>
+</h3>
+<p>Finally we need a test runner container to bootstrap everything: Boot services, migrations, and execute tests. Depending on environment, we can create alternate versions for CI runners versus local runners, to configure Ports, Volumes, and Variables differently. Like the migrations, our test cases are baked into this image for portability. This would look like:</p>
+<div class="md-fenced-code-tabs" id="tab-tab-group-3"><input
+	name="tab-group-3"
+	type="radio"
+	id="tab-group-3-0_docker-compose.yml"
+	checked="checked"
+	class="code-tab"
+	data-lang="docker-compose.yml"
+	aria-controls="tab-group-3-0_docker-compose.yml-panel"
+	aria-hidden="true"
+	role="tab"
+>
+<label
+	for="tab-group-3-0_docker-compose.yml"
+	class="code-tab-label"
+	data-lang="docker-compose.yml"
+	id="tab-group-3-0_docker-compose.yml-label"
+>docker-compose.yml</label>
+<div
+	class="code-tabpanel"
+	role="tabpanel"
+	data-lang="docker-compose.yml"
+	id="tab-group-3-0_docker-compose.yml-panel"
+	aria-labelledby="tab-group-3-0_docker-compose.yml-label"
+> <pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="yaml"><span class="giallo-l"><span style="color: #56949F;">services</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">  #</span><span style="color: #9893A5;font-style: italic;"> ...</span></span>
+<span class="giallo-l"><span style="color: #56949F;">  karate</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    build</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      context</span><span style="color: #797593;">:</span><span style="color: #D7827E;"> .</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      dockerfile</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> docker/karate/Dockerfile</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    working_dir</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> /workdir</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    entrypoint</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> /bin/bash</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    command</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> docker/karate/entrypoint.sh</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    volumes</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #797593;">      -</span><span style="color: #EA9D34;"> .:/workdir</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    depends_on</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #797593;">      -</span><span style="color: #EA9D34;"> service</span></span></code></pre>
+ </div><input
+	name="tab-group-3"
+	type="radio"
+	id="tab-group-3-1_docker/karate/entrypoint.sh"
+	class="code-tab"
+	data-lang="docker/karate/entrypoint.sh"
+	aria-controls="tab-group-3-1_docker/karate/entrypoint.sh-panel"
+	aria-hidden="true"
+	role="tab"
+>
+<label
+	for="tab-group-3-1_docker/karate/entrypoint.sh"
+	class="code-tab-label"
+	data-lang="docker/karate/entrypoint.sh"
+	id="tab-group-3-1_docker/karate/entrypoint.sh-label"
+>docker/karate/entrypoint.sh</label>
+<div
+	class="code-tabpanel"
+	role="tabpanel"
+	data-lang="docker/karate/entrypoint.sh"
+	id="tab-group-3-1_docker/karate/entrypoint.sh-panel"
+	aria-labelledby="tab-group-3-1_docker/karate/entrypoint.sh-label"
+> 
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #797593;font-style: italic;">#!</span><span style="color: #9893A5;font-style: italic;">/bin/bash</span></span>
+<span class="giallo-l"><span style="color: #D7827E;">/app/wait-for-it</span><span style="color: #EA9D34;"> service:8080</span><span style="color: #286983;"> -t</span><span style="color: #D7827E;"> 30</span></span>
+<span class="giallo-l"><span style="color: #B4637A;font-style: italic;">echo</span><span style="color: #EA9D34;"> &quot;Running tests!&quot;</span></span>
+<span class="giallo-l"><span style="color: #D7827E;">java</span><span style="color: #286983;"> -jar -Dkarate.config.dir=</span><span style="color: #EA9D34;">&quot;docker/karate&quot; /app/karate.jar docker/karate/features</span><span style="color: #286983;"> -e</span><span style="color: #EA9D34;"> docker</span><span style="color: #286983;"> -o</span><span style="color: #EA9D34;"> /app/target</span><span style="color: #286983;"> --tags</span><span style="color: #EA9D34;"> ~@ignore</span></span></code></pre>
+ </div><input
+	name="tab-group-3"
+	type="radio"
+	id="tab-group-3-2_docker/karate/Dockerfile"
+	class="code-tab"
+	data-lang="docker/karate/Dockerfile"
+	aria-controls="tab-group-3-2_docker/karate/Dockerfile-panel"
+	aria-hidden="true"
+	role="tab"
+>
+<label
+	for="tab-group-3-2_docker/karate/Dockerfile"
+	class="code-tab-label"
+	data-lang="docker/karate/Dockerfile"
+	id="tab-group-3-2_docker/karate/Dockerfile-label"
+>docker/karate/Dockerfile</label>
+<div
+	class="code-tabpanel"
+	role="tabpanel"
+	data-lang="docker/karate/Dockerfile"
+	id="tab-group-3-2_docker/karate/Dockerfile-panel"
+	aria-labelledby="tab-group-3-2_docker/karate/Dockerfile-label"
+> 
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="docker"><span class="giallo-l"><span style="color: #286983;">FROM</span><span> debian:buster-slim </span><span style="color: #286983;">as</span><span> builder</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> apt-get update &amp;&amp; apt-get install -y git curl</span></span>
+<span class="giallo-l"><span style="color: #286983;">WORKDIR</span><span> /</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> git clone https://github.com/vishnubob/wait-for-it.git</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> curl -L -H </span><span style="color: #EA9D34;">&quot;Accept: application/zip&quot;</span><span> https://github.com/karatelabs/karate/releases/download/v1.2.1.RC1/karate-1.2.1.RC1.jar -o karate.jar </span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">FROM</span><span> eclipse-temurin:11</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> mkdir /app</span></span>
+<span class="giallo-l"><span style="color: #286983;">COPY</span><span> --from=builder /wait-for-it/wait-for-it.sh /app/wait-for-it.sh</span></span>
+<span class="giallo-l"><span style="color: #286983;">COPY</span><span> --from=builder /karate.jar /app</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">CMD</span><span> [\</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">  &quot;/app/wait-for-it.sh&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;service:8080&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;-s&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;-t&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;30&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;&amp;&amp;&quot;</span><span>,\</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">  &quot;echo&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;&#39;Running tests!&#39;&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;&amp;&amp;&quot;</span><span>,\</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">  &quot;java&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;-jar&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;-Dkarate.config.dir=</span><span style="color: #286983;">\&quot;</span><span style="color: #EA9D34;">docker/karate</span><span style="color: #286983;">\&quot;</span><span style="color: #EA9D34;">&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;/app/karate.jar&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;docker/karate/features&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;-e&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;docker&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;-o&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;/app/target&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;--tags&quot;</span><span>, </span><span style="color: #EA9D34;">&quot;~@ignore&quot;</span><span>\</span></span>
+<span class="giallo-l"><span>]</span></span></code></pre>
+ </div><input
+	name="tab-group-3"
+	type="radio"
+	id="tab-group-3-3_docker/karate/karate-config.js"
+	class="code-tab"
+	data-lang="docker/karate/karate-config.js"
+	aria-controls="tab-group-3-3_docker/karate/karate-config.js-panel"
+	aria-hidden="true"
+	role="tab"
+>
+<label
+	for="tab-group-3-3_docker/karate/karate-config.js"
+	class="code-tab-label"
+	data-lang="docker/karate/karate-config.js"
+	id="tab-group-3-3_docker/karate/karate-config.js-label"
+>docker/karate/karate-config.js</label>
+<div
+	class="code-tabpanel"
+	role="tabpanel"
+	data-lang="docker/karate/karate-config.js"
+	id="tab-group-3-3_docker/karate/karate-config.js-panel"
+	aria-labelledby="tab-group-3-3_docker/karate/karate-config.js-label"
+> 
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="javascript"><span class="giallo-l"><span style="color: #286983;">function</span><span style="color: #D7827E;"> fn</span><span style="color: #797593;">() {</span><span>   </span></span>
+<span class="giallo-l"><span style="color: #286983;">  var</span><span style="font-style: italic;"> env</span><span style="color: #286983;"> =</span><span style="font-style: italic;"> karate</span><span style="color: #286983;">.</span><span style="font-style: italic;">env</span><span style="color: #797593;">;</span><span style="color: #797593;font-style: italic;"> //</span><span style="color: #9893A5;font-style: italic;"> get java system property &#39;karate.env&#39;</span></span>
+<span class="giallo-l"><span style="font-style: italic;">  karate</span><span style="color: #286983;">.</span><span style="color: #D7827E;">log</span><span>(</span><span style="color: #EA9D34;">&#39;karate.env system property was:&#39;</span><span style="color: #797593;">,</span><span style="font-style: italic;"> env</span><span>)</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">  //</span><span style="color: #9893A5;font-style: italic;"> Can optionally change this config based on the ENV if you need to invoke a different</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">  //</span><span style="color: #9893A5;font-style: italic;"> URL based on running in a test environment vs a docker environment, etc</span></span>
+<span class="giallo-l"><span style="color: #286983;">  return</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span>    baseUrl</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> &#39;http://service:8080/&#39;</span></span>
+<span class="giallo-l"><span style="color: #797593;">  }</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span></code></pre> </div>
+</div>
+<h2 id="end-to-end">End to End <a class="zola-anchor" href="#end-to-end" aria-label="Anchor link for: end-to-end"></a>
+</h2>
+<p>We can happily close out by demonstrating that if we run our karate service, we can see all tests are reporting as passing after having started up all dependencies and executed the cases:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #D7827E;">docker</span><span style="color: #EA9D34;"> compose run</span><span style="color: #286983;"> --rm</span><span style="color: #EA9D34;"> karate</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;"> Truncated</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #D7827E;">22:41:46.667</span><span> [main]  INFO  com.intuit.karate.Suite - </span><span style="color: #286983;">&lt;&lt;</span><span style="color: #EA9D34;">pass&gt;&gt;</span><span style="color: #D7827E;"> feature 1</span><span style="color: #EA9D34;"> of</span><span style="color: #D7827E;"> 1</span><span> (0</span><span style="color: #EA9D34;"> remaining</span><span>)</span><span style="color: #D7827E;"> docker/karate/features/Example.feature</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">Karate version: 1.2.1.RC1</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">======================================================</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">elapsed:   1.18 | threads:    1 | thread time: 0.35 </span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">features:     1 | skipped:    0 | efficiency: 0.30</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">scenarios:    2 | passed:     2 | failed: 0</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">======================================================</span></span></code></pre>
+    </div>
+  </article>
+  
+  
+  <script
+    src="https://utteranc.es/client.js"
+    repo="dfontana/dfontana.github.io"
+    issue-term="pathname"
+    label="comments"
+    theme="github-light"
+    crossorigin="anonymous"
+    async
+  ></script>
+  
+
+  
+    
+  <footer>
+    <hr>
+    <hr>
+    <section class="author">
+    <div class="authorimage" style="background-image: url(&#x2F;img&#x2F;profile.png)"></div>
+    <div class="author-content">
+      <h4>Dylan Fontana</h4>
+      
+        <p class="bio">Explore, Learn, Pursue.</p>
+      
+      
+    </div>
+    </section>
+    </footer>
+
+  
+
+
+  </body>
+</html>

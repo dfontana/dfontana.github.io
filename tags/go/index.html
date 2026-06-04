@@ -1,0 +1,80 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>go — Tags — nill.ink</title>
+    
+<link rel="stylesheet" href="https://nill.ink/section_and_pages.css">
+
+    <script>
+function get_opposite(current) {
+  switch (current) {
+    case 'light': return 'dark'
+    case 'dark': return 'light'
+    default:
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) { return 'light' } else { return 'dark'}
+  }
+}
+function toggle_dark() {
+  const root = document.documentElement;
+  let current = getComputedStyle(root).getPropertyValue('color-scheme').trim()
+  const next = get_opposite(current);
+  root.style.setProperty('color-scheme', next);
+  localStorage.setItem('color-scheme', next);
+}
+(function() {
+  const saved = localStorage.getItem('color-scheme');
+  if (saved) { document.documentElement.style.setProperty('color-scheme', saved); }
+})();
+</script>
+
+  </head>
+  <body>
+    <header>
+  <nav class="navbox" itemscope itemtype="http://schema.org/SiteNavigationElement">
+    <a class="nav-title" href="https:&#x2F;&#x2F;nill.ink"><div class="nav-image-box"><div class="nav-image" style="background-image: url(&#x2F;img&#x2F;icon-bronze.png)"></div></div>nill<span class="title-ink">&#46;ink</span><span class="title-social" hidden>oss</span></a>&nbsp;
+    <span class="navbox-spacer"></span>
+    
+    <a itemprop="url"
+        class=""
+        href="https:&#x2F;&#x2F;nill.ink&#x2F;frontier">
+        <span itemprop="name">Frontiers</span></a>&nbsp;&nbsp;
+    
+    <a itemprop="url"
+        class=""
+        href="https:&#x2F;&#x2F;nill.ink&#x2F;about">
+        <span itemprop="name">About</span></a>&nbsp;&nbsp;
+    
+    <button class="nav-dark-toggle" onclick="toggle_dark()"><svg viewBox="145 145 220 220" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"><path d="M248.082 263.932c-31.52-31.542-39.978-77.104-26.02-116.542-15.25 5.394-29.668 13.834-41.854 26.02-43.75 43.75-43.75 114.668 0 158.396 43.728 43.73 114.626 43.752 158.374 0 12.228-12.186 20.646-26.604 26.022-41.854-39.414 13.958-84.998 5.5-116.522-26.018"/></svg></button>
+  </nav>
+</header>
+
+    
+
+  <main>
+    <h1>go</h1>
+    
+      
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <header>
+    <h2 class="pagetitle" itemprop="name">
+      <a href="https://nill.ink/frontier/etags/">Storing Data with ETags (in Go)</a>
+    </h2>
+    <p class="pageDate">
+      2019-01-01
+    </p>
+  </header>
+  
+    <div class="pagesummary" itemprop="summary">
+      <p>What if there were no cookies? Be it paranoid users clearing their browsing data, increasingly stringent cookie policies, or lack of cookie persistence (see <em>WebView</em>) we could realistically find ourselves here. As a result, we'll need a new way to persist some data, one of which I'd like to demonstrate today: <strong>ETags</strong>.</p>
+      <a itemprop="url" href="https://nill.ink/frontier/etags/">More</a>
+    </div>
+  
+</article>
+
+    
+  </main>
+
+
+  </body>
+</html>

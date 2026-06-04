@@ -1,0 +1,183 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>How to Setup ZSH — nill.ink</title>
+    
+<link rel="stylesheet" href="https://nill.ink/section_and_pages.css">
+
+    <script>
+function get_opposite(current) {
+  switch (current) {
+    case 'light': return 'dark'
+    case 'dark': return 'light'
+    default:
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) { return 'light' } else { return 'dark'}
+  }
+}
+function toggle_dark() {
+  const root = document.documentElement;
+  let current = getComputedStyle(root).getPropertyValue('color-scheme').trim()
+  const next = get_opposite(current);
+  root.style.setProperty('color-scheme', next);
+  localStorage.setItem('color-scheme', next);
+}
+(function() {
+  const saved = localStorage.getItem('color-scheme');
+  if (saved) { document.documentElement.style.setProperty('color-scheme', saved); }
+})();
+</script>
+
+  </head>
+  <body>
+    <header>
+  <nav class="navbox" itemscope itemtype="http://schema.org/SiteNavigationElement">
+    <a class="nav-title" href="https:&#x2F;&#x2F;nill.ink"><div class="nav-image-box"><div class="nav-image" style="background-image: url(&#x2F;img&#x2F;icon-bronze.png)"></div></div>nill<span class="title-ink">&#46;ink</span><span class="title-social" hidden>oss</span></a>&nbsp;
+    <span class="navbox-spacer"></span>
+    
+    <a itemprop="url"
+        class=""
+        href="https:&#x2F;&#x2F;nill.ink&#x2F;frontier">
+        <span itemprop="name">Frontiers</span></a>&nbsp;&nbsp;
+    
+    <a itemprop="url"
+        class=""
+        href="https:&#x2F;&#x2F;nill.ink&#x2F;about">
+        <span itemprop="name">About</span></a>&nbsp;&nbsp;
+    
+    <button class="nav-dark-toggle" onclick="toggle_dark()"><svg viewBox="145 145 220 220" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"><path d="M248.082 263.932c-31.52-31.542-39.978-77.104-26.02-116.542-15.25 5.394-29.668 13.834-41.854 26.02-43.75 43.75-43.75 114.668 0 158.396 43.728 43.73 114.626 43.752 158.374 0 12.228-12.186 20.646-26.604 26.022-41.854-39.414 13.958-84.998 5.5-116.522-26.018"/></svg></button>
+  </nav>
+</header>
+
+    
+
+  <article itemscope itemtype="https://schema.org/BlogPosting">
+    <header>
+        <h1 itemprop="headline">How to Setup ZSH</h1>
+        
+        
+        <p>
+          2017-10-13&nbsp;
+  
+    |&nbsp;
+    
+      <a href="https://nill.ink/tags/terminal/"># terminal</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/zsh/"># zsh</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/configuration/"># configuration</a>
+      
+        
+      
+    
+  
+
+        </p>
+        
+    </header>
+    <div class="articlebody" itemprop="articleBody">
+      <p>Having not been satisfied with the autocompletion bash provides, and curious what alternative shells had to offer, I found ZSH. In this guide, I'm going to walk you through how I setup ZSH on my Windows machine (inside WSL) - but the instructions compare similarly for my Mac.</p>
+<span id="continue-reading"></span><h2 id="first-step-zsh">First Step, ZSH <a class="zola-anchor" href="#first-step-zsh" aria-label="Anchor link for: first-step-zsh"></a>
+</h2>
+<p>You'll want to boot up your terminal / WSL terminal and install the ZSH package. This is really simple:</p>
+<ul>
+<li>On WSL:</li>
+</ul>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #D7827E;">sudo</span><span style="color: #EA9D34;"> apt-get install zsh</span></span></code></pre>
+<ul>
+<li>With Brew:</li>
+</ul>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #D7827E;">brew</span><span style="color: #EA9D34;"> install zsh zsh-completions</span></span></code></pre>
+<p>Test the installation went well by trying to execute <code>zsh</code>. Note on your first run you may be prompted for some configurations, you can simply exit this as we'll be using a manager to handle our ZSH! Type <code>exit</code> to move back to bash.</p>
+<h2 id="oh-my-zsh">Oh-My-ZSH <a class="zola-anchor" href="#oh-my-zsh" aria-label="Anchor link for: oh-my-zsh"></a>
+</h2>
+<p>There's a lot of ZSH managers out there - think of these as your package managers. If you want to add a theme or plugin, this is where you look. I prefer Oh-My-ZSH, but recognize there are alternatives! Install with:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #D7827E;">sh</span><span style="color: #286983;"> -c</span><span style="color: #EA9D34;"> &quot;</span><span style="color: #797593;">$(</span><span style="color: #D7827E;">wget</span><span style="color: #EA9D34;"> https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh</span><span style="color: #286983;"> -O</span><span style="color: #EA9D34;"> -</span><span style="color: #797593;">)</span><span style="color: #EA9D34;">&quot;</span></span></code></pre>
+<p>After running the installation script, you'll find a few new directories and files in your home dir: <code>.zshrc</code> and <code>.oh-my-zsh</code>. Just like a <code>.bashrc</code>, your <code>.zshrc</code> is responsible for aliases, functions, and more - but more importantly - this is also where we can define themes and plugins.</p>
+<p>There's lot of settings to be tweaked, check out the default configuration Oh-My-ZSH makes as its pretty well documented with all the options you can tweak. Read on for some plugin recommendations!</p>
+<h2 id="plugins">Plugins <a class="zola-anchor" href="#plugins" aria-label="Anchor link for: plugins"></a>
+</h2>
+<p>Plugins get to be added via the <code>.zshrc</code> file and can be found on the official repository or 3rd party suppliers. The big importance to note here is that plugins are <em>space delimited</em>. If you simply list your plugins separated by commas, you'll end up loading none of them. So with that said, there's two plugins I like to use the most and are worthy of highlighting. The first is the included <code>ssh-agent</code> plugin to automatically add your ssh keys when opening a terminal. Add the following to the <code>plugins</code> line of your <code>~/.zshrc</code>:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B4637A;font-style: italic;">...</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="font-style: italic;">plugins</span><span style="color: #286983;">=</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">z git ssh-agent</span><span style="color: #797593;">)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;"> Tells what identities to load. Can be more than one separated by spaces.</span></span>
+<span class="giallo-l"><span style="color: #D7827E;">zstyle</span><span style="color: #EA9D34;"> :omz:plugins:ssh-agent identities id_rsa</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;"> How long to keep these identities loaded before reasking for password.</span></span>
+<span class="giallo-l"><span style="color: #D7827E;">zstyle</span><span style="color: #EA9D34;"> :omz:plugins:ssh-agent lifetime 4h</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #B4637A;font-style: italic;">...</span></span></code></pre>
+<p>And that's it! Now when we open a terminal we type in our ssh password once, and 4 hours later we do it again. Another one I really like is called "zsh-syntax-highlighting". It's beyond helpful as it highlights errors in commands as you type them, gives colors to regex's, and more. It's actually syntax highlighting in your command prompt. This one you'll need to clone into the custom .Oh-my-zsh directory:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #D7827E;">git</span><span style="color: #EA9D34;"> clone https://github.com/zsh-users/zsh-syntax-highlighting.git</span><span style="color: #797593;"> ${</span><span style="font-style: italic;">ZSH_CUSTOM</span><span style="color: #286983;">:-</span><span>~</span><span style="color: #286983;">/</span><span>.</span><span style="font-style: italic;">oh-my-zsh</span><span style="color: #286983;">/</span><span style="font-style: italic;">custom</span><span style="color: #797593;">}</span><span style="color: #EA9D34;">/plugins/zsh-syntax-highlighting</span></span></code></pre>
+<p>After which, you'll need to add it to the plugin list in your <code>.zshrc</code> file.</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B4637A;font-style: italic;">...</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #D7827E;">plugins-(z</span><span style="color: #EA9D34;"> git ssh-agent zsh-syntax-highlighting</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #B4637A;font-style: italic;">...</span></span></code></pre>
+<p>Finally, if you run <code>source ~/.zshrc</code> you can reload your configuration and see the changes.</p>
+<h2 id="keep-exploring">Keep Exploring <a class="zola-anchor" href="#keep-exploring" aria-label="Anchor link for: keep-exploring"></a>
+</h2>
+<p>Now that I've gotten you started, check out other <a rel="nofollow external" href="https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins">plugins</a> and <a rel="nofollow external" href="https://github.com/robbyrussell/oh-my-zsh/wiki/themes">themes</a> made available by Oh-My-ZSH!</p>
+<hr />
+<h3 id="old-troubleshooting-steps-that-you-shouldn-t-need">Old Troubleshooting Steps that You Shouldn't Need? <a class="zola-anchor" href="#old-troubleshooting-steps-that-you-shouldn-t-need" aria-label="Anchor link for: old-troubleshooting-steps-that-you-shouldn-t-need"></a>
+</h3>
+<p>On a final side note, the zsh-syntax-highlighting plugin has given me trouble installing before. I've always gotten it working, but it's taken a combination of some of the following suggestions, so if it doesn't work first go - try adding some of these fixes in your <code>.zshrc</code>:</p>
+<ol>
+<li>
+<p>List the <code>zsh-syntax-highlighting</code> plugin last. This apparently matters according to prior github issues, but I have a hunch it may not matter any longer after looking at how plugins are loaded by oh-my-zsh in debug logs.</p>
+</li>
+<li>
+<p>Try manually sourcing the plugin. This one definitely isn't the best solution, but it can help diagnose. Just add the following to <code>.zshrc</code>:</p>
+</li>
+</ol>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B4637A;font-style: italic;">source</span><span style="color: #EA9D34;"> ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh</span></span></code></pre>
+<ol start="3">
+<li>Finally, if the above two options fail, you can also try to modify the fpath manually. Again, this really shouldn't be needed if you are loading your plugins correctly. (Remember, plugins are separated by <em>spaces</em> not <em>commas</em>).</li>
+</ol>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="shellscript"><span class="giallo-l"><span style="font-style: italic;">fpath</span><span style="color: #286983;">=</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">/usr/local/share/zsh-completions</span><span style="font-style: italic;"> $fpath</span><span style="color: #797593;">)</span></span></code></pre>
+    </div>
+  </article>
+  
+  
+  <script
+    src="https://utteranc.es/client.js"
+    repo="dfontana/dfontana.github.io"
+    issue-term="pathname"
+    label="comments"
+    theme="github-light"
+    crossorigin="anonymous"
+    async
+  ></script>
+  
+
+  
+    
+  <footer>
+    <hr>
+    <hr>
+    <section class="author">
+    <div class="authorimage" style="background-image: url(&#x2F;img&#x2F;profile.png)"></div>
+    <div class="author-content">
+      <h4>Dylan Fontana</h4>
+      
+        <p class="bio">Explore, Learn, Pursue.</p>
+      
+      
+    </div>
+    </section>
+    </footer>
+
+  
+
+
+  </body>
+</html>

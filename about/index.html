@@ -1,0 +1,116 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>About — nill.ink</title>
+    
+<link rel="stylesheet" href="https://nill.ink/about.css">
+
+    <script>
+function get_opposite(current) {
+  switch (current) {
+    case 'light': return 'dark'
+    case 'dark': return 'light'
+    default:
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) { return 'light' } else { return 'dark'}
+  }
+}
+function toggle_dark() {
+  const root = document.documentElement;
+  let current = getComputedStyle(root).getPropertyValue('color-scheme').trim()
+  const next = get_opposite(current);
+  root.style.setProperty('color-scheme', next);
+  localStorage.setItem('color-scheme', next);
+}
+(function() {
+  const saved = localStorage.getItem('color-scheme');
+  if (saved) { document.documentElement.style.setProperty('color-scheme', saved); }
+})();
+</script>
+
+  </head>
+  <body>
+    <header>
+  <nav class="navbox" itemscope itemtype="http://schema.org/SiteNavigationElement">
+    <a class="nav-title" href="https:&#x2F;&#x2F;nill.ink"><div class="nav-image-box"><div class="nav-image" style="background-image: url(&#x2F;img&#x2F;icon-bronze.png)"></div></div>nill<span class="title-ink">&#46;ink</span><span class="title-social" hidden>oss</span></a>&nbsp;
+    <span class="navbox-spacer"></span>
+    
+    <a itemprop="url"
+        class=""
+        href="https:&#x2F;&#x2F;nill.ink&#x2F;frontier">
+        <span itemprop="name">Frontiers</span></a>&nbsp;&nbsp;
+    
+    <a itemprop="url"
+        class=""
+        href="https:&#x2F;&#x2F;nill.ink&#x2F;about">
+        <span itemprop="name">About</span></a>&nbsp;&nbsp;
+    
+    <button class="nav-dark-toggle" onclick="toggle_dark()"><svg viewBox="145 145 220 220" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"><path d="M248.082 263.932c-31.52-31.542-39.978-77.104-26.02-116.542-15.25 5.394-29.668 13.834-41.854 26.02-43.75 43.75-43.75 114.668 0 158.396 43.728 43.73 114.626 43.752 158.374 0 12.228-12.186 20.646-26.604 26.022-41.854-39.414 13.958-84.998 5.5-116.522-26.018"/></svg></button>
+  </nav>
+</header>
+
+    
+<main class="about-main">
+  <h1 class="about-title">About</h1>
+
+  <div class="about-layout">
+    <div class="about-left">
+      <p>It's simple: I <em>love</em> what I do. And that's what makes me, well, me. I enjoy learning, reading, and exploring - there's a sea of knowledge out there and not enough time to comprehend it all. It's that <em>passion</em> that pushes me to do better; help others understand more; and deliver meaning from the meaningless.</p>
+<p>You won't find me hard-pressed about titles and accolades. I thrive on breaking down hard problems, rallying teams together with fixes. I have experience building and <em>operating</em> data pipelines, APIs, web interfaces, &amp; more.</p>
+<p>Ask me about my opinions and experiences with:</p>
+<ul>
+<li>"Big Data" on Spark/Flink/Kafka/Airflow/Iceberg</li>
+<li>Rust vs Go, Java vs Scala</li>
+<li>Linux flavors, my home server, split keyboards</li>
+<li>ReactJS &amp; PHP</li>
+<li>Coding agents</li>
+</ul>
+<p>...And <em>way more</em> I've forgotten to list. I'm always exploring new frontiers -- <em>never ready to settle</em>.</p>
+<h2 id="timeline">Timeline</h2>
+<div class="timeline">
+<div class="timeline-row">
+<span class="timeline-date">2022–now</span>
+<div class="timeline-entry">
+  <div class="timeline-title">Datadog — Senior Software Engineer</div>
+  <div class="timeline-desc"><p><em>Scaling</em> metering processes in Revenue, combining Flink, Spark, Iceberg, Airflow, and a mixture of other tools for the job.</p>
+</div>
+</div>
+</div>
+<div class="timeline-row">
+<span class="timeline-date">2018–2022</span>
+<div class="timeline-entry">
+  <div class="timeline-title">Wayfair — Senior Software Engineer</div>
+  <div class="timeline-desc"><ul>
+<li>Refactored external ad server, created Creative Generation Tooling saving 3 days / week.</li>
+<li>Created a cross-channel intelligent advertising platform, integrating Creative Generation Tooling as an API serve 300+ ad creative classes.</li>
+<li>Led identity APIs powering $100M+ in business value, mentored 12+ engineers across three teams, and architected vendor integrations saving 25 hrs/week.</li>
+<li>Modernized on-prem, Apache Storm stream processing onto GCP, Apache Flink</li>
+<li>Cut identity's infrastructure costs 36% by migrating the core Redis NoSQL cache to Aerospike.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="timeline-row">
+<span class="timeline-date">2014–2018</span>
+<div class="timeline-entry">
+  <div class="timeline-title">Worcester Polytechnic Institute</div>
+  <div class="timeline-desc"><p>Bachelors in Computer Science; Minor in Data Science. Inducted into Upsilon Pi Epsilon</p>
+</div>
+</div>
+</div>
+</div>
+<h2 id="a-little-history">A little history</h2>
+<p>I'm originally from Colorado, but grew up all around the States (and briefly in London) before settling down in the Northeast.</p>
+<p>I earned my undergraduate degree in Massachussets, following my wife back to Boston. I've spent the last decade of my life making this home, finally getting some land to call our own.</p>
+<p>My wife &amp; I love to travel (and talk about them). If we're not enjoying the local cuisine or cuddling our little <a rel="nofollow external" href="https://en.wikipedia.org/wiki/Tortoiseshell_cat">Tortie</a>, you'll almost always find us enjoying a good house project --avid DIYers <em>almost</em> to a fault.</p>
+
+    </div>
+
+    <div class="about-portrait">
+      <img src="https://nill.ink/img/portrait.jpg" alt="Dylan Fontana">
+    </div>
+  </div>
+</main>
+
+  </body>
+</html>

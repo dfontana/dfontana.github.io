@@ -1,0 +1,420 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>Creating a Discord Bot in Rust — nill.ink</title>
+    
+<link rel="stylesheet" href="https://nill.ink/section_and_pages.css">
+
+    <script>
+function get_opposite(current) {
+  switch (current) {
+    case 'light': return 'dark'
+    case 'dark': return 'light'
+    default:
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) { return 'light' } else { return 'dark'}
+  }
+}
+function toggle_dark() {
+  const root = document.documentElement;
+  let current = getComputedStyle(root).getPropertyValue('color-scheme').trim()
+  const next = get_opposite(current);
+  root.style.setProperty('color-scheme', next);
+  localStorage.setItem('color-scheme', next);
+}
+(function() {
+  const saved = localStorage.getItem('color-scheme');
+  if (saved) { document.documentElement.style.setProperty('color-scheme', saved); }
+})();
+</script>
+
+  </head>
+  <body>
+    <header>
+  <nav class="navbox" itemscope itemtype="http://schema.org/SiteNavigationElement">
+    <a class="nav-title" href="https:&#x2F;&#x2F;nill.ink"><div class="nav-image-box"><div class="nav-image" style="background-image: url(&#x2F;img&#x2F;icon-bronze.png)"></div></div>nill<span class="title-ink">&#46;ink</span><span class="title-social" hidden>oss</span></a>&nbsp;
+    <span class="navbox-spacer"></span>
+    
+    <a itemprop="url"
+        class=""
+        href="https:&#x2F;&#x2F;nill.ink&#x2F;frontier">
+        <span itemprop="name">Frontiers</span></a>&nbsp;&nbsp;
+    
+    <a itemprop="url"
+        class=""
+        href="https:&#x2F;&#x2F;nill.ink&#x2F;about">
+        <span itemprop="name">About</span></a>&nbsp;&nbsp;
+    
+    <button class="nav-dark-toggle" onclick="toggle_dark()"><svg viewBox="145 145 220 220" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"><path d="M248.082 263.932c-31.52-31.542-39.978-77.104-26.02-116.542-15.25 5.394-29.668 13.834-41.854 26.02-43.75 43.75-43.75 114.668 0 158.396 43.728 43.73 114.626 43.752 158.374 0 12.228-12.186 20.646-26.604 26.022-41.854-39.414 13.958-84.998 5.5-116.522-26.018"/></svg></button>
+  </nav>
+</header>
+
+    
+
+  <article itemscope itemtype="https://schema.org/BlogPosting">
+    <header>
+        <h1 itemprop="headline">Creating a Discord Bot in Rust</h1>
+        
+        
+        <p>
+          2021-03-26&nbsp;
+  
+    |&nbsp;
+    
+      <a href="https://nill.ink/tags/rust/"># rust</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/discord/"># discord</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/bot/"># bot</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/project/"># project</a>
+      
+        
+      
+    
+  
+
+        </p>
+        
+    </header>
+    <div class="articlebody" itemprop="articleBody">
+      <p>Quarantine has lead to some <em>oddities</em> to pass the time, and this post is no different. I created a Discord Bot in Rust, hosted on my <a href="https://nill.ink/frontier/raspberry-pi/">Raspberry Pi</a>. It's purpose? To <strong>shrug</strong>. This is the way <img class="emote" src="/img/shrug-dog.png"/></p>
+<span id="continue-reading"></span>
+<p><img class="emote" src="/img/shrug-dog.png"/><img class="emote" src="/img/shrug-dog.png"/> Warning - <em>this post is gonna get silly</em> <img class="emote" src="/img/shrug-dog.png"/><img class="emote" src="/img/shrug-dog.png"/></p>
+<h2 id="what-are-we-making">What Are We Making? <a class="zola-anchor" href="#what-are-we-making" aria-label="Anchor link for: what-are-we-making"></a>
+</h2>
+<p>A bot with a few different utilities baked into it, some practical and others more so for the fun of it. For this article, we'll talk about my experience using the <a rel="nofollow external" href="https://github.com/serenity-rs/serenity">Serenity-rs</a> library to create a bot which will:</p>
+<ul>
+<li>React to a message that mentions a specific user name</li>
+<li>Send a custom emoji in response to the user</li>
+</ul>
+<p>Some of the other dependencies we'll rely on:</p>
+<ul>
+<li><a rel="nofollow external" href="https://crates.io/crates/dotenv">dotenv</a> to help us have a test environment versus a production one.</li>
+<li><a rel="nofollow external" href="https://crates.io/crates/lazy_static">lazy_static</a> for global singletons</li>
+</ul>
+<h2 id="before-the-code-came-the-build">Before the Code Came the Build <a class="zola-anchor" href="#before-the-code-came-the-build" aria-label="Anchor link for: before-the-code-came-the-build"></a>
+</h2>
+<p>Sadly in order to <img class="emote" src="/img/shrug-dog.png"/> we first need an instance to run. In short: A Raspberry Pi hosting a Docker container of our bot, with a separate env for testing and production. Let's unpack these.</p>
+<h3 id="1-defining-our-environments">1. Defining our Environments <a class="zola-anchor" href="#1-defining-our-environments" aria-label="Anchor link for: 1-defining-our-environments"></a>
+</h3>
+<p>Recall, <a href="https://nill.ink/frontier/nodejs-profiling/">I don't like manually changing values and neither should you!</a> I want to quickly run something locally - futz with it - and have zero impact on the production running instance. For this, it means defining <em>two</em> bots in the <a rel="nofollow external" href="https://discord.com/developers/applications">Discord Application Portal</a> - aptly named <code>disbot</code> and <code>disbot-dev</code>. I can then configure two <code>.env</code> files containing the following:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="ini"><span class="giallo-l"><span style="color: #286983;">API_KEY</span><span style="color: #797593;">=</span><span>&lt;Your Bot Token Here&gt;</span></span>
+<span class="giallo-l"><span style="color: #286983;">EMOTE_NAME</span><span style="color: #797593;">=</span><span>&lt;your-emote-to-react-with || shrug_dog&gt;</span></span>
+<span class="giallo-l"><span style="color: #286983;">EMOTE_USERS</span><span style="color: #797593;">=</span><span>&lt;csv-of-users-to-target-when-mentioned || User1,User2,User3&gt;</span></span></code></pre>
+<p>Ideally we now set ourselves up to pass the desired env as a CLI arg, eg <code>cargo run dev</code> vs <code>cargo run</code>. Thanks to <code>dotenv</code>, this will be a relative breeze using a few helpers <img class="emote" src="/img/shrug-dog.png"/></p>
+<ul>
+<li>An <code>Environment</code> Enum, to vary app behavior such as debug logging</li>
+</ul>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="rust"><span class="giallo-l"><span style="color: #797593;">#[</span><span>derive</span><span style="color: #797593;">(</span><span style="color: #56949F;">Clone</span><span style="color: #797593;">,</span><span style="color: #56949F;"> Debug</span><span style="color: #797593;">,</span><span style="color: #56949F;"> PartialEq</span><span style="color: #797593;">)]</span></span>
+<span class="giallo-l"><span style="color: #286983;">pub enum</span><span style="color: #56949F;"> Environment</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #286983;">  PROD</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #286983;">  DEV</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">impl</span><span style="color: #56949F;"> FromStr</span><span style="color: #286983;"> for</span><span style="color: #56949F;"> Environment</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #286983;">  type</span><span style="color: #56949F;"> Err</span><span style="color: #286983;"> =</span><span style="color: #56949F;"> String</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"><span style="color: #286983;">  fn</span><span style="color: #D7827E;"> from_str</span><span style="color: #797593;">(</span><span style="font-style: italic;">s</span><span style="color: #286983;">: &amp;</span><span style="color: #56949F;">str</span><span style="color: #797593;">)</span><span style="color: #286983;"> -&gt;</span><span style="color: #56949F;"> Result</span><span style="color: #797593;">&lt;</span><span style="font-style: italic;">Self</span><span style="color: #797593;">,</span><span style="font-style: italic;"> Self</span><span style="color: #286983;">::</span><span style="color: #56949F;">Err</span><span style="color: #797593;">&gt; {</span></span>
+<span class="giallo-l"><span style="color: #286983;">    match</span><span style="font-style: italic;"> s</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">      &quot;prod&quot;</span><span style="color: #286983;"> =&gt;</span><span style="color: #56949F;"> Ok</span><span style="color: #797593;">(</span><span style="color: #56949F;">Environment</span><span style="color: #286983;">::PROD</span><span style="color: #797593;">),</span></span>
+<span class="giallo-l"><span style="color: #EA9D34;">      &quot;dev&quot;</span><span style="color: #286983;"> =&gt;</span><span style="color: #56949F;"> Ok</span><span style="color: #797593;">(</span><span style="color: #56949F;">Environment</span><span style="color: #286983;">::DEV</span><span style="color: #797593;">),</span></span>
+<span class="giallo-l"><span style="font-style: italic;">      _</span><span style="color: #286983;"> =&gt;</span><span style="color: #56949F;"> Err</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;Unknown Environment Given&quot;</span><span style="color: #286983;">.</span><span style="color: #D7827E;">to_string</span><span style="color: #797593;">()),</span></span>
+<span class="giallo-l"><span style="color: #797593;">    }</span></span>
+<span class="giallo-l"><span style="color: #797593;">  }</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">impl</span><span style="color: #56949F;"> Default</span><span style="color: #286983;"> for</span><span style="color: #56949F;"> Environment</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #286983;">  fn</span><span style="color: #D7827E;"> default</span><span style="color: #797593;">()</span><span style="color: #286983;"> -&gt;</span><span style="font-style: italic;"> Self</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">    //</span><span style="color: #9893A5;font-style: italic;"> Living on the edge with code like this, perhaps Dev </span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">    //</span><span style="color: #9893A5;font-style: italic;"> is the smarter way ;)</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    Environment</span><span style="color: #286983;">::PROD</span></span>
+<span class="giallo-l"><span style="color: #797593;">  }</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span></code></pre>
+<ul>
+<li>A <code>Config</code> Struct, to store all these key-values</li>
+</ul>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="rust"><span class="giallo-l"><span style="color: #797593;">#[</span><span>derive</span><span style="color: #797593;">(</span><span style="color: #56949F;">Debug</span><span style="color: #797593;">,</span><span style="color: #56949F;"> Clone</span><span style="color: #797593;">)]</span></span>
+<span class="giallo-l"><span style="color: #286983;">pub struct</span><span style="color: #56949F;"> Config</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="font-style: italic;">  api_key</span><span style="color: #286983;">:</span><span style="color: #56949F;"> String</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">  emote_name</span><span style="color: #286983;">:</span><span style="color: #56949F;"> String</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">  emote_users</span><span style="color: #286983;">:</span><span style="color: #56949F;"> Vec</span><span style="color: #797593;">&lt;</span><span style="color: #56949F;">String</span><span style="color: #797593;">&gt;,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">  env</span><span style="color: #286983;">:</span><span style="color: #56949F;"> Environment</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">impl</span><span style="color: #56949F;"> Config</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #286983;">  pub fn</span><span style="color: #D7827E;"> new</span><span style="color: #797593;">(</span><span style="font-style: italic;">env</span><span style="color: #286983;">:</span><span style="color: #56949F;"> Environment</span><span style="color: #797593;">)</span><span style="color: #286983;"> -&gt;</span><span style="color: #56949F;"> Result</span><span style="color: #797593;">&lt;</span><span style="color: #56949F;">Config</span><span style="color: #797593;">,</span><span style="color: #56949F;"> VarError</span><span style="color: #797593;">&gt; {</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    Ok</span><span style="color: #797593;">(</span><span style="color: #56949F;">Config</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="font-style: italic;">      api_key</span><span style="color: #286983;">:</span><span style="color: #56949F;"> env</span><span style="color: #286983;">::</span><span style="color: #D7827E;">var</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;API_KEY&quot;</span><span style="color: #797593;">)</span><span style="color: #286983;">?</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">      emote_name</span><span style="color: #286983;">:</span><span style="color: #56949F;"> env</span><span style="color: #286983;">::</span><span style="color: #D7827E;">var</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;EMOTE_NAME&quot;</span><span style="color: #797593;">)</span><span style="color: #286983;">?</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">      emote_users</span><span style="color: #286983;">:</span><span style="color: #56949F;"> env</span><span style="color: #286983;">::</span><span style="color: #D7827E;">var</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;EMOTE_USERS&quot;</span><span style="color: #797593;">)</span><span style="color: #286983;">?</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">split</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;,&quot;</span><span style="color: #797593;">)</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">map</span><span style="color: #797593;">(</span><span style="color: #286983;">|</span><span style="font-style: italic;">x</span><span style="color: #286983;">|</span><span style="font-style: italic;"> x</span><span style="color: #286983;">.</span><span style="color: #D7827E;">to_string</span><span style="color: #797593;">())</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">collect</span><span style="color: #797593;">(),</span></span>
+<span class="giallo-l"><span style="font-style: italic;">      env</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #797593;">    })</span></span>
+<span class="giallo-l"><span style="color: #797593;">  }</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span></code></pre>
+<p>Which can then be read from our main function - alas we are one step closer to <img class="emote" src="/img/shrug-dog.png"/> <strong>shrugging</strong> <img class="emote" src="/img/shrug-dog.png"/></p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="rust"><span class="giallo-l"><span style="color: #286983;">fn</span><span style="color: #D7827E;"> main</span><span style="color: #797593;">() {</span></span>
+<span class="giallo-l"><span style="color: #286983;">  let</span><span style="font-style: italic;"> env</span><span style="color: #286983;"> =</span><span style="color: #56949F;"> std</span><span style="color: #286983;">::</span><span style="color: #56949F;">env</span><span style="color: #286983;">::</span><span style="color: #D7827E;">args</span><span style="color: #797593;">()</span><span style="color: #286983;">.</span><span style="color: #D7827E;">nth</span><span style="color: #797593;">(</span><span style="color: #D7827E;">1</span><span style="color: #797593;">)</span><span style="color: #286983;">.</span><span style="color: #D7827E;">map_or</span><span style="color: #797593;">(</span><span style="color: #56949F;">Environment</span><span style="color: #286983;">::</span><span style="color: #D7827E;">default</span><span style="color: #797593;">(),</span><span style="color: #286983;"> |</span><span style="font-style: italic;">v</span><span style="color: #286983;">|</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    Environment</span><span style="color: #286983;">::</span><span style="color: #D7827E;">from_str</span><span style="color: #797593;">(</span><span style="color: #286983;">&amp;</span><span style="font-style: italic;">v</span><span style="color: #797593;">)</span><span style="color: #286983;">.</span><span style="color: #D7827E;">unwrap</span><span style="color: #797593;">()</span></span>
+<span class="giallo-l"><span style="color: #797593;">  });</span></span>
+<span class="giallo-l"><span style="color: #56949F;">  dotenv</span><span style="color: #286983;">::</span><span style="color: #D7827E;">from_filename</span><span style="color: #797593;">(</span><span style="font-style: italic;">env</span><span style="color: #286983;">.</span><span style="color: #D7827E;">as_file</span><span style="color: #797593;">())</span><span style="color: #286983;">.</span><span style="color: #D7827E;">ok</span><span style="color: #797593;">();</span></span>
+<span class="giallo-l"><span style="color: #286983;">  let</span><span style="font-style: italic;"> config</span><span style="color: #286983;"> =</span><span style="color: #56949F;"> Config</span><span style="color: #286983;">::</span><span style="color: #D7827E;">new</span><span style="color: #797593;">(</span><span style="font-style: italic;">env</span><span style="color: #797593;">)</span><span style="color: #286983;">.</span><span style="color: #D7827E;">expect</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;Err parsing environment&quot;</span><span style="color: #797593;">);</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span></code></pre><h3 id="2-the-build-process">2. The Build Process <a class="zola-anchor" href="#2-the-build-process" aria-label="Anchor link for: 2-the-build-process"></a>
+</h3>
+<p>Building won't require any special <code>Cargo.toml</code> options, but it will require the help of the <a rel="nofollow external" href="https://github.com/messense/rust-musl-cross">rust-musl-cross</a> base Docker Image for compiling a binary that can run on the ARMv7 Architecture of the Pi. The general approach I take here is:</p>
+<ol>
+<li>Use a Multi-stage build</li>
+<li>Cache dependencies in the first step, so they only re-download on change</li>
+<li>Compile the application in the next step, using whatever build dependencies I need (eg <code>rust-musl-cross</code>, or maybe your fav <code>jdk</code> if that's your poison <img class="emote" src="/img/shrug-dog.png"/>)</li>
+<li>Copy the final artifact into an optimized run container (eg <code>Alpine Linux</code>, or your fav <code>jre</code> if you're <em>still</em> sipping that <img class="emote" src="/img/shrug-dog.png"/>)</li>
+</ol>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="docker"><span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;">###################</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;"> 0. Download dependencies (this step gets skipped on subsequent builds thanks to Caching!)</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;">###################</span></span>
+<span class="giallo-l"><span style="color: #286983;">FROM</span><span> messense/rust-musl-cross:armv7-musleabihf </span><span style="color: #286983;">as</span><span> builder</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> USER=root cargo new --bin cache_build</span></span>
+<span class="giallo-l"><span style="color: #286983;">WORKDIR</span><span> ./cache_build</span></span>
+<span class="giallo-l"><span style="color: #286983;">COPY</span><span> ./Cargo.toml ./Cargo.toml</span></span>
+<span class="giallo-l"><span style="color: #286983;">COPY</span><span> ./Cargo.lock ./Cargo.lock</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> cargo build --target=armv7-unknown-linux-musleabihf --release</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> rm src/*.rs</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;">###################</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;"> 1. Build</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;">###################</span></span>
+<span class="giallo-l"><span style="color: #286983;">ADD</span><span> ./src ./src</span></span>
+<span class="giallo-l"><span style="color: #286983;">ADD</span><span> *.env ./</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> rm target/armv7-unknown-linux-musleabihf/release/deps/disbot*</span></span>
+<span class="giallo-l"><span style="color: #286983;">RUN</span><span> cargo build ---target=armv7-unknown-linux-musleabihf --release</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;">##################</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;"> 2. Run</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">#</span><span style="color: #9893A5;font-style: italic;">##################</span></span>
+<span class="giallo-l"><span style="color: #286983;">FROM</span><span> alpine:latest</span></span>
+<span class="giallo-l"><span style="color: #286983;">COPY</span><span> --from=builder /home/rust/src/cache_build/target/armv7-unknown-linux-musleabihf/release/disbot /app</span></span>
+<span class="giallo-l"><span style="color: #286983;">COPY</span><span> --from=builder /home/rust/src/cache_build/prod.env /prod.env</span></span>
+<span class="giallo-l"><span style="color: #286983;">ENTRYPOINT</span><span> [</span><span style="color: #EA9D34;">&quot;/app&quot;</span><span>]</span></span></code></pre><h3 id="3-the-deploy-process">3. The Deploy Process <a class="zola-anchor" href="#3-the-deploy-process" aria-label="Anchor link for: 3-the-deploy-process"></a>
+</h3>
+<p>The Shiba (<img class="emote" src="/img/shrug-dog.png"/>) may not Shruggeth (<img class="emote" src="/img/shrug-dog.png"/>) without a Deployment. <a rel="nofollow external" href="https://docs.docker.com/compose/">Docker Compose</a> is relatively straight forward, the only special piece of the puzzle is the restart policy: I wanted the bot to restart should the container crash (for whatever reason <img class="emote" src="/img/shrug-dog.png"/>).</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="yaml"><span class="giallo-l"><span style="color: #56949F;">version</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> &quot;3.8&quot;</span></span>
+<span class="giallo-l"><span style="color: #56949F;">services</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">  disbot</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    container_name</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> disbot</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    build</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      context</span><span style="color: #797593;">:</span><span style="color: #D7827E;"> .</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      dockerfile</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> ./docker/disbot/Dockerfile</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    image</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> disbot:latest</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    deploy</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      restart_policy</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="color: #56949F;">        condition</span><span style="color: #797593;">:</span><span style="color: #EA9D34;"> on-failure</span></span></code></pre>
+<p>The only thing left to do is getting the image itself to the Pi. I'm not a fan of developing <em>on the Pi</em>, nor publishing images to some Docker Repository. Instead, I'll just <code>tar</code> the image and throw it onto the Pi manually. The only requirement is ssh access to the Pi locally -- something I've already done in my aforementioned setup <img class="emote" src="/img/shrug-dog.png"/>. Using this, Docker-Compose will upgrade the running instances to new image versions as they get deployed</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #D7827E;">docker-compose</span><span style="color: #EA9D34;"> build disbot</span></span>
+<span class="giallo-l"><span style="color: #D7827E;">docker</span><span style="color: #EA9D34;"> save</span><span style="color: #286983;"> -o</span><span style="color: #EA9D34;"> disbot.tar disbot:latest</span></span>
+<span class="giallo-l"><span style="color: #D7827E;">ssh</span><span style="font-style: italic;"> $USER</span><span style="color: #EA9D34;">@raspberrypi &#39;mkdir -p ~/deploy&#39;</span></span>
+<span class="giallo-l"><span style="color: #D7827E;">scp</span><span style="color: #EA9D34;"> disbot.tar</span><span style="font-style: italic;"> $USER</span><span style="color: #EA9D34;">@raspberrypi:~/deploy/</span></span>
+<span class="giallo-l"><span style="color: #D7827E;">scp</span><span style="color: #EA9D34;"> docker-compose.yaml</span><span style="font-style: italic;"> $USER</span><span style="color: #EA9D34;">@raspberrypi:~/deploy/</span></span>
+<span class="giallo-l"><span style="color: #D7827E;">scp</span><span style="color: #EA9D34;"> prod.env</span><span style="font-style: italic;"> $USER</span><span style="color: #EA9D34;">@raspberrypi:~/deploy/</span></span>
+<span class="giallo-l"><span style="color: #D7827E;">rm</span><span style="color: #EA9D34;"> disbot.tar</span></span>
+<span class="giallo-l"><span style="color: #D7827E;">ssh</span><span style="font-style: italic;"> $USER</span><span style="color: #EA9D34;">@raspberrypi &#39;cd ~/deploy &amp;&amp; docker load -i disbot.tar &amp;&amp; docker-compose up -d &amp;&amp; docker image prune -fa&#39;</span></span></code></pre>
+<p>(To prevent old images cluttering the Pi's disk, <code>docker image prune -fa</code> can help)</p>
+<h2 id="the-entrypoint">The Entrypoint <a class="zola-anchor" href="#the-entrypoint" aria-label="Anchor link for: the-entrypoint"></a>
+</h2>
+<p>Serenity is a pretty slick library, making it easy to register our bot with the right set of intentions. The actual <code>main.rs</code> isn't much longer than what we got a glimpse of earlier. After the config is parsed, we need a <code>Client</code> (stating what we intend to do) and with an <code>event_handler</code> (to actually execute). The most notable addition is registering an Async framework - in this case <a rel="nofollow external" href="https://github.com/tokio-rs/tokio">Tokio</a>.</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="rust"><span class="giallo-l"><span style="color: #797593;">#[</span><span>tokio</span><span style="color: #286983;">::</span><span>main</span><span style="color: #797593;">]</span></span>
+<span class="giallo-l"><span style="color: #286983;">async fn</span><span style="color: #D7827E;"> main</span><span style="color: #797593;">() {</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">  //</span><span style="color: #9893A5;font-style: italic;"> ... Config/Env Parsing</span></span>
+<span class="giallo-l"><span style="color: #286983;">  let mut</span><span style="font-style: italic;"> client</span><span style="color: #286983;"> =</span><span style="color: #56949F;"> Client</span><span style="color: #286983;">::</span><span style="color: #D7827E;">builder</span><span style="color: #797593;">(</span><span style="color: #286983;">&amp;</span><span style="font-style: italic;">config</span><span style="color: #286983;">.</span><span style="color: #D7827E;">get_api_key</span><span style="color: #797593;">())</span></span>
+<span class="giallo-l"><span style="color: #286983;">    .</span><span style="color: #D7827E;">intents</span><span style="color: #797593;">(</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      GatewayIntents</span><span style="color: #286983;">::GUILDS</span></span>
+<span class="giallo-l"><span style="color: #286983;">        |</span><span style="color: #56949F;"> GatewayIntents</span><span style="color: #286983;">::GUILD_EMOJIS</span></span>
+<span class="giallo-l"><span style="color: #286983;">        |</span><span style="color: #56949F;"> GatewayIntents</span><span style="color: #286983;">::GUILD_MESSAGES</span></span>
+<span class="giallo-l"><span style="color: #286983;">        |</span><span style="color: #56949F;"> GatewayIntents</span><span style="color: #286983;">::GUILD_MESSAGE_REACTIONS</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #797593;">    )</span></span>
+<span class="giallo-l"><span style="color: #286983;">    .</span><span style="color: #D7827E;">event_handler</span><span style="color: #797593;">(</span><span style="color: #56949F;">Handler</span><span style="color: #286983;">::</span><span style="color: #D7827E;">new</span><span style="color: #797593;">(</span><span style="font-style: italic;">config</span><span style="color: #286983;">.</span><span style="color: #D7827E;">clone</span><span style="color: #797593;">()))</span></span>
+<span class="giallo-l"><span style="color: #286983;">    .await</span></span>
+<span class="giallo-l"><span style="color: #286983;">    .</span><span style="color: #D7827E;">expect</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;Err creating client&quot;</span><span style="color: #797593;">);</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">  if let</span><span style="color: #56949F;"> Err</span><span style="color: #797593;">(</span><span style="font-style: italic;">why</span><span style="color: #797593;">)</span><span style="color: #286983;"> =</span><span style="font-style: italic;"> client</span><span style="color: #286983;">.</span><span style="color: #D7827E;">start</span><span style="color: #797593;">()</span><span style="color: #286983;">.await</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #D7827E;">    println!</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;Client error: </span><span style="color: #797593;">{</span><span style="color: #EA9D34;">:?</span><span style="color: #797593;">}</span><span style="color: #EA9D34;">&quot;</span><span style="color: #797593;">,</span><span style="font-style: italic;"> why</span><span style="color: #797593;">);</span></span>
+<span class="giallo-l"><span style="color: #797593;">  }</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span></code></pre>
+<p>The <strong>real crux of the problem</strong>, then, lies in two implementation details:</p>
+<ul>
+<li>Pulling the custom emoji we want to react with and caching it (so we don't need an API fetch every time the bot triggers)</li>
+<li>Setting up the event handler to listen for the right time to act.</li>
+</ul>
+<h2 id="creating-an-emoji-cache">Creating an Emoji Cache <a class="zola-anchor" href="#creating-an-emoji-cache" aria-label="Anchor link for: creating-an-emoji-cache"></a>
+</h2>
+<p>Since this is pretty well defined unit of behavior, I decided to break out a module for it: <code>emoji.rs</code> which will house our <code>EmojiLookup</code> struct. In here:</p>
+<ul>
+<li>I want to fetch this cache easily, from anywhere</li>
+<li>I want this cache to be thread-safe</li>
+<li>And I want the cache capable of populating itself</li>
+</ul>
+<p>With these needs in mind, I turned to <code>lazy_static!</code> to help setup that global instance. This little macro makes it simple to create static references, which can be made thread safe using the proper synchronization primitives (eg <code>RwLock</code>, etc). Rather than store an entire <code>EmojiLookup</code> struct, though, I decided to only store the configuration values needed to rebuild the struct. Internally, <code>Serenity-rs</code> handle caching of API calls so we don't actually need to re-cache these values ourselves (how nifty), so I'm dancing around the requirement a little (<em>oh well</em> <img class="emote" src="/img/shrug-dog.png"/>).</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="rust"><span class="giallo-l"><span style="color: #D7827E;">lazy_static!</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #286983;">  static ref EMOJI_TO_FIND:</span><span style="color: #56949F;"> RwLock</span><span style="color: #797593;">&lt;</span><span style="color: #56949F;">String</span><span style="color: #797593;">&gt;</span><span style="color: #286983;"> =</span><span style="color: #56949F;"> RwLock</span><span style="color: #286983;">::</span><span style="color: #D7827E;">new</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;&quot;</span><span style="color: #286983;">.</span><span style="color: #D7827E;">to_string</span><span style="color: #797593;">());</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">pub struct</span><span style="color: #56949F;"> EmojiLookup</span><span style="color: #797593;"> {}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">pub fn</span><span style="color: #D7827E;"> configure</span><span style="color: #797593;">(</span><span style="font-style: italic;">config</span><span style="color: #286983;">: &amp;</span><span style="color: #56949F;">Config</span><span style="color: #797593;">)</span><span style="color: #286983;"> -&gt;</span><span style="color: #56949F;"> Result</span><span style="color: #797593;">&lt;(),</span><span style="color: #56949F;"> String</span><span style="color: #797593;">&gt; {</span></span>
+<span class="giallo-l"><span style="color: #286983;">  let mut</span><span style="font-style: italic;"> inst</span><span style="color: #286983;"> = INSTANCE</span></span>
+<span class="giallo-l"><span style="color: #286983;">    .</span><span style="color: #D7827E;">try_write</span><span style="color: #797593;">()</span></span>
+<span class="giallo-l"><span style="color: #286983;">    .</span><span style="color: #D7827E;">map_err</span><span style="color: #797593;">(</span><span style="color: #286983;">|</span><span style="font-style: italic;">_</span><span style="color: #286983;">|</span><span style="color: #EA9D34;"> &quot;Failed to get lock on emoji instance&quot;</span><span style="color: #797593;">)</span><span style="color: #286983;">?</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"><span style="color: #286983;">  *</span><span style="font-style: italic;">inst</span><span style="color: #286983;"> =</span><span style="font-style: italic;"> config</span><span style="color: #286983;">.</span><span style="color: #D7827E;">get_emote_name</span><span style="color: #797593;">()</span><span style="color: #286983;">.</span><span style="color: #D7827E;">to_string</span><span style="color: #797593;">();</span></span>
+<span class="giallo-l"><span style="color: #56949F;">  Ok</span><span style="color: #797593;">(())</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">impl</span><span style="color: #56949F;"> EmojiLookup</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #286983;">  pub fn</span><span style="color: #D7827E;"> inst</span><span style="color: #797593;">()</span><span style="color: #286983;"> -&gt;</span><span style="font-style: italic;"> Self</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    EmojiLookup</span><span style="color: #797593;"> {}</span></span>
+<span class="giallo-l"><span style="color: #797593;">  }</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span></code></pre>
+<p>With the above, we can now setup the <code>EmojiLookup</code> once on application start and obtain a usable handle to it at any point we desire.</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="rust"><span class="giallo-l"><span style="color: #286983;">mod</span><span style="color: #D7827E;"> emoji</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">async fn</span><span style="color: #D7827E;"> main</span><span style="color: #797593;">() {</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">  //</span><span style="color: #9893A5;font-style: italic;"> ... config and env parsing</span></span>
+<span class="giallo-l"><span style="color: #56949F;">  emoji</span><span style="color: #286983;">::</span><span style="color: #D7827E;">configure</span><span style="color: #797593;">(</span><span style="color: #286983;">&amp;</span><span style="font-style: italic;">config</span><span style="color: #797593;">)</span><span style="color: #286983;">.</span><span style="color: #D7827E;">expect</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;Failed to setup emoji lookup&quot;</span><span style="color: #797593;">);</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">  //</span><span style="color: #9893A5;font-style: italic;"> ... client setup</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span></code></pre>
+<p>When it comes to actually finding the emoji itself, we'll just do a simple search over the <code>Guild</code>'s stored emotes (noting that this only works for custom emojis -- baked in emotes you'll just need to use the hardcoded unicode representation of them <img class="emote" src="/img/shrug-dog.png"/>).</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="rust"><span class="giallo-l"><span style="color: #286983;">impl</span><span style="color: #56949F;"> EmojiLookup</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #286983;">  pub async fn</span><span style="color: #D7827E;"> get</span><span style="color: #797593;">(</span><span style="color: #286983;">&amp;</span><span style="font-style: italic;">self</span><span style="color: #797593;">,</span><span style="font-style: italic;"> guild_id</span><span style="color: #286983;">:</span><span style="color: #56949F;"> GuildId</span><span style="color: #797593;">,</span><span style="font-style: italic;"> cache</span><span style="color: #286983;">: &amp;</span><span style="color: #56949F;">Cache</span><span style="color: #797593;">)</span><span style="color: #286983;"> -&gt;</span><span style="color: #56949F;"> Result</span><span style="color: #797593;">&lt;</span><span style="color: #56949F;">Emoji</span><span style="color: #797593;">,</span><span style="color: #56949F;"> String</span><span style="color: #797593;">&gt; {</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">    //</span><span style="color: #9893A5;font-style: italic;"> Pull the emoji from the guild attached to the message</span></span>
+<span class="giallo-l"><span style="color: #286983;">    let</span><span style="font-style: italic;"> maybe_emoji</span><span style="color: #286983;"> =</span><span style="font-style: italic;"> cache</span></span>
+<span class="giallo-l"><span style="color: #286983;">      .</span><span style="color: #D7827E;">guild_field</span><span style="color: #797593;">(</span><span style="font-style: italic;">guild_id</span><span style="color: #797593;">,</span><span style="color: #286983;"> |</span><span style="font-style: italic;">guild</span><span style="color: #286983;">|</span><span style="font-style: italic;"> guild</span><span style="color: #286983;">.</span><span>emojis</span><span style="color: #286983;">.</span><span style="color: #D7827E;">clone</span><span style="color: #797593;">())</span></span>
+<span class="giallo-l"><span style="color: #286983;">      .await</span></span>
+<span class="giallo-l"><span style="color: #286983;">      .</span><span style="color: #D7827E;">ok_or</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;Failed to pull emojis for Guild&quot;</span><span style="color: #286983;">.</span><span style="color: #D7827E;">to_string</span><span style="color: #797593;">())</span><span style="color: #286983;">?</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">    //</span><span style="color: #9893A5;font-style: italic;"> Obtain a read lock and find the emoji of matching name</span></span>
+<span class="giallo-l"><span style="color: #286983;">    let</span><span style="font-style: italic;"> emoji</span><span style="color: #286983;"> = match INSTANCE.</span><span style="color: #D7827E;">try_read</span><span style="color: #797593;">() {</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      Ok</span><span style="color: #797593;">(</span><span style="font-style: italic;">e</span><span style="color: #797593;">)</span><span style="color: #286983;"> =&gt;</span><span style="font-style: italic;"> maybe_emoji</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">iter</span><span style="color: #797593;">()</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">find_map</span><span style="color: #797593;">(</span></span>
+<span class="giallo-l"><span style="color: #286983;">          |</span><span style="color: #797593;">(</span><span style="font-style: italic;">_</span><span style="color: #797593;">,</span><span style="font-style: italic;"> emoji</span><span style="color: #797593;">)</span><span style="color: #286983;">|</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #286983;">            if</span><span style="font-style: italic;"> emoji</span><span style="color: #286983;">.</span><span>name </span><span style="color: #286983;">== *</span><span style="font-style: italic;">e</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #56949F;">              Some</span><span style="color: #797593;">(</span><span style="font-style: italic;">emoji</span><span style="color: #797593;">)</span></span>
+<span class="giallo-l"><span style="color: #797593;">            }</span><span style="color: #286983;"> else</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #56949F;">              None</span></span>
+<span class="giallo-l"><span style="color: #797593;">            }</span></span>
+<span class="giallo-l"><span style="color: #797593;">          },</span></span>
+<span class="giallo-l"><span style="color: #797593;">        )</span></span>
+<span class="giallo-l"><span style="color: #286983;">        .</span><span style="color: #D7827E;">ok_or</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;Server does not have expected Emoji&quot;</span><span style="color: #286983;">.</span><span style="color: #D7827E;">to_string</span><span style="color: #797593;">())</span><span style="color: #286983;">?</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #56949F;">      Err</span><span style="color: #797593;">(</span><span style="font-style: italic;">_</span><span style="color: #797593;">)</span><span style="color: #286983;"> =&gt; return</span><span style="color: #56949F;"> Err</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;Failed to get read on Emoji&quot;</span><span style="color: #286983;">.</span><span style="color: #D7827E;">to_string</span><span style="color: #797593;">()),</span></span>
+<span class="giallo-l"><span style="color: #797593;">    };</span></span>
+<span class="giallo-l"><span style="color: #56949F;">    Ok</span><span style="color: #797593;">(</span><span style="font-style: italic;">emoji</span><span style="color: #286983;">.</span><span style="color: #D7827E;">clone</span><span style="color: #797593;">())</span></span>
+<span class="giallo-l"><span style="color: #797593;">  }</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span></code></pre>
+<p>At last, we're finally able to enact the full wrath of the <em>shrug</em>! <img class="emote" src="/img/shrug-dog.png"/><img class="emote jumbo" src="/img/shrug-dog.png"/><img class="emote" src="/img/shrug-dog.png"/></p>
+<h2 id="defining-an-event-handler">Defining an Event Handler <a class="zola-anchor" href="#defining-an-event-handler" aria-label="Anchor link for: defining-an-event-handler"></a>
+</h2>
+<p>As another unit of logic, I broke this into a <code>Handler</code> struct inside <code>handler.rs</code>. For this, the only special piece is needing to satisfy the Trait <code>EventHandler</code>, which has a few "lifecycle" methods the bot can tie into. In this case, we only care to implement the <code>message</code> function, which is invoked when a message is sent in the Guild.</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="rust"><span class="giallo-l"><span style="color: #286983;">pub struct</span><span style="color: #56949F;"> Handler</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="font-style: italic;">  config</span><span style="color: #286983;">:</span><span style="color: #56949F;"> Config</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;">#[</span><span>async_trait</span><span style="color: #797593;">]</span></span>
+<span class="giallo-l"><span style="color: #286983;">impl</span><span style="color: #56949F;"> EventHandler</span><span style="color: #286983;"> for</span><span style="color: #56949F;"> Handler</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="color: #286983;">  async fn</span><span style="color: #D7827E;"> message</span><span style="color: #797593;">(</span><span style="color: #286983;">&amp;</span><span style="font-style: italic;">self</span><span style="color: #797593;">,</span><span style="font-style: italic;"> ctx</span><span style="color: #286983;">:</span><span style="color: #56949F;"> Context</span><span style="color: #797593;">,</span><span style="font-style: italic;"> msg</span><span style="color: #286983;">:</span><span style="color: #56949F;"> Message</span><span style="color: #797593;">) {</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">    //</span><span style="color: #9893A5;font-style: italic;"> TODO Enact your shrugging vengeance</span></span>
+<span class="giallo-l"><span style="color: #797593;">  }</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span></code></pre>
+<p>The general flow looks like this:</p>
+<ul>
+<li>Don't react if the message comes from yourself (otherwise we get all kinds of odd infinite loop-y behavior)</li>
+</ul>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="rust"><span class="giallo-l"><span style="color: #286983;">if</span><span style="font-style: italic;"> msg</span><span style="color: #286983;">.</span><span style="color: #D7827E;">is_own</span><span style="color: #797593;">(</span><span style="color: #286983;">&amp;</span><span style="font-style: italic;">ctx</span><span style="color: #286983;">.</span><span>cache</span><span style="color: #797593;">)</span><span style="color: #286983;">.await</span><span style="color: #797593;"> {</span><span>      </span></span>
+<span class="giallo-l"><span style="color: #286983;">  return</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span></code></pre>
+<ul>
+<li>See if the message has any mentions of a configured user</li>
+</ul>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="rust"><span class="giallo-l"><span style="color: #286983;">let</span><span style="font-style: italic;"> mentions_user</span><span style="color: #286983;"> =</span><span style="font-style: italic;"> msg</span><span style="color: #286983;">.</span><span>mentions</span><span style="color: #286983;">.</span><span style="color: #D7827E;">iter</span><span style="color: #797593;">()</span><span style="color: #286983;">.</span><span style="color: #D7827E;">find</span><span style="color: #797593;">(</span><span style="color: #286983;">|</span><span style="font-style: italic;">user</span><span style="color: #286983;">|</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="font-style: italic;">  self</span></span>
+<span class="giallo-l"><span style="color: #286983;">    .</span><span>config</span></span>
+<span class="giallo-l"><span style="color: #286983;">    .</span><span style="color: #D7827E;">get_emote_users</span><span style="color: #797593;">()</span></span>
+<span class="giallo-l"><span style="color: #286983;">    .</span><span style="color: #D7827E;">iter</span><span style="color: #797593;">()</span></span>
+<span class="giallo-l"><span style="color: #286983;">    .</span><span style="color: #D7827E;">any</span><span style="color: #797593;">(</span><span style="color: #286983;">|</span><span style="font-style: italic;">cname</span><span style="color: #286983;">| *</span><span style="font-style: italic;">cname</span><span style="color: #286983;">.</span><span style="color: #D7827E;">to_lowercase</span><span style="color: #797593;">()</span><span style="color: #286983;"> ==</span><span style="font-style: italic;"> user</span><span style="color: #286983;">.</span><span>name</span><span style="color: #286983;">.</span><span style="color: #D7827E;">to_lowercase</span><span style="color: #797593;">())</span></span>
+<span class="giallo-l"><span style="color: #797593;">});</span></span>
+<span class="giallo-l"><span style="color: #286983;">if</span><span style="font-style: italic;"> mentions_user</span><span style="color: #286983;">.</span><span style="color: #D7827E;">is_none</span><span style="color: #797593;">() {</span></span>
+<span class="giallo-l"><span style="color: #286983;">  return</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span></code></pre>
+<ul>
+<li>Fetch the emoji from our <code>EmojiLookup</code></li>
+</ul>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="rust"><span class="giallo-l"><span style="color: #286983;">let</span><span style="font-style: italic;"> guild_id</span><span style="color: #286983;"> = match</span><span style="font-style: italic;"> msg</span><span style="color: #286983;">.</span><span>guild_id </span><span style="color: #797593;">{</span></span>
+<span class="giallo-l"><span style="color: #56949F;">  Some</span><span style="color: #797593;">(</span><span style="font-style: italic;">id</span><span style="color: #797593;">)</span><span style="color: #286983;"> =&gt;</span><span style="font-style: italic;"> id</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #56949F;">  None</span><span style="color: #286983;"> =&gt; return</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #797593;">};</span></span>
+<span class="giallo-l"><span style="color: #286983;">let</span><span style="font-style: italic;"> emoji</span><span style="color: #286983;"> =</span><span style="color: #56949F;"> EmojiLookup</span><span style="color: #286983;">::</span><span style="color: #D7827E;">inst</span><span style="color: #797593;">()</span><span style="color: #286983;">.</span><span style="color: #D7827E;">get</span><span style="color: #797593;">(</span><span style="font-style: italic;">guild_id</span><span style="color: #797593;">,</span><span style="color: #286983;"> &amp;</span><span style="font-style: italic;">ctx</span><span style="color: #286983;">.</span><span>cache</span><span style="color: #797593;">)</span><span style="color: #286983;">.await</span><span style="color: #797593;">;</span></span></code></pre>
+<ul>
+<li>React to the message &amp; Reply with your distaste <img class="emote" src="/img/shrug-dog.png"/></li>
+</ul>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="rust"><span class="giallo-l"><span style="color: #286983;">let</span><span style="font-style: italic;"> react</span><span style="color: #286983;"> =</span><span style="font-style: italic;"> msg</span><span style="color: #286983;">.</span><span style="color: #D7827E;">react</span><span style="color: #797593;">(</span></span>
+<span class="giallo-l"><span style="color: #286983;">  &amp;</span><span style="font-style: italic;">ctx</span><span style="color: #286983;">.</span><span>http</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="color: #56949F;">  ReactionType</span><span style="color: #286983;">::</span><span style="color: #56949F;">Custom</span><span style="color: #797593;"> {</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    animated</span><span style="color: #286983;">:</span><span style="font-style: italic;"> emoji</span><span style="color: #286983;">.</span><span>animated</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    id</span><span style="color: #286983;">:</span><span style="font-style: italic;"> emoji</span><span style="color: #286983;">.</span><span>id</span><span style="color: #797593;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    name</span><span style="color: #286983;">:</span><span style="color: #56949F;"> Some</span><span style="color: #797593;">(</span><span style="font-style: italic;">emoji</span><span style="color: #286983;">.</span><span>name</span><span style="color: #286983;">.</span><span style="color: #D7827E;">to_string</span><span style="color: #797593;">()),</span></span>
+<span class="giallo-l"><span style="color: #797593;">  },</span></span>
+<span class="giallo-l"><span style="color: #797593;">);</span></span>
+<span class="giallo-l"><span style="color: #286983;">let</span><span style="font-style: italic;"> message</span><span style="color: #286983;"> =</span><span style="font-style: italic;"> msg</span><span style="color: #286983;">.</span><span>channel_id</span><span style="color: #286983;">.</span><span style="color: #D7827E;">say</span><span style="color: #797593;">(</span><span style="color: #286983;">&amp;</span><span style="font-style: italic;">ctx</span><span style="color: #286983;">.</span><span>http</span><span style="color: #797593;">,</span><span style="color: #D7827E;"> format!</span><span style="color: #797593;">(</span><span style="color: #EA9D34;">&quot;</span><span style="color: #797593;">{}</span><span style="color: #EA9D34;">&quot;</span><span style="color: #797593;">,</span><span style="font-style: italic;"> emoji</span><span style="color: #797593;">));</span></span>
+<span class="giallo-l"><span style="color: #56949F;">tokio</span><span style="color: #286983;">::</span><span style="color: #D7827E;">try_join!</span><span style="color: #797593;">(</span><span style="font-style: italic;">react</span><span style="color: #797593;">,</span><span style="font-style: italic;"> message</span><span style="color: #797593;">)</span></span>
+<span class="giallo-l"><span style="color: #286983;">  .</span><span style="color: #D7827E;">map</span><span style="color: #797593;">(</span><span style="color: #286983;">|</span><span style="font-style: italic;">_</span><span style="color: #286983;">|</span><span style="color: #797593;"> ())</span></span>
+<span class="giallo-l"><span style="color: #286983;">  .</span><span style="color: #D7827E;">map_err</span><span style="color: #797593;">(</span><span style="color: #286983;">|</span><span style="font-style: italic;">_</span><span style="color: #286983;">|</span><span style="color: #EA9D34;"> &quot;Failed to react/Send&quot;</span><span style="color: #286983;">.</span><span style="color: #D7827E;">to_string</span><span style="color: #797593;">())</span></span></code></pre>
+<p>Which in sum is <a rel="nofollow external" href="https://github.com/dfontana/disbot/blob/master/src/cmd/shrug.rs">captured here</a> (structured slightly differently, but you'll get the point).</p>
+<h2 id="unleash-the-shiba">Unleash the Shiba <img class="emote" src="/img/shrug-dog.png"/> <a class="zola-anchor" href="#unleash-the-shiba" aria-label="Anchor link for: unleash-the-shiba"></a>
+</h2>
+<p><img src="/img/shiba-has-shrugged.png" alt="Shruggin&#39; Shiba" /></p>
+<p>... Well, it is mostly useless <img class="emote" src="/img/shrug-dog.png"/>. If anything, hopefully this post has laid the groundwork for you to try out your own silly bot!</p>
+
+    </div>
+  </article>
+  
+  
+  <script
+    src="https://utteranc.es/client.js"
+    repo="dfontana/dfontana.github.io"
+    issue-term="pathname"
+    label="comments"
+    theme="github-light"
+    crossorigin="anonymous"
+    async
+  ></script>
+  
+
+  
+    
+  <footer>
+    <hr>
+    <hr>
+    <section class="author">
+    <div class="authorimage" style="background-image: url(&#x2F;img&#x2F;profile.png)"></div>
+    <div class="author-content">
+      <h4>Dylan Fontana</h4>
+      
+        <p class="bio">Explore, Learn, Pursue.</p>
+      
+      
+    </div>
+    </section>
+    </footer>
+
+  
+
+
+  </body>
+</html>

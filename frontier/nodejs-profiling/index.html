@@ -1,0 +1,167 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>NodeJS Environment Profiles — nill.ink</title>
+    
+<link rel="stylesheet" href="https://nill.ink/section_and_pages.css">
+
+    <script>
+function get_opposite(current) {
+  switch (current) {
+    case 'light': return 'dark'
+    case 'dark': return 'light'
+    default:
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) { return 'light' } else { return 'dark'}
+  }
+}
+function toggle_dark() {
+  const root = document.documentElement;
+  let current = getComputedStyle(root).getPropertyValue('color-scheme').trim()
+  const next = get_opposite(current);
+  root.style.setProperty('color-scheme', next);
+  localStorage.setItem('color-scheme', next);
+}
+(function() {
+  const saved = localStorage.getItem('color-scheme');
+  if (saved) { document.documentElement.style.setProperty('color-scheme', saved); }
+})();
+</script>
+
+  </head>
+  <body>
+    <header>
+  <nav class="navbox" itemscope itemtype="http://schema.org/SiteNavigationElement">
+    <a class="nav-title" href="https:&#x2F;&#x2F;nill.ink"><div class="nav-image-box"><div class="nav-image" style="background-image: url(&#x2F;img&#x2F;icon-bronze.png)"></div></div>nill<span class="title-ink">&#46;ink</span><span class="title-social" hidden>oss</span></a>&nbsp;
+    <span class="navbox-spacer"></span>
+    
+    <a itemprop="url"
+        class=""
+        href="https:&#x2F;&#x2F;nill.ink&#x2F;frontier">
+        <span itemprop="name">Frontiers</span></a>&nbsp;&nbsp;
+    
+    <a itemprop="url"
+        class=""
+        href="https:&#x2F;&#x2F;nill.ink&#x2F;about">
+        <span itemprop="name">About</span></a>&nbsp;&nbsp;
+    
+    <button class="nav-dark-toggle" onclick="toggle_dark()"><svg viewBox="145 145 220 220" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"><path d="M248.082 263.932c-31.52-31.542-39.978-77.104-26.02-116.542-15.25 5.394-29.668 13.834-41.854 26.02-43.75 43.75-43.75 114.668 0 158.396 43.728 43.73 114.626 43.752 158.374 0 12.228-12.186 20.646-26.604 26.022-41.854-39.414 13.958-84.998 5.5-116.522-26.018"/></svg></button>
+  </nav>
+</header>
+
+    
+
+  <article itemscope itemtype="https://schema.org/BlogPosting">
+    <header>
+        <h1 itemprop="headline">NodeJS Environment Profiles</h1>
+        
+        
+        <p>
+          2017-10-13&nbsp;
+  
+    |&nbsp;
+    
+      <a href="https://nill.ink/tags/js/"># js</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/configuration/"># configuration</a>
+      
+        &nbsp;
+      
+    
+      <a href="https://nill.ink/tags/environment/"># environment</a>
+      
+        
+      
+    
+  
+
+        </p>
+        
+    </header>
+    <div class="articlebody" itemprop="articleBody">
+      <p>Switching configuration between production and development can be tedious and error prone. Fed up with the constant back and forth, I searched for a better solution.</p>
+<span id="continue-reading"></span><h2 id="reading-environment-variables-in-node">Reading Environment Variables in Node <a class="zola-anchor" href="#reading-environment-variables-in-node" aria-label="Anchor link for: reading-environment-variables-in-node"></a>
+</h2>
+<p>An easy solution would be to simply pass environment variables when launching NodeJS, pulling the configuration from inside our files to the commandline during launch time. We can accomplish this like so:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="javascript"><span class="giallo-l"><span style="font-style: italic;">location</span><span style="color: #286983;">=</span><span style="font-style: italic;">Boston node server</span><span style="color: #286983;">.</span><span style="font-style: italic;">js</span></span></code></pre>
+<p>Once we've set these variables, its a simple matter of reading them inside Node. Thankfully, Node has the <code>process</code> object, which allows us to look at environment variables through <code>env</code>. To access a variable called <code>location</code>, for example, we'd simple do:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="javascript"><span class="giallo-l"><span style="color: #286983;">var</span><span style="font-style: italic;"> location</span><span style="color: #286983;"> =</span><span style="font-style: italic;"> process</span><span style="color: #286983;">.</span><span style="font-style: italic;">env</span><span style="color: #286983;">.</span><span style="font-style: italic;">location</span><span style="color: #286983;"> ||</span><span style="color: #EA9D34;"> &#39;New_York&#39;</span><span style="color: #797593;">;</span></span></code></pre>
+<p>Notice we set a default value with a logical OR. It's important to remember this, to prevent undefined behavior when someone forgets to set the variable or if you have a default value in mind.</p>
+<p>This is still not the ideal scenario, however. Let's harp on the notion of a default configuration. We've successfully pulled out our configuration using environment variables, but if I want to change the default configs then I'm back to my original problem of editing source code! Luckily, we can do one extra tweak to solve just this.</p>
+<h2 id="the-magic-of-environments-and-jsons">The Magic of Environments and JSONs <a class="zola-anchor" href="#the-magic-of-environments-and-jsons" aria-label="Anchor link for: the-magic-of-environments-and-jsons"></a>
+</h2>
+<p>Here's where setting up an environment profile comes in. What if we were to place all our configurations within a file (like a JSON) and load it in at runtime? What if we did one better, and made it a module that can handle comments AND specify all our configurations within itself - rather than specifying our default configuration within our source. Well we can! And we will:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="javascript"><span class="giallo-l"><span style="color: #797593;font-style: italic;">//</span><span style="color: #9893A5;font-style: italic;"> config.js</span></span>
+<span class="giallo-l"><span style="color: #286983;">let</span><span style="font-style: italic;"> env</span><span style="color: #286983;"> =</span><span style="font-style: italic;"> process</span><span style="color: #286983;">.</span><span style="font-style: italic;">env</span><span style="color: #286983;">.</span><span style="font-style: italic;">CONFIG</span><span style="color: #286983;"> ||</span><span style="color: #EA9D34;"> &#39;default&#39;</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"><span style="color: #286983;">let</span><span style="font-style: italic;"> config</span><span style="color: #286983;"> =</span><span style="color: #797593;"> {};</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">/**</span></span>
+<span class="giallo-l"><span style="color: #9893A5;font-style: italic;"> * config.IP: IP of database.</span></span>
+<span class="giallo-l"><span style="color: #9893A5;font-style: italic;"> * config.PORT: Port number of database.</span></span>
+<span class="giallo-l"><span style="color: #9893A5;font-style: italic;"> * config.LOG_LEVEL: Trace level to print when logging events.</span></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;"> */</span></span>
+<span class="giallo-l"><span style="color: #286983;">switch</span><span>(</span><span style="font-style: italic;">env</span><span>)</span><span style="color: #797593;">{</span></span>
+<span class="giallo-l"><span style="color: #286983;">    case</span><span>(</span><span style="color: #EA9D34;">&#39;prod&#39;</span><span>)</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="font-style: italic;">        config</span><span style="color: #286983;">.</span><span style="font-style: italic;">IP</span><span style="color: #286983;"> =</span><span style="color: #EA9D34;"> &#39;127.127.127.127&#39;</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"><span style="font-style: italic;">        config</span><span style="color: #286983;">.</span><span style="font-style: italic;">PORT</span><span style="color: #286983;"> =</span><span style="color: #D7827E;"> 80</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"><span style="font-style: italic;">        config</span><span style="color: #286983;">.</span><span style="font-style: italic;">LOG_LEVEL</span><span style="color: #286983;"> =</span><span style="color: #D7827E;"> 1</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"><span style="color: #286983;">        break</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"><span style="color: #286983;">    default</span><span style="color: #797593;">:</span></span>
+<span class="giallo-l"><span style="font-style: italic;">        config</span><span style="color: #286983;">.</span><span style="font-style: italic;">IP</span><span style="color: #286983;"> =</span><span style="color: #EA9D34;"> &#39;127.0.0.0&#39;</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"><span style="font-style: italic;">        config</span><span style="color: #286983;">.</span><span style="font-style: italic;">PORT</span><span style="color: #286983;"> =</span><span style="color: #D7827E;"> 8080</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"><span style="font-style: italic;">        config</span><span style="color: #286983;">.</span><span style="font-style: italic;">LOG_LEVEL</span><span style="color: #286983;"> =</span><span style="color: #D7827E;"> 2</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"><span style="color: #797593;">}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #56949F;">module</span><span style="color: #286983;">.</span><span style="color: #56949F;">exports</span><span style="color: #286983;"> =</span><span style="font-style: italic;"> config</span><span style="color: #797593;">;</span></span></code></pre>
+<p>And then in our server.js, we:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="javascript"><span class="giallo-l"><span style="color: #797593;font-style: italic;">//</span><span style="color: #9893A5;font-style: italic;">Import configuration</span></span>
+<span class="giallo-l"><span style="color: #286983;">const</span><span style="font-style: italic;"> config</span><span style="color: #286983;"> =</span><span style="color: #D7827E;"> require</span><span>(</span><span style="color: #EA9D34;">&#39;./config&#39;</span><span>)</span><span style="color: #797593;">;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #286983;">...</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #797593;font-style: italic;">//</span><span style="color: #9893A5;font-style: italic;">Access it&#39;s fields</span></span>
+<span class="giallo-l"><span style="font-style: italic;">console</span><span style="color: #286983;">.</span><span style="color: #D7827E;">log</span><span>(</span><span style="font-style: italic;">config</span><span style="color: #286983;">.</span><span style="font-style: italic;">IP</span><span>)</span><span style="color: #797593;">;</span></span></code></pre>
+<p>And we call our server as such:</p>
+<pre class="giallo" style="color: #575279; background-color: #FAF4ED;"><code data-lang="shellscript"><span class="giallo-l"><span style="font-style: italic;">CONFIG</span><span style="color: #286983;">=</span><span style="color: #EA9D34;">prod</span><span style="color: #D7827E;"> node</span><span style="color: #EA9D34;"> server.js</span></span></code></pre>
+<p>That's it! We've gone from hard coded messes, to flexible, documentable, and "gitignore-able" configurations that can change without modifying the original source.</p>
+
+    </div>
+  </article>
+  
+  
+  <script
+    src="https://utteranc.es/client.js"
+    repo="dfontana/dfontana.github.io"
+    issue-term="pathname"
+    label="comments"
+    theme="github-light"
+    crossorigin="anonymous"
+    async
+  ></script>
+  
+
+  
+    
+  <footer>
+    <hr>
+    <hr>
+    <section class="author">
+    <div class="authorimage" style="background-image: url(&#x2F;img&#x2F;profile.png)"></div>
+    <div class="author-content">
+      <h4>Dylan Fontana</h4>
+      
+        <p class="bio">Explore, Learn, Pursue.</p>
+      
+      
+    </div>
+    </section>
+    </footer>
+
+  
+
+
+  </body>
+</html>
